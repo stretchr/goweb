@@ -1,0 +1,2 @@
+  * Add JSONP callback parameter 
+  * Consider configurable default formatter (i.e. JsonFormatter) for when no file extension is provided
