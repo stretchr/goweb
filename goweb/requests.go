@@ -19,20 +19,24 @@ const DEFAULT_FORMAT string = JSON_FORMAT
 
 // Gets a string describing the format of the request.
 func getFormatForRequest(request *http.Request) string {
-	
-	if (request.URL == nil) { return DEFAULT_FORMAT }
-	
+
+	if request.URL == nil {
+		return DEFAULT_FORMAT
+	}
+
 	// use the file extension as the format
 	ext := strings.ToUpper(getFileExtension(request.URL.Path))
 	if ext != "" {
-		
+
 		// manual overrides
-		if ext == "HTM" { return HTML_FORMAT }
-		
+		if ext == "HTM" {
+			return HTML_FORMAT
+		}
+
 		return ext
 	}
-	
+
 	// we don't know, so use the default one
 	return DEFAULT_FORMAT
-	
+
 }

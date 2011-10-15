@@ -23,17 +23,18 @@ var testDomain string = "http://test.matryer.com"
 // test controller
 type TestController struct {
 	HandleRequestWasCalled bool
-	WriteHeaderWasCalled bool
-	LastContext *Context
+	WriteHeaderWasCalled   bool
+	LastContext            *Context
 }
+
 func (handler *TestController) HandleRequest(c *Context) {
-	
+
 	// this method has been called
 	handler.HandleRequestWasCalled = true
-	
+
 	// save the request and response objects
 	handler.LastContext = c
-	
+
 }
 func (handler *TestController) WriteHeader(statusCode int) {
 	handler.WriteHeaderWasCalled = true
@@ -44,45 +45,52 @@ func (handler *TestController) WriteHeader(statusCode int) {
 */
 type TestRestController struct {
 	lastCall string
-	lastId string
+	lastId   string
 }
-func (cr *TestRestController) Create(cx *Context) { cr.lastCall = "Create"; cr.lastId = "(none)" }
+
+func (cr *TestRestController) Create(cx *Context)            { cr.lastCall = "Create"; cr.lastId = "(none)" }
 func (cr *TestRestController) Delete(id string, cx *Context) { cr.lastCall = "Delete"; cr.lastId = id }
-func (cr *TestRestController) DeleteMany(cx *Context) { cr.lastCall = "DeleteMany"; cr.lastId = "(none)" }
-func (cr *TestRestController) Read(id string, cx *Context) { cr.lastCall = "Read"; cr.lastId = id }
-func (cr *TestRestController) ReadMany(cx *Context) { cr.lastCall = "ReadMany"; cr.lastId = "(none)" }
+func (cr *TestRestController) DeleteMany(cx *Context) {
+	cr.lastCall = "DeleteMany"
+	cr.lastId = "(none)"
+}
+func (cr *TestRestController) Read(id string, cx *Context)   { cr.lastCall = "Read"; cr.lastId = id }
+func (cr *TestRestController) ReadMany(cx *Context)          { cr.lastCall = "ReadMany"; cr.lastId = "(none)" }
 func (cr *TestRestController) Update(id string, cx *Context) { cr.lastCall = "Update"; cr.lastId = id }
-func (cr *TestRestController) UpdateMany(cx *Context) { cr.lastCall = "UpdateMany"; cr.lastId = "(none)" }
+func (cr *TestRestController) UpdateMany(cx *Context) {
+	cr.lastCall = "UpdateMany"
+	cr.lastId = "(none)"
+}
 
 /*
 	Test ResponseWriter
 */
 type TestResponseWriter struct {
 	WrittenHeaderInt int
-	Output string
-	header http.Header
+	Output           string
+	header           http.Header
 }
+
 func (rw *TestResponseWriter) Header() http.Header {
-	
+
 	if rw.header == nil {
 		rw.header = make(http.Header)
 	}
-	
+
 	return rw.header
 }
 func (rw *TestResponseWriter) Write(bytes []byte) (int, os.Error) {
-	
+
 	// add these bytes to the output string
 	rw.Output = rw.Output + string(bytes)
-	
+
 	// return normal values
 	return 0, nil
-	
+
 }
 func (rw *TestResponseWriter) WriteHeader(i int) {
 	rw.WrittenHeaderInt = i
 }
-
 
 func RouteMatcherFunc_Match(c *Context) RouteMatcherFuncValue {
 	return Match
@@ -94,10 +102,7 @@ func RouteMatcherFunc_DontCare(c *Context) RouteMatcherFuncValue {
 	return DontCare
 }
 
-
-
-
-type TestFormatter struct {}
+type TestFormatter struct{}
 
 func (f *TestFormatter) Format(input interface{}) ([]uint8, os.Error) {
 	return []uint8(""), nil
@@ -105,9 +110,6 @@ func (f *TestFormatter) Format(input interface{}) ([]uint8, os.Error) {
 func (f *TestFormatter) ContentType() string {
 	return "text/plain"
 }
-
-
-
 
 /*
 
@@ -120,5 +122,3 @@ func assertEqual(t *testing.T, actual interface{}, expected interface{}, message
 		t.Errorf(msg, expected, actual)
 	}
 }
-
-

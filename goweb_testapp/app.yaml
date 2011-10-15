@@ -1,7 +1,7 @@
 application: gowebtestapp
 version: 2
 runtime: go
-api_version: 2
+api_version: 3
 
 handlers:
 - url: /.*

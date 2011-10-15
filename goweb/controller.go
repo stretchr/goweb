@@ -2,10 +2,9 @@ package goweb
 
 // Interface for controller types that handle requests
 type Controller interface {
-	
+
 	// When implemented, handles the request
 	HandleRequest(c *Context)
-	
 }
 
 // The ControllerFunc type is an adapter to allow the use of

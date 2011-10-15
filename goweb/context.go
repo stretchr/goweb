@@ -8,35 +8,34 @@ import (
 
 // Object holding details about the request and responses
 type Context struct {
-	
+
 	// The underlying http.Request for this context
 	Request *http.Request
-	
+
 	// The underlying http.ResponseWriter for this context
 	ResponseWriter http.ResponseWriter
-	
+
 	// A ParameterValueMap containing path parameters
 	PathParams ParameterValueMap
-	
+
 	// The format that the response should be
 	Format string
-	
 }
 
 // Helper function to make a new Context object
 // with the specified http.Request, http.ResponseWriter and ParameterValueMap
 func makeContext(request *http.Request, responseWriter http.ResponseWriter, pathParams ParameterValueMap) *Context {
-	
+
 	var context *Context = new(Context)
-	
+
 	// set the parameters
 	context.Request = request
 	context.ResponseWriter = responseWriter
 	context.PathParams = pathParams
-	
+
 	// note the format
 	context.Format = getFormatForRequest(request)
-	
+
 	return context
 }
 
@@ -86,7 +85,6 @@ func (c *Context) IsDelete() bool {
 	return c.Request.Method == DELETE_HTTP_METHOD
 }
 
-
 /*
 	RespondWith* methods
 */
@@ -106,77 +104,77 @@ func (c *Context) Respond(data interface{}, statusCode int, errors []string, con
 // Writes the specified object out (with the specified status code)
 // using the appropriate formatter
 func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
-	
+
 	var error os.Error
 
 	// get the formatter
 	formatter, error := GetFormatter(c.Format)
-	
+
 	if error != nil {
 		c.writeInternalServerError(error, http.StatusNotFound)
 		return error
 	} else {
-	
+
 		// set the content type
-		c.ResponseWriter.Header()["Content-Type"] = []string{ formatter.ContentType() }
-	
+		c.ResponseWriter.Header()["Content-Type"] = []string{formatter.ContentType()}
+
 		// format the output
 		output, error := formatter.Format(obj)
-		
+
 		if error != nil {
 			c.writeInternalServerError(error, http.StatusInternalServerError)
 			return error
 		} else {
-			
+
 			outputString := string(output)
-			
+
 			/*
 				JSONP
 			*/
 			callback := c.GetCallback()
 			if callback != "" {
-				
+
 				// wrap with function call
-				
+
 				requestContext := c.GetRequestContext()
-				
+
 				outputString = callback + "(" + outputString
-				
+
 				if requestContext != "" {
 					outputString = outputString + ", \"" + requestContext + "\")"
 				} else {
 					outputString = outputString + ")"
 				}
-				
+
 				// set the new content type
-				c.ResponseWriter.Header()["Content-Type"] = []string{ JSONP_CONTENT_TYPE }
-				
+				c.ResponseWriter.Header()["Content-Type"] = []string{JSONP_CONTENT_TYPE}
+
 			}
-			
+
 			// write the status code
-			if (strings.Index(c.Request.URL.Raw, REQUEST_ALWAYS200_PARAMETER) > -1) {
-			
+			if strings.Index(c.Request.URL.Raw, REQUEST_ALWAYS200_PARAMETER) > -1 {
+
 				// "always200"
 				// write a fake 200 status code (regardless of what the actual code was)
 				c.ResponseWriter.WriteHeader(http.StatusOK)
-			
+
 			} else {
-				
+
 				// write the actual status code
 				c.ResponseWriter.WriteHeader(statusCode)
-				
+
 			}
-			
+
 			// write the output
 			c.ResponseWriter.Write([]uint8(outputString))
-		
+
 		}
-	
+
 	}
-	
+
 	// success - no errors
 	return nil
-	
+
 }
 
 func (c *Context) writeInternalServerError(error os.Error, statusCode int) {
@@ -197,7 +195,7 @@ func (c *Context) RespondWithError(statusCode int) os.Error {
 }
 
 func (c *Context) RespondWithErrorMessage(message string, statusCode int) os.Error {
-	return c.Respond(nil, statusCode, []string{ message }, c)
+	return c.Respond(nil, statusCode, []string{message}, c)
 }
 
 // Responds with the specified data
@@ -219,3 +217,10 @@ func (c *Context) RespondWithNotFound() os.Error {
 func (c *Context) RespondWithNotImplemented() os.Error {
 	return c.RespondWithError(http.StatusNotImplemented)
 }
+
+// Responds with 302 Temporarily Moved (redirect)
+func (c *Context) RespondWithLocation(location string) os.Error {
+    c.ResponseWriter.Header().Set("Location", location)
+    return c.RespondWithStatus(302)
+}
+

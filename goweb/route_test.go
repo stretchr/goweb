@@ -3,6 +3,7 @@ package goweb
 import (
 	"testing"
 	"http"
+	"url"
 )
 
 /*
@@ -22,13 +23,13 @@ func TestMakeRouteFromPath(t *testing.T) {
 	// test the parameter keys
 	var paramKeys ParameterKeyMap = route.parameterKeys
 
-	if (len(paramKeys) != 2) {
+	if len(paramKeys) != 2 {
 		t.Errorf("paramKeys should have 2 items")
 	}
-	if (paramKeys["id"] != 1) {
+	if paramKeys["id"] != 1 {
 		t.Errorf("paramKeys['id'] expected to be 1, but was %s", paramKeys["id"])
 	}
-	if (paramKeys["group_id"] != 3) {
+	if paramKeys["group_id"] != 3 {
 		t.Errorf("paramKeys['group_id'] expected to be 3, but was %s", paramKeys["id"])
 	}
 
@@ -40,24 +41,24 @@ func TestMakeRouteFromPath(t *testing.T) {
 }
 
 func TestRouteGetParameterValueMapFromPath(t *testing.T) {
-	
+
 	var route *Route = makeRouteFromPath(routePath)
 	var paramValues ParameterValueMap = route.getParameterValueMap("/people/123/groups/456")
-	
-	if (len(paramValues) != 2) {
+
+	if len(paramValues) != 2 {
 		t.Errorf("paramValues should have 2 items")
 	}
-	if (paramValues["id"] != "123") {
+	if paramValues["id"] != "123" {
 		t.Errorf("paramKeys['id'] expected to be '123', but was %s", paramValues["id"])
 	}
-	if (paramValues["group_id"] != "456") {
+	if paramValues["group_id"] != "456" {
 		t.Errorf("paramKeys['group_id'] expected to be '456', but was %s", paramValues["group_id"])
 	}
-	
+
 }
 
 func TestRouteDoesMatchPath(t *testing.T) {
-	
+
 	var route1 *Route = makeRouteFromPath(routePathWithoutExtension)
 	var route2 *Route = makeRouteFromPath("/something-else/{id}/groups/{group_id}")
 
@@ -74,9 +75,9 @@ func TestRouteDoesMatchPath(t *testing.T) {
 }
 
 func TestRouteDoesMatchPath_WithExtension(t *testing.T) {
-	
+
 	var route1 *Route = makeRouteFromPath(routePath)
-	
+
 	if !route1.DoesMatchPath("/people/123/groups/456.json") {
 		t.Errorf("Route should match given path '/people/123/groups/456.json'")
 	}
@@ -90,7 +91,7 @@ func TestRouteDoesMatchPath_WithExtension(t *testing.T) {
 }
 
 func TestCatchAllRouteDoesMatchPath(t *testing.T) {
-	
+
 	var route1 *Route = makeRouteFromPath("*")
 
 	if !route1.DoesMatchPath("/people/123/groups/456") {
@@ -108,56 +109,54 @@ func TestCatchAllRouteDoesMatchPath(t *testing.T) {
 	if !route1.DoesMatchPath("/this/is/quite/a/long/and/specific/path") {
 		t.Errorf("'*' route should match EVERY path")
 	}
-	
+
 }
 
 func TestRouteDoesMatchContext(t *testing.T) {
 
 	// make a route
 	var route1 *Route = makeRouteFromPath(routePath)
-	
+
 	// make a test request
 	var request *http.Request = new(http.Request)
-	request.URL, _ = http.ParseURL(testDomain + "/people/123/groups/456")
+	request.URL, _ = url.Parse(testDomain + "/people/123/groups/456")
 	var context *Context = new(Context)
 	context.Request = request
-	
-	route1.MatcherFuncs = []RouteMatcherFunc{ RouteMatcherFunc_Match }
+
+	route1.MatcherFuncs = []RouteMatcherFunc{RouteMatcherFunc_Match}
 
 	if !route1.DoesMatchContext(context) {
 		t.Errorf("DoesMatchPath should be true with RouteMatcherFunc_Match")
 	}
-	
-	route1.MatcherFuncs = []RouteMatcherFunc{ RouteMatcherFunc_DontCare }
+
+	route1.MatcherFuncs = []RouteMatcherFunc{RouteMatcherFunc_DontCare}
 
 	if route1.DoesMatchContext(context) {
 		t.Errorf("DoesMatchPath should be false with RouteMatcherFunc_DontCare since default when matcher funcs are present is NOT to match")
 	}
-	
-	route1.MatcherFuncs = []RouteMatcherFunc{ RouteMatcherFunc_Match, RouteMatcherFunc_DontCare }
+
+	route1.MatcherFuncs = []RouteMatcherFunc{RouteMatcherFunc_Match, RouteMatcherFunc_DontCare}
 
 	if !route1.DoesMatchContext(context) {
 		t.Errorf("DoesMatchPath should be true with RouteMatcherFunc_Match, RouteMatcherFunc_DontCare")
 	}
-	
-	route1.MatcherFuncs = []RouteMatcherFunc{ RouteMatcherFunc_NoMatch }
+
+	route1.MatcherFuncs = []RouteMatcherFunc{RouteMatcherFunc_NoMatch}
 
 	if route1.DoesMatchContext(context) {
 		t.Errorf("DoesMatchPath should be false with RouteMatcherFunc_NoMatch")
 	}
-	
-	route1.MatcherFuncs = []RouteMatcherFunc{ RouteMatcherFunc_NoMatch, RouteMatcherFunc_DontCare }
+
+	route1.MatcherFuncs = []RouteMatcherFunc{RouteMatcherFunc_NoMatch, RouteMatcherFunc_DontCare}
 
 	if route1.DoesMatchContext(context) {
 		t.Errorf("DoesMatchPath should be false with RouteMatcherFunc_NoMatch, RouteMatcherFunc_DontCare")
 	}
-	
-	route1.MatcherFuncs = []RouteMatcherFunc{ RouteMatcherFunc_NoMatch, RouteMatcherFunc_DontCare }
+
+	route1.MatcherFuncs = []RouteMatcherFunc{RouteMatcherFunc_NoMatch, RouteMatcherFunc_DontCare}
 
 	if route1.DoesMatchContext(context) {
 		t.Errorf("DoesMatchPath should be false with RouteMatcherFunc_NoMatch, RouteMatcherFunc_DontCare")
 	}
-	
+
 }
-
-

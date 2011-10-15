@@ -17,24 +17,21 @@ func isExtensionSegment(segment string) bool {
 
 // Splits a path into its segments
 func getPathSegments(path string) []string {
-	
+
 	ext := getFileExtension(path)
-	
+
 	// trim off the extension (if it's there)
 	if len(ext) > 0 {
-		path = path[0:len(path) - (len(ext) + 1)]
+		path = path[0 : len(path)-(len(ext)+1)]
 	}
-	
-	// for this go release...
-	segments := strings.Split(strings.Trim(path, "/"), "/", -1)
-	
-	// for the next Go release...
-	//segments := strings.Split(strings.Trim(path, "/"), "/", -1)
-	
+
+	// split path
+	segments := strings.Split(strings.Trim(path, "/"), "/")
+
 	if len(ext) > 0 {
-		segments = append(segments, "." + ext)
+		segments = append(segments, "."+ext)
 	}
-	
+
 	return segments
 }
 
@@ -45,8 +42,8 @@ func getParameterValueMap(keys ParameterKeyMap, path string) ParameterValueMap {
 
 	var segments []string = getPathSegments(path)
 	for k, index := range keys {
-    paramValues[k] = segments[index]
-  }
+		paramValues[k] = segments[index]
+	}
 
 	return paramValues
 
@@ -54,15 +51,15 @@ func getParameterValueMap(keys ParameterKeyMap, path string) ParameterValueMap {
 
 // Gets the file extension (in uppercase) from a path
 func getFileExtension(path string) string {
-	
+
 	lastDot := strings.LastIndex(path, ".")
-	
-	if lastDot == -1 { 
-		return "" /* no extension */ 
+
+	if lastDot == -1 {
+		return "" /* no extension */
 	} else {
 		return path[lastDot+1:]
 	}
-	
+
 	return ""
-	
+
 }

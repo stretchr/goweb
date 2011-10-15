@@ -6,7 +6,7 @@ import (
 )
 
 func TestRouteMatcherFuncValue(t *testing.T) {
-	
+
 	if DontCare != -1 {
 		t.Errorf("DontCare should be -1")
 	}
@@ -16,16 +16,16 @@ func TestRouteMatcherFuncValue(t *testing.T) {
 	if Match != 1 {
 		t.Errorf("Match should be 1")
 	}
-	
+
 }
 
 func TestRouteMatcher_xMethods(t *testing.T) {
-	
+
 	var request *http.Request = new(http.Request)
 	request.Method = GET_HTTP_METHOD
 	var context *Context = new(Context)
 	context.Request = request
-	
+
 	if GetMethod(context) != Match {
 		t.Errorf("GetMethod on a GET context should Match")
 	}
@@ -38,9 +38,9 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != DontCare {
 		t.Errorf("PostMethod on a GET context should DontCare")
 	}
-	
+
 	request.Method = POST_HTTP_METHOD
-	
+
 	if GetMethod(context) != DontCare {
 		t.Errorf("GetMethod on a POST context should DontCare")
 	}
@@ -53,9 +53,9 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != Match {
 		t.Errorf("PostMethod on a POST context should Match")
 	}
-	
+
 	request.Method = PUT_HTTP_METHOD
-	
+
 	if GetMethod(context) != DontCare {
 		t.Errorf("GetMethod on a PUT context should DontCare")
 	}
@@ -68,9 +68,9 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != DontCare {
 		t.Errorf("PostMethod on a PUT context should DontCare")
 	}
-	
+
 	request.Method = DELETE_HTTP_METHOD
-	
+
 	if GetMethod(context) != DontCare {
 		t.Errorf("GetMethod on a DELETE context should DontCare")
 	}
@@ -83,5 +83,5 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != DontCare {
 		t.Errorf("PostMethod on a DELETE context should DontCare")
 	}
-	
+
 }

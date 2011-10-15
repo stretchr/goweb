@@ -4,20 +4,19 @@ import "http"
 
 // The standard API response object
 type standardResponse struct {
-	
+
 	// The context of the request that initiated this response
 	C string
-	
+
 	// The HTTP Status code of this response
 	S int
-	
+
 	// The data (if any) for this response
 	D interface{}
-	
+
 	// A list of any errors that occurred while processing
 	// the response
 	E []string
-
 }
 
 // Makes a standardResponse object with the specified settings
@@ -43,6 +42,6 @@ func makeFailureStandardResponse(context string, statusCode int) *standardRespon
 	response := makeStandardResponse()
 	response.C = context
 	response.S = statusCode
-	response.E = []string{ http.StatusText(statusCode) }
+	response.E = []string{http.StatusText(statusCode)}
 	return response
 }

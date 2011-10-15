@@ -16,7 +16,6 @@ const NoMatch RouteMatcherFuncValue = 0
 // Indicates that the route should match
 const Match RouteMatcherFuncValue = 1
 
-
 // Returns Match if the Method of the http.Request in the specified
 // Context is GET, otherwise returns DontCare
 func GetMethod(c *Context) RouteMatcherFuncValue {

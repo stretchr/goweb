@@ -16,6 +16,8 @@ GOFILES=\
 	route_manager.go \
 	http_handler.go \
 	shortcut_funcs.go \
-	formatters.go
+	formatters.go \
+	decoders.go \
+	form_decode.go
 
 include $(GOROOT)/src/Make.pkg
