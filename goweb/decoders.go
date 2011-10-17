@@ -72,7 +72,7 @@ func (cx *Context) Fill(v interface{}) os.Error {
 	decoder, ok := decoders[ct]
 	if ok != true {
 		fmt.Printf("No RequestDecoder for %s defaulting to application/x-www-form-urlencoded", ct)
-		decoder = decoders["application/x-www-form-urlencoded; charset=UTF-8"]
+		decoder = decoders["application/x-www-form-urlencoded"]
 	}
 	// decode
 	err := decoder.Unmarshal(cx, v)
