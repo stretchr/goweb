@@ -1,16 +1,12 @@
 package goweb
 
-import (
-	"container/vector"
-)
-
 /*
 	RouteManager
 */
 
 // Manages routes and matching
 type RouteManager struct {
-	routes vector.Vector
+	routes []*Route
 }
 
 // Creates a route that maps the specified path to the specified controller
@@ -55,12 +51,12 @@ func (manager *RouteManager) MapFunc(path string, contorllerFunction func(*Conte
 
 // Adds a route to the manager
 func (manager *RouteManager) AddRoute(route *Route) {
-	manager.routes.Push(route)
+    manager.routes = append(manager.routes, route)
 }
 
 // Clears all routes
 func (manager *RouteManager) ClearRoutes() {
-	manager.routes = make(vector.Vector, 0)
+	manager.routes = make([]*Route, 0)
 }
 
 // Default instance of the RouteManager

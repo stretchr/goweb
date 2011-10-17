@@ -66,49 +66,49 @@ func TestMapRest(t *testing.T) {
 		var route *Route
 
 		// GET /people/1
-		route = DefaultRouteManager.routes[0].(*Route)
+		route = DefaultRouteManager.routes[0]
 		assertRoute(t, route, "/people/{id}", "GET", GetMethod)
 		handleRequest("/people/123", "GET")
 		assertLastCall(t, testRestController.(*TestRestController), "Read")
 		assertLastId(t, testRestController.(*TestRestController), "123")
 
 		// GET /people
-		route = DefaultRouteManager.routes[1].(*Route)
+		route = DefaultRouteManager.routes[1]
 		assertRoute(t, route, "/people", "GET", GetMethod)
 		handleRequest("/people", "GET")
 		assertLastCall(t, testRestController.(*TestRestController), "ReadMany")
 		assertNoLastId(t, testRestController.(*TestRestController))
 
 		// UPDATE /people/1
-		route = DefaultRouteManager.routes[2].(*Route)
+		route = DefaultRouteManager.routes[2]
 		assertRoute(t, route, "/people/{id}", "PUT", PutMethod)
 		handleRequest("/people/123", "PUT")
 		assertLastCall(t, testRestController.(*TestRestController), "Update")
 		assertLastId(t, testRestController.(*TestRestController), "123")
 
 		// UPDATE /people
-		route = DefaultRouteManager.routes[3].(*Route)
+		route = DefaultRouteManager.routes[3]
 		assertRoute(t, route, "/people", "PUT", PutMethod)
 		handleRequest("/people", "PUT")
 		assertLastCall(t, testRestController.(*TestRestController), "UpdateMany")
 		assertNoLastId(t, testRestController.(*TestRestController))
 
 		// DELETE /people/1
-		route = DefaultRouteManager.routes[4].(*Route)
+		route = DefaultRouteManager.routes[4]
 		assertRoute(t, route, "/people/{id}", "DELETE", DeleteMethod)
 		handleRequest("/people/123", "DELETE")
 		assertLastCall(t, testRestController.(*TestRestController), "Delete")
 		assertLastId(t, testRestController.(*TestRestController), "123")
 
 		// DELETE /people
-		route = DefaultRouteManager.routes[5].(*Route)
+		route = DefaultRouteManager.routes[5]
 		assertRoute(t, route, "/people", "DELETE", DeleteMethod)
 		handleRequest("/people", "DELETE")
 		assertLastCall(t, testRestController.(*TestRestController), "DeleteMany")
 		assertNoLastId(t, testRestController.(*TestRestController))
 
 		// CREATE /people
-		route = DefaultRouteManager.routes[6].(*Route)
+		route = DefaultRouteManager.routes[6]
 		assertRoute(t, route, "/people", "POST", PostMethod)
 		handleRequest("/people", "POST")
 		assertLastCall(t, testRestController.(*TestRestController), "Create")
@@ -132,7 +132,7 @@ func TestMapShortcut(t *testing.T) {
 	} else {
 
 		// get the route
-		var firstRoute *Route = manager.routes[0].(*Route)
+		var firstRoute *Route = manager.routes[0]
 
 		if firstRoute != createdRoute {
 			t.Errorf(".Map should return the same route it adds to .routes")
@@ -186,7 +186,7 @@ func TestMapFuncShortcut(t *testing.T) {
 	} else {
 
 		// get the route
-		var firstRoute *Route = manager.routes[0].(*Route)
+		var firstRoute *Route = manager.routes[0]
 
 		if firstRoute != createdRoute {
 			t.Errorf(".Map should return the same route it adds to .routes")

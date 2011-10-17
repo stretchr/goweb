@@ -17,14 +17,14 @@ func TestAddRoute(t *testing.T) {
 
 	manager.AddRoute(route1)
 
-	if manager.routes.Len() != 1 {
-		t.Errorf("len manager.Routes should be 1 not %d", manager.routes.Len())
+	if len(manager.routes) != 1 {
+		t.Errorf("len manager.Routes should be 1 not %d", len(manager.routes))
 	}
 
 	manager.AddRoute(route2)
 
-	if manager.routes.Len() != 2 {
-		t.Errorf("len manager.Routes should be 2 not %d", manager.routes.Len())
+	if len(manager.routes) != 2 {
+		t.Errorf("len manager.Routes should be 2 not %d", (manager.routes))
 	}
 
 }
@@ -41,7 +41,7 @@ func TestMap(t *testing.T) {
 	} else {
 
 		// get the route
-		var firstRoute *Route = manager.routes[0].(*Route)
+		var firstRoute *Route = manager.routes[0]
 
 		if firstRoute != createdRoute {
 			t.Errorf(".Map should return the same route it adds to .routes")
@@ -71,7 +71,7 @@ func TestMapWithMatcherFuncs(t *testing.T) {
 	} else {
 
 		// get the route
-		var firstRoute *Route = manager.routes[0].(*Route)
+		var firstRoute *Route = manager.routes[0]
 
 		if firstRoute != createdRoute {
 			t.Errorf(".Map should return the same route it adds to .routes")
@@ -135,7 +135,7 @@ func TestMapFunc(t *testing.T) {
 	} else {
 
 		// get the route
-		var firstRoute *Route = manager.routes[0].(*Route)
+		var firstRoute *Route = manager.routes[0]
 
 		if firstRoute != createdRoute {
 			t.Errorf(".Map should return the same route it adds to .routes")
