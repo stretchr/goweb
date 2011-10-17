@@ -2,6 +2,8 @@ package goweb
 
 import "testing"
 
+var context *Context = new(Context)
+
 func TestRegisteredFormatters(t *testing.T) {
 
 	if formatters[JSON_FORMAT] != defaultJsonFormatter {
@@ -31,7 +33,7 @@ func TestGetFormatter(t *testing.T) {
 func TestJsonFormatter(t *testing.T) {
 
 	input := "Good morning"
-	output, error := defaultJsonFormatter.Format(input)
+	output, error := defaultJsonFormatter.Format(context, input)
 
 	if error != nil {
 		t.Errorf("No errors should have occurred")

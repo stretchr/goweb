@@ -1,56 +1,59 @@
 package goweb
 
-import(
-    "fmt"
-    "json"
-    "io/ioutil"
-    "os"
-    "xml"
-    "strings"
+import (
+	"fmt"
+	"json"
+	"io/ioutil"
+	"os"
+	"xml"
+	"strings"
 )
 // types that impliment RequestDecoder can unmarshal 
 // the request body into an apropriate type/struct
 type RequestDecoder interface {
-    Unmarshal(cx *Context, v interface{}) (os.Error)
+	Unmarshal(cx *Context, v interface{}) os.Error
 }
 
 // a JSON decoder for request body (just a wrapper to json.Unmarshal)
-type JsonRequestDecoder struct {}
+type JsonRequestDecoder struct{}
+
 func (d *JsonRequestDecoder) Unmarshal(cx *Context, v interface{}) os.Error {
-    // read body 
-    data, err := ioutil.ReadAll(cx.Request.Body)
-    if err != nil {
-        return err
-    }
-    return json.Unmarshal(data, v)
+	// read body 
+	data, err := ioutil.ReadAll(cx.Request.Body)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, v)
 }
 
 // an XML decoder for request body
-type XmlRequestDecoder struct {}
+type XmlRequestDecoder struct{}
+
 func (d *XmlRequestDecoder) Unmarshal(cx *Context, v interface{}) os.Error {
-    // read body 
-    data, err := ioutil.ReadAll(cx.Request.Body)
-    if err != nil {
-        return err
-    }
-    buf := strings.NewReader(string(data))
-    return xml.Unmarshal(buf, v)
+	// read body 
+	data, err := ioutil.ReadAll(cx.Request.Body)
+	if err != nil {
+		return err
+	}
+	buf := strings.NewReader(string(data))
+	return xml.Unmarshal(buf, v)
 }
 
 // a form-enc decoder for request body
-type FormRequestDecoder struct {}
+type FormRequestDecoder struct{}
+
 func (d *FormRequestDecoder) Unmarshal(cx *Context, v interface{}) os.Error {
-    if cx.Request.Form == nil {
-        cx.Request.ParseForm()
-    }
-    return UnmarshalForm(cx.Request.Form, v)
+	if cx.Request.Form == nil {
+		cx.Request.ParseForm()
+	}
+	return UnmarshalForm(cx.Request.Form, v)
 }
 
 // map of Content-Type -> RequestDecoders
 var decoders map[string]RequestDecoder = map[string]RequestDecoder{
-    "application/json": new(JsonRequestDecoder),
-    "application/xml": new(XmlRequestDecoder),
-    "application/x-www-form-urlencoded": new(FormRequestDecoder),
+	"application/json":                  new(JsonRequestDecoder),
+	"application/xml":                   new(XmlRequestDecoder),
+	"application/x-www-form-urlencoded": new(FormRequestDecoder),
 }
 
 // goweb.Context Helper function to fill a variable with the contents
@@ -58,26 +61,24 @@ var decoders map[string]RequestDecoder = map[string]RequestDecoder{
 // on the content-type and an apropriate RequestDecoder
 // automatically selected
 func (cx *Context) Fill(v interface{}) os.Error {
-        // get content type
-    ct := cx.Request.Header.Get("Content-Type")
-   	if ct == "" {
-        return fmt.Errorf("No Content-Type set for request")
-    }
-    // ignore charset (after ';')
-    ct = strings.Split(ct, ";")[0]
-    // get request decoder
-    decoder, ok := decoders[ct] 
-    if ok != true {
-        fmt.Printf("No RequestDecoder for %s defaulting to application/x-www-form-urlencoded", ct)
-        decoder = decoders["application/x-www-form-urlencoded; charset=UTF-8"]
-    }
-    // decode
-    err := decoder.Unmarshal(cx, v)
-    if err != nil {
-        return err
-    }
-    // all clear
-    return nil
+	// get content type
+	ct := cx.Request.Header.Get("Content-Type")
+	if ct == "" {
+		return fmt.Errorf("No Content-Type set for request")
+	}
+	// ignore charset (after ';')
+	ct = strings.Split(ct, ";")[0]
+	// get request decoder
+	decoder, ok := decoders[ct]
+	if ok != true {
+		fmt.Printf("No RequestDecoder for %s defaulting to application/x-www-form-urlencoded", ct)
+		decoder = decoders["application/x-www-form-urlencoded; charset=UTF-8"]
+	}
+	// decode
+	err := decoder.Unmarshal(cx, v)
+	if err != nil {
+		return err
+	}
+	// all clear
+	return nil
 }
-
-
