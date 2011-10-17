@@ -18,10 +18,10 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	var context *Context
 
 	// we always need the form parsing
-	request.ParseForm()
+	//request.ParseForm()
 
 	// do we need to spoof the HTTP method?
-	overrideMethod := request.Form.Get(REQUEST_METHOD_OVERRIDE_PARAMETER)
+	overrideMethod := request.URL.Query().Get(REQUEST_METHOD_OVERRIDE_PARAMETER)
 	if overrideMethod != "" {
 		request.Method = strings.ToUpper(overrideMethod)
 	}
