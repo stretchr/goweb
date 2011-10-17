@@ -104,7 +104,7 @@ func RouteMatcherFunc_DontCare(c *Context) RouteMatcherFuncValue {
 
 type TestFormatter struct{}
 
-func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
+func (f *TestFormatter) Format(input interface{}) ([]uint8, os.Error) {
 	return []uint8(""), nil
 }
 func (f *TestFormatter) ContentType() string {
