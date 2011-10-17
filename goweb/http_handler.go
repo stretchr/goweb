@@ -17,9 +17,6 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	var found bool = false
 	var context *Context
 
-	// we always need the form parsing
-	//request.ParseForm()
-
 	// do we need to spoof the HTTP method?
 	overrideMethod := request.URL.Query().Get(REQUEST_METHOD_OVERRIDE_PARAMETER)
 	if overrideMethod != "" {

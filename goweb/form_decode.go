@@ -12,11 +12,11 @@ import (
 func UnmarshalForm(form url.Values, v interface{}) os.Error {
 	// check v is valid
 	rv := reflect.ValueOf(v).Elem()
-	if rv.Kind() != reflect.Ptr || rv.IsNil() {
-		return fmt.Errorf("v must be a valid pointer")
+    // dereference pointer
+	if rv.Kind() == reflect.Ptr {
+        rv = rv.Elem()
 	}
-	// get value
-	rv = rv.Elem()
+	// get type
 	rt := rv.Type()
 
 	if rv.Kind() == reflect.Struct {
@@ -27,7 +27,7 @@ func UnmarshalForm(form url.Values, v interface{}) os.Error {
 				return err
 			}
 		}
-	} else if rv.Kind() == reflect.Map {
+	} else if rv.Kind() == reflect.Map && !rv.IsNil() {
 		// for each form value add it to the map
 		for k, v := range form {
 			if len(v) > 0 {
@@ -35,7 +35,7 @@ func UnmarshalForm(form url.Values, v interface{}) os.Error {
 			}
 		}
 	} else {
-		return fmt.Errorf("v must point to a struct or map type")
+		return fmt.Errorf("v must point to a struct or a non-nil map type")
 	}
 	return nil
 }

@@ -63,16 +63,16 @@ var decoders map[string]RequestDecoder = map[string]RequestDecoder{
 func (cx *Context) Fill(v interface{}) os.Error {
 	// get content type
 	ct := cx.Request.Header.Get("Content-Type")
+    // default to urlencoded
 	if ct == "" {
-		return fmt.Errorf("No Content-Type set for request")
+        ct = "application/x-www-form-urlencoded"
 	}
 	// ignore charset (after ';')
 	ct = strings.Split(ct, ";")[0]
 	// get request decoder
 	decoder, ok := decoders[ct]
 	if ok != true {
-		fmt.Printf("No RequestDecoder for %s defaulting to application/x-www-form-urlencoded", ct)
-		decoder = decoders["application/x-www-form-urlencoded"]
+		return fmt.Errorf("Cannot decode request for %s data", ct)
 	}
 	// decode
 	err := decoder.Unmarshal(cx, v)
