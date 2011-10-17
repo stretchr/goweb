@@ -45,20 +45,12 @@ func makeContext(request *http.Request, responseWriter http.ResponseWriter, path
 
 // Gets the context value from the request
 func (c *Context) GetRequestContext() string {
-	request := c.Request
-	if request.Form == nil {
-		request.ParseForm()
-	}
-	return request.Form.Get(REQUEST_CONTEXT_PARAMETER)
+	return c.Request.URL.Query().Get(REQUEST_CONTEXT_PARAMETER)
 }
 
 // Gets the callback value from the request
 func (c *Context) GetCallback() string {
-	request := c.Request
-	if request.Form == nil {
-		request.ParseForm()
-	}
-	return request.Form.Get(REQUEST_CALLBACK_PARAMETER)
+	return c.Request.URL.Query().Get(REQUEST_CALLBACK_PARAMETER)
 }
 
 /*
