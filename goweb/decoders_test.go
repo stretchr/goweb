@@ -95,17 +95,17 @@ func TestJsonDecoding(t *testing.T) {
 	person := new(personTestStruct)
 	err := cx.Fill(person)
 	if err != nil {
-		t.Errorf("form-decoder:", err)
+		t.Errorf("json-decoder:", err)
 	}
 	// check it
 	if person.Name != "Alice" {
-		t.Errorf("form-decoder: expected 'alice' got %v", person.Name)
+		t.Errorf("json-decoder: expected 'alice' got %v", person.Name)
 	}
 	if person.Age != 25 {
-		t.Errorf("form-decoder: expected '25' got %v", person.Age)
+		t.Errorf("json-decoder: expected '25' got %v", person.Age)
 	}
 	if person.Atoms != int64(29357029322375092) {
-		t.Errorf("form-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
+		t.Errorf("json-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
 	}
 	// check the "context" param is still available
 	if cx.GetRequestContext() != "123" {
@@ -131,6 +131,39 @@ func TestJsonDecoding(t *testing.T) {
 // 	}
 // 
 // }
+
+func makeXmlData() string {
+	return `<Person><name>Alice</name><age>25</age><atoms>29357029322375092</atoms></Person>`
+}
+
+func TestXmlDecoding(t *testing.T) {
+	cx := makeTestContextWithContentTypeAndBody("application/xml", makeXmlData())
+	// check the "context" param is available (incase it consumes body)
+	if cx.GetRequestContext() != "123" {
+		t.Errorf("GetRequestContext() should return the correct request context before cx.Fill")
+	}
+	// fill struct 
+	var person personTestStruct
+	err := cx.Fill(&person)
+	if err != nil {
+		t.Errorf("xml-decoder:", err)
+	}
+	// check it
+	if person.Name != "Alice" {
+		t.Errorf("xml-decoder: expected 'alice' got %v", person.Name)
+	}
+	if person.Age != 25 {
+		t.Errorf("xml-decoder: expected '25' got %v", person.Age)
+	}
+	if person.Atoms != int64(29357029322375092) {
+		t.Errorf("xml-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
+	}
+	// check the "context" param is still available
+	if cx.GetRequestContext() != "123" {
+		t.Errorf("GetRequestContext() should return the correct request context after cx.Fill")
+	}
+}
+
 
 func TestUnknownDecoding(t *testing.T) {
 	cx := makeTestContextWithContentTypeAndBody("application/junk", "<<junk>>")
