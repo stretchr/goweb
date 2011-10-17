@@ -7,14 +7,14 @@ import (
 )
 
 type Formatter interface {
-	Format(input interface{}) ([]uint8, os.Error)
+	Format(context *Context, input interface{}) ([]uint8, os.Error)
 	ContentType() string
 }
 
 // Formatter for JSON
 type JsonFormatter struct{}
 
-func (f *JsonFormatter) Format(input interface{}) ([]uint8, os.Error) {
+func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
 	output, error := json.Marshal(input)
 	return []uint8(output), error
 }

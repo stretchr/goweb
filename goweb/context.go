@@ -119,7 +119,7 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 		c.ResponseWriter.Header()["Content-Type"] = []string{formatter.ContentType()}
 
 		// format the output
-		output, error := formatter.Format(obj)
+		output, error := formatter.Format(c, obj)
 
 		if error != nil {
 			c.writeInternalServerError(error, http.StatusInternalServerError)
@@ -220,7 +220,6 @@ func (c *Context) RespondWithNotImplemented() os.Error {
 
 // Responds with 302 Temporarily Moved (redirect)
 func (c *Context) RespondWithLocation(location string) os.Error {
-    c.ResponseWriter.Header().Set("Location", location)
-    return c.RespondWithStatus(302)
+	c.ResponseWriter.Header().Set("Location", location)
+	return c.RespondWithStatus(302)
 }
-
