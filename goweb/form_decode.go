@@ -12,9 +12,9 @@ import (
 func UnmarshalForm(form url.Values, v interface{}) os.Error {
 	// check v is valid
 	rv := reflect.ValueOf(v).Elem()
-    // dereference pointer
+	// dereference pointer
 	if rv.Kind() == reflect.Ptr {
-        rv = rv.Elem()
+		rv = rv.Elem()
 	}
 	// get type
 	rt := rv.Type()

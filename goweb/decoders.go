@@ -63,9 +63,9 @@ var decoders map[string]RequestDecoder = map[string]RequestDecoder{
 func (cx *Context) Fill(v interface{}) os.Error {
 	// get content type
 	ct := cx.Request.Header.Get("Content-Type")
-    // default to urlencoded
+	// default to urlencoded
 	if ct == "" {
-        ct = "application/x-www-form-urlencoded"
+		ct = "application/x-www-form-urlencoded"
 	}
 	// ignore charset (after ';')
 	ct = strings.Split(ct, ";")[0]
