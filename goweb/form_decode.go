@@ -22,7 +22,7 @@ func UnmarshalForm(form url.Values, v interface{}) os.Error {
 	if rv.Kind() == reflect.Struct {
 		// for each struct field on v
 		for i := 0; i < rt.NumField(); i++ {
-			err := unmarshalField(form, rt.Field(i).Name, rv.Field(i))
+			err := unmarshalField(form, rt.Field(i), rv.Field(i))
 			if err != nil {
 				return err
 			}
@@ -40,9 +40,9 @@ func UnmarshalForm(form url.Values, v interface{}) os.Error {
 	return nil
 }
 
-func unmarshalField(form url.Values, name string, v reflect.Value) os.Error {
+func unmarshalField(form url.Values, t reflect.StructField, v reflect.Value) os.Error {
 	// form field value
-	fvs := form[name]
+	fvs := form[t.Name]
 	if len(fvs) == 0 {
 		return nil
 	}
@@ -69,6 +69,17 @@ func unmarshalField(form url.Values, name string, v reflect.Value) os.Error {
 		if fv == "1" || fv == "true" || fv == "on" || fv == "yes" {
 			v.SetBool(true)
 		}
+    case reflect.Slice:
+        // ONLY STRING SLICES SO FAR
+        // add all form values to slice
+        sv := reflect.MakeSlice(t.Type, len(fvs), len(fvs))
+        for i,fv := range fvs {
+            svv := sv.Index(i)
+            svv.SetString(fv)
+        }
+        v.Set(sv)
+    default:
+        fmt.Println("unknown type", v.Kind())
 	}
 	return nil
 }

@@ -3,22 +3,34 @@ package goweb
 import (
 	"testing"
 	"url"
+    "fmt"
 	"bytes"
 	"http"
 	"io/ioutil"
+    "strconv"
+    "reflect"
 )
 
 type personTestStruct struct {
 	Name  string
 	Age   int
 	Atoms int64
+    Nicknames []string
 }
+
+var personName string = "Alice"
+var personAge int = 25
+var personAtoms int64 = 29357029322375092
+var personNicknames []string = []string{"ally", "al"}
 
 func makeFormData() string {
 	form := make(url.Values)
-	form.Add("Name", "Alice")
-	form.Add("Age", "25")
-	form.Add("Atoms", "29357029322375092")
+	form.Add("Name", personName)
+	form.Add("Age", strconv.Itoa(personAge))
+	form.Add("Atoms", strconv.Itoa64(personAtoms))
+    for _,name := range personNicknames {
+        form.Add("Nicknames", name)
+    }
 	return form.Encode()
 }
 
@@ -49,14 +61,17 @@ func TestFormDecoding(t *testing.T) {
 		t.Errorf("form-decoder:", err)
 	}
 	// check it
-	if person.Name != "Alice" {
-		t.Errorf("form-decoder: expected 'alice' got %v", person.Name)
+	if person.Name != personName {
+		t.Errorf("form-decoder: expected %v got %v", personName, person.Name)
 	}
-	if person.Age != 25 {
-		t.Errorf("form-decoder: expected '25' got %v", person.Age)
+	if person.Age != personAge {
+		t.Errorf("form-decoder: expected %v got %v", personAge, person.Age)
 	}
-	if person.Atoms != int64(29357029322375092) {
-		t.Errorf("form-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
+	if person.Atoms != personAtoms {
+		t.Errorf("form-decoders: expected %v got %v", personAtoms, person.Atoms)
+	}
+	if !reflect.DeepEqual(person.Nicknames, personNicknames) {
+		t.Errorf("form-decoders: expected %v got %v", personNicknames, person.Nicknames)
 	}
 }
 
@@ -70,19 +85,20 @@ func TestFormDecodingPtrPtr(t *testing.T) {
 		t.Errorf("form-decoder:", err)
 	}
 	// check it
-	if person.Name != "Alice" {
-		t.Errorf("form-decoder: expected 'alice' got %v", person.Name)
+	if person.Name != personName {
+		t.Errorf("form-decoder: expected %s got %v", personName, person.Name)
 	}
-	if person.Age != 25 {
-		t.Errorf("form-decoder: expected '25' got %v", person.Age)
+	if person.Age != personAge {
+		t.Errorf("form-decoder: expected %v got %v", personAge, person.Age)
 	}
-	if person.Atoms != int64(29357029322375092) {
-		t.Errorf("form-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
+	if person.Atoms != personAtoms {
+		t.Errorf("form-decoders: expected %v got %v", personAtoms, person.Atoms)
 	}
 }
 
 func makeJsonData() string {
-	return `{"Name":"Alice", "Age":25, "Atoms":29357029322375092}`
+    return fmt.Sprintf(`{"Name":"%s", "Age":%d, "Atoms":%d, "Nicknames":["%s","%s"]}`, 
+        personName, personAge, personAtoms, personNicknames[0], personNicknames[1])
 }
 
 func TestJsonDecoding(t *testing.T) {
@@ -98,14 +114,17 @@ func TestJsonDecoding(t *testing.T) {
 		t.Errorf("json-decoder:", err)
 	}
 	// check it
-	if person.Name != "Alice" {
-		t.Errorf("json-decoder: expected 'alice' got %v", person.Name)
+	if person.Name != personName {
+		t.Errorf("json-decoder: expected %v got %v", personName, person.Name)
 	}
-	if person.Age != 25 {
-		t.Errorf("json-decoder: expected '25' got %v", person.Age)
+	if person.Age != personAge {
+		t.Errorf("json-decoder: expected %v got %v", personAge, person.Age)
 	}
-	if person.Atoms != int64(29357029322375092) {
-		t.Errorf("json-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
+	if person.Atoms != personAtoms {
+		t.Errorf("json-decoders: expected %v got %v", personAtoms, person.Atoms)
+	}
+    if !reflect.DeepEqual(person.Nicknames, personNicknames) {
+		t.Errorf("json-decoders: expected %v got %v", personNicknames, person.Nicknames)
 	}
 	// check the "context" param is still available
 	if cx.GetRequestContext() != "123" {
@@ -133,7 +152,13 @@ func TestJsonDecoding(t *testing.T) {
 // }
 
 func makeXmlData() string {
-	return `<Person><name>Alice</name><age>25</age><atoms>29357029322375092</atoms></Person>`
+	return fmt.Sprintf(`<Person>
+        <name>%s</name>
+        <age>%d</age>
+        <atoms>%d</atoms>
+        <Nicknames>%s</Nicknames>
+        <Nicknames>%s</Nicknames>
+    </Person>`, personName, personAge, personAtoms, personNicknames[0], personNicknames[1])
 }
 
 func TestXmlDecoding(t *testing.T) {
@@ -149,14 +174,17 @@ func TestXmlDecoding(t *testing.T) {
 		t.Errorf("xml-decoder:", err)
 	}
 	// check it
-	if person.Name != "Alice" {
-		t.Errorf("xml-decoder: expected 'alice' got %v", person.Name)
+	if person.Name != personName {
+		t.Errorf("xml-decoder: expected %v got %v", personName, person.Name)
 	}
-	if person.Age != 25 {
-		t.Errorf("xml-decoder: expected '25' got %v", person.Age)
+	if person.Age != personAge {
+		t.Errorf("xml-decoder: expected %v got %v", personAge, person.Age)
 	}
-	if person.Atoms != int64(29357029322375092) {
-		t.Errorf("xml-decoders: expected int64 '29357029322375092' got %v", person.Atoms)
+	if person.Atoms != personAtoms {
+		t.Errorf("xml-decoders: expected %v got %v", personAtoms, person.Atoms)
+	}
+    if !reflect.DeepEqual(person.Nicknames, personNicknames) {
+		t.Errorf("xml-decoders: expected %v got %v", personNicknames, person.Nicknames)
 	}
 	// check the "context" param is still available
 	if cx.GetRequestContext() != "123" {
