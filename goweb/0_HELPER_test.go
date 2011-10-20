@@ -104,14 +104,14 @@ func RouteMatcherFunc_DontCare(c *Context) RouteMatcherFuncValue {
 
 type TestFormatter struct {
 	LastContext *Context
-	LastInput interface{}
+	LastInput   interface{}
 }
 
 func (f *TestFormatter) Format(context *Context, input interface{}) ([]uint8, os.Error) {
-	
+
 	f.LastContext = context
 	f.LastInput = input
-	
+
 	return []uint8(""), nil
 }
 func (f *TestFormatter) ContentType() string {

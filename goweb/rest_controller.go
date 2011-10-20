@@ -37,4 +37,3 @@ type RestManyDeleter interface {
 
 // Interface for RESTful controllers
 type RestController interface{}
-

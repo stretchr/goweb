@@ -19,7 +19,7 @@ type FormatterDecider func(*Context) (bool, os.Error)
 // Struct to hold a potential formatter option.  The Decider will
 // be used to determine if the specified Formatter will be used
 type FormatterOption struct {
-	Decider FormatterDecider
+	Decider   FormatterDecider
 	Formatter Formatter
 }
 
@@ -47,27 +47,26 @@ func ClearFormatters() {
 // Gets the relevant formatter for the specified context or
 // returns an error if no formatter is found
 func GetFormatter(context *Context) (Formatter, os.Error) {
-	
+
 	for i := len(formatterOptions); i > 0; i-- {
-		
+
 		hit, error := formatterOptions[i-1].Decider(context)
-		
+
 		// return the error if there was one
 		if error != nil {
 			return nil, error
 		}
-		
+
 		// if it was a hit, return this formatter
 		if hit {
 			return formatterOptions[i-1].Formatter, nil
 		}
-		
-	}
-	
-	return nil, os.NewError("No suitable Formatter could be found to deal with that request, consider calling ConfigureDefaultFormatters() or AddFormatter().  See http://code.google.com/p/goweb/wiki/APIDocumentation#Formatters")
-	
-}
 
+	}
+
+	return nil, os.NewError("No suitable Formatter could be found to deal with that request, consider calling ConfigureDefaultFormatters() or AddFormatter().  See http://code.google.com/p/goweb/wiki/APIDocumentation#Formatters")
+
+}
 
 /*
 
@@ -94,9 +93,9 @@ var defaultJsonFormatter *JsonFormatter = new(JsonFormatter)
 
 // Adds the default formatters to goweb so that
 func ConfigureDefaultFormatters() {
-	
-	AddFormatter(func(c *Context) (bool, os.Error) {	
+
+	AddFormatter(func(c *Context) (bool, os.Error) {
 		return c.Format == "JSON", nil
 	}, defaultJsonFormatter)
-	
+
 }

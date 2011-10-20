@@ -69,17 +69,17 @@ func unmarshalField(form url.Values, t reflect.StructField, v reflect.Value) os.
 		if fv == "1" || fv == "true" || fv == "on" || fv == "yes" {
 			v.SetBool(true)
 		}
-    case reflect.Slice:
-        // ONLY STRING SLICES SO FAR
-        // add all form values to slice
-        sv := reflect.MakeSlice(t.Type, len(fvs), len(fvs))
-        for i,fv := range fvs {
-            svv := sv.Index(i)
-            svv.SetString(fv)
-        }
-        v.Set(sv)
-    default:
-        fmt.Println("unknown type", v.Kind())
+	case reflect.Slice:
+		// ONLY STRING SLICES SO FAR
+		// add all form values to slice
+		sv := reflect.MakeSlice(t.Type, len(fvs), len(fvs))
+		for i, fv := range fvs {
+			svv := sv.Index(i)
+			svv.SetString(fv)
+		}
+		v.Set(sv)
+	default:
+		fmt.Println("unknown type", v.Kind())
 	}
 	return nil
 }

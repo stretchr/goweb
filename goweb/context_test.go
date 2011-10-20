@@ -19,22 +19,21 @@ func (c *Context) assertContentType(t *testing.T, contentType string) {
 }
 
 func MakeTestContext() *Context {
-	
+
 	ClearFormatters()
 	ConfigureDefaultFormatters()
-	
+
 	var request *http.Request = new(http.Request)
 	var responseWriter http.ResponseWriter
 	var pathParams ParameterValueMap = make(ParameterValueMap)
-	
+
 	return makeContext(request, responseWriter, pathParams)
 }
 
 func MakeTestContextWithUrl(u string) *Context {
 	ClearFormatters()
 	ConfigureDefaultFormatters()
-	
-	
+
 	var request *http.Request = new(http.Request)
 	request.URL, _ = url.Parse(u)
 	var responseWriter http.ResponseWriter
@@ -89,30 +88,30 @@ func TestContextFormat(t *testing.T) {
 }
 
 func TestWriteResponsePassesTheRightThingsToTheFormatter(t *testing.T) {
-	
+
 	context := MakeTestContextWithUrl(testDomain + "/people/123.json")
 	ClearFormatters()
 	context.ResponseWriter = new(TestResponseWriter)
-	
+
 	data := "This is the data"
-	
+
 	// create a test formatter that will always be used
 	var testFormatter *TestFormatter = new(TestFormatter)
-	AddFormatter(func(c *Context) (bool, os.Error) {	
+	AddFormatter(func(c *Context) (bool, os.Error) {
 		return true, nil
 	}, testFormatter)
-	
+
 	// write something
 	context.WriteResponse(data, 200)
-	
+
 	if testFormatter.LastContext != context {
 		t.Error("Correct context object was not passed to the formatter")
 	}
-	
+
 	if testFormatter.LastInput != data {
 		t.Error("Correct input (data) object was not passed to the formatter")
 	}
-	
+
 }
 
 /*
@@ -256,7 +255,6 @@ func TestRespondContentType(t *testing.T) {
 	context := MakeTestContextWithUrl(testDomain + "/people/123/groups/456.json")
 	context.ResponseWriter = response
 
-	
 	context.RespondWithData(data)
 
 	context.assertContentType(t, "application/json")

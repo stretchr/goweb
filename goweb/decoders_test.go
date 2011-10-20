@@ -3,19 +3,19 @@ package goweb
 import (
 	"testing"
 	"url"
-    "fmt"
+	"fmt"
 	"bytes"
 	"http"
 	"io/ioutil"
-    "strconv"
-    "reflect"
+	"strconv"
+	"reflect"
 )
 
 type personTestStruct struct {
-	Name  string
-	Age   int
-	Atoms int64
-    Nicknames []string
+	Name      string
+	Age       int
+	Atoms     int64
+	Nicknames []string
 }
 
 var personName string = "Alice"
@@ -28,9 +28,9 @@ func makeFormData() string {
 	form.Add("Name", personName)
 	form.Add("Age", strconv.Itoa(personAge))
 	form.Add("Atoms", strconv.Itoa64(personAtoms))
-    for _,name := range personNicknames {
-        form.Add("Nicknames", name)
-    }
+	for _, name := range personNicknames {
+		form.Add("Nicknames", name)
+	}
 	return form.Encode()
 }
 
@@ -97,8 +97,8 @@ func TestFormDecodingPtrPtr(t *testing.T) {
 }
 
 func makeJsonData() string {
-    return fmt.Sprintf(`{"Name":"%s", "Age":%d, "Atoms":%d, "Nicknames":["%s","%s"]}`, 
-        personName, personAge, personAtoms, personNicknames[0], personNicknames[1])
+	return fmt.Sprintf(`{"Name":"%s", "Age":%d, "Atoms":%d, "Nicknames":["%s","%s"]}`,
+		personName, personAge, personAtoms, personNicknames[0], personNicknames[1])
 }
 
 func TestJsonDecoding(t *testing.T) {
@@ -123,7 +123,7 @@ func TestJsonDecoding(t *testing.T) {
 	if person.Atoms != personAtoms {
 		t.Errorf("json-decoders: expected %v got %v", personAtoms, person.Atoms)
 	}
-    if !reflect.DeepEqual(person.Nicknames, personNicknames) {
+	if !reflect.DeepEqual(person.Nicknames, personNicknames) {
 		t.Errorf("json-decoders: expected %v got %v", personNicknames, person.Nicknames)
 	}
 	// check the "context" param is still available
@@ -183,7 +183,7 @@ func TestXmlDecoding(t *testing.T) {
 	if person.Atoms != personAtoms {
 		t.Errorf("xml-decoders: expected %v got %v", personAtoms, person.Atoms)
 	}
-    if !reflect.DeepEqual(person.Nicknames, personNicknames) {
+	if !reflect.DeepEqual(person.Nicknames, personNicknames) {
 		t.Errorf("xml-decoders: expected %v got %v", personNicknames, person.Nicknames)
 	}
 	// check the "context" param is still available
@@ -191,7 +191,6 @@ func TestXmlDecoding(t *testing.T) {
 		t.Errorf("GetRequestContext() should return the correct request context after cx.Fill")
 	}
 }
-
 
 func TestUnknownDecoding(t *testing.T) {
 	cx := makeTestContextWithContentTypeAndBody("application/junk", "<<junk>>")
