@@ -244,8 +244,8 @@ func init() {
 	*/
 	apiController := new(MyAPIController)
 	goweb.MapRest("/api", apiController)
-	
-	
+
+	goweb.ConfigureDefaultFormatters()
 	http.Handle("/", goweb.DefaultHttpHandler)
 	
 }

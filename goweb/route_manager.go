@@ -51,7 +51,7 @@ func (manager *RouteManager) MapFunc(path string, contorllerFunction func(*Conte
 
 // Adds a route to the manager
 func (manager *RouteManager) AddRoute(route *Route) {
-    manager.routes = append(manager.routes, route)
+  manager.routes = append(manager.routes, route)
 }
 
 // Clears all routes

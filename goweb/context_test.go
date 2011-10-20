@@ -18,14 +18,22 @@ func (c *Context) assertContentType(t *testing.T, contentType string) {
 }
 
 func MakeTestContext() *Context {
+	
+	ClearFormatters()
+	ConfigureDefaultFormatters()
+	
 	var request *http.Request = new(http.Request)
 	var responseWriter http.ResponseWriter
 	var pathParams ParameterValueMap = make(ParameterValueMap)
-
+	
 	return makeContext(request, responseWriter, pathParams)
 }
 
 func MakeTestContextWithUrl(u string) *Context {
+	ClearFormatters()
+	ConfigureDefaultFormatters()
+	
+	
 	var request *http.Request = new(http.Request)
 	request.URL, _ = url.Parse(u)
 	var responseWriter http.ResponseWriter
@@ -220,6 +228,7 @@ func TestRespondContentType(t *testing.T) {
 	context := MakeTestContextWithUrl(testDomain + "/people/123/groups/456.json")
 	context.ResponseWriter = response
 
+	
 	context.RespondWithData(data)
 
 	context.assertContentType(t, "application/json")

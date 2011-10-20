@@ -111,6 +111,15 @@ func (f *TestFormatter) ContentType() string {
 	return "text/plain"
 }
 
+type TestFormatter2 struct{}
+
+func (f *TestFormatter2) Format(input interface{}) ([]uint8, os.Error) {
+	return []uint8(""), nil
+}
+func (f *TestFormatter2) ContentType() string {
+	return "text/plain"
+}
+
 /*
 
 	Test helper functions

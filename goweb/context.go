@@ -108,7 +108,7 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 	var error os.Error
 
 	// get the formatter
-	formatter, error := GetFormatter(c.Format)
+	formatter, error := GetFormatter(c)
 
 	if error != nil {
 		c.writeInternalServerError(error, http.StatusNotFound)
