@@ -107,24 +107,25 @@ type TestFormatter struct {
 	LastInput   interface{}
 }
 
-func (f *TestFormatter) Format(context *Context, input interface{}) ([]uint8, os.Error) {
-
-	f.LastContext = context
+func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
+	cx.ResponseWriter.Header().Set("Content-Type", "text/plain")
+	f.LastContext = cx
 	f.LastInput = input
-
 	return []uint8(""), nil
 }
-func (f *TestFormatter) ContentType() string {
-	return "text/plain"
+
+func (f *TestFormatter) Match(cx *Context) bool {
+	return cx.Format == "ONE" || cx.Format == "JSON"
 }
 
 type TestFormatter2 struct{}
 
-func (f *TestFormatter2) Format(context *Context, input interface{}) ([]uint8, os.Error) {
+func (f *TestFormatter2) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
+	cx.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	return []uint8(""), nil
 }
-func (f *TestFormatter2) ContentType() string {
-	return "text/plain"
+func (f *TestFormatter2) Match(cx *Context) bool {
+	return cx.Format == "TWO"
 }
 
 /*

@@ -4,7 +4,6 @@ import (
 	"testing"
 	"http"
 	"url"
-	"os"
 )
 
 func (c *Context) assertContentType(t *testing.T, contentType string) {
@@ -96,10 +95,8 @@ func TestWriteResponsePassesTheRightThingsToTheFormatter(t *testing.T) {
 	data := "This is the data"
 
 	// create a test formatter that will always be used
-	var testFormatter *TestFormatter = new(TestFormatter)
-	AddFormatter(func(c *Context) (bool, os.Error) {
-		return true, nil
-	}, testFormatter)
+	testFormatter := new(TestFormatter)
+	AddFormatter(testFormatter)
 
 	// write something
 	context.WriteResponse(data, 200)

@@ -101,68 +101,34 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 
 	// get the formatter
 	formatter, error := GetFormatter(c)
-
-	if error != nil && formatter != nil {
+	if error != nil {
 		c.writeInternalServerError(error, http.StatusNotFound)
 		return error
+	}
+
+	// format the output
+	output, error := formatter.Format(c, obj)
+	if error != nil {
+		c.writeInternalServerError(error, http.StatusInternalServerError)
+		return error
+	}
+
+	// write the status code
+	if strings.Index(c.Request.URL.Raw, REQUEST_ALWAYS200_PARAMETER) > -1 {
+
+		// "always200"
+		// write a fake 200 status code (regardless of what the actual code was)
+		c.ResponseWriter.WriteHeader(http.StatusOK)
+
 	} else {
 
-		// set the content type
-		c.ResponseWriter.Header()["Content-Type"] = []string{formatter.ContentType()}
-
-		// format the output
-		output, error := formatter.Format(c, obj)
-
-		if error != nil {
-			c.writeInternalServerError(error, http.StatusInternalServerError)
-			return error
-		} else {
-
-			outputString := string(output)
-
-			/*
-				JSONP
-			*/
-			callback := c.GetCallback()
-			if callback != "" {
-
-				// wrap with function call
-
-				requestContext := c.GetRequestContext()
-
-				outputString = callback + "(" + outputString
-
-				if requestContext != "" {
-					outputString = outputString + ", \"" + requestContext + "\")"
-				} else {
-					outputString = outputString + ")"
-				}
-
-				// set the new content type
-				c.ResponseWriter.Header()["Content-Type"] = []string{JSONP_CONTENT_TYPE}
-
-			}
-
-			// write the status code
-			if strings.Index(c.Request.URL.Raw, REQUEST_ALWAYS200_PARAMETER) > -1 {
-
-				// "always200"
-				// write a fake 200 status code (regardless of what the actual code was)
-				c.ResponseWriter.WriteHeader(http.StatusOK)
-
-			} else {
-
-				// write the actual status code
-				c.ResponseWriter.WriteHeader(statusCode)
-
-			}
-
-			// write the output
-			c.ResponseWriter.Write([]uint8(outputString))
-
-		}
+		// write the actual status code
+		c.ResponseWriter.WriteHeader(statusCode)
 
 	}
+
+	// write the output
+	c.ResponseWriter.Write(output)
 
 	// success - no errors
 	return nil
