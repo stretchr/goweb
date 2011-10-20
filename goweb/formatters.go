@@ -8,7 +8,7 @@ import (
 // Interface describing an object responsible for formatting
 // other objects
 type Formatter interface {
-	Format(input interface{}) ([]uint8, os.Error)
+	Format(context *Context, input interface{}) ([]uint8, os.Error)
 	ContentType() string
 }
 
@@ -79,7 +79,7 @@ func GetFormatter(context *Context) (Formatter, os.Error) {
 type JsonFormatter struct{}
 
 // Converts a data object into JSON
-func (f *JsonFormatter) Format(input interface{}) ([]uint8, os.Error) {
+func (f *JsonFormatter) Format(context *Context, input interface{}) ([]uint8, os.Error) {
 	output, error := json.Marshal(input)
 	return []uint8(output), error
 }

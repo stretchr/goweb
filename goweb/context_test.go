@@ -4,6 +4,7 @@ import (
 	"testing"
 	"http"
 	"url"
+	"os"
 )
 
 func (c *Context) assertContentType(t *testing.T, contentType string) {
@@ -85,6 +86,33 @@ func TestContextFormat(t *testing.T) {
 	if context.Format != DEFAULT_FORMAT {
 		t.Errorf("Format should be the default format")
 	}
+}
+
+func TestWriteResponsePassesTheRightThingsToTheFormatter(t *testing.T) {
+	
+	context := MakeTestContextWithUrl(testDomain + "/people/123.json")
+	ClearFormatters()
+	context.ResponseWriter = new(TestResponseWriter)
+	
+	data := "This is the data"
+	
+	// create a test formatter that will always be used
+	var testFormatter *TestFormatter = new(TestFormatter)
+	AddFormatter(func(c *Context) (bool, os.Error) {	
+		return true, nil
+	}, testFormatter)
+	
+	// write something
+	context.WriteResponse(data, 200)
+	
+	if testFormatter.LastContext != context {
+		t.Error("Correct context object was not passed to the formatter")
+	}
+	
+	if testFormatter.LastInput != data {
+		t.Error("Correct input (data) object was not passed to the formatter")
+	}
+	
 }
 
 /*

@@ -45,20 +45,12 @@ func makeContext(request *http.Request, responseWriter http.ResponseWriter, path
 
 // Gets the context value from the request
 func (c *Context) GetRequestContext() string {
-	request := c.Request
-	if request.Form == nil {
-		request.ParseForm()
-	}
-	return request.Form.Get(REQUEST_CONTEXT_PARAMETER)
+	return c.Request.URL.Query().Get(REQUEST_CONTEXT_PARAMETER)
 }
 
 // Gets the callback value from the request
 func (c *Context) GetCallback() string {
-	request := c.Request
-	if request.Form == nil {
-		request.ParseForm()
-	}
-	return request.Form.Get(REQUEST_CALLBACK_PARAMETER)
+	return c.Request.URL.Query().Get(REQUEST_CALLBACK_PARAMETER)
 }
 
 /*
@@ -110,7 +102,7 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 	// get the formatter
 	formatter, error := GetFormatter(c)
 
-	if error != nil {
+	if error != nil && formatter != nil {
 		c.writeInternalServerError(error, http.StatusNotFound)
 		return error
 	} else {
@@ -119,7 +111,7 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 		c.ResponseWriter.Header()["Content-Type"] = []string{formatter.ContentType()}
 
 		// format the output
-		output, error := formatter.Format(obj)
+		output, error := formatter.Format(c, obj)
 
 		if error != nil {
 			c.writeInternalServerError(error, http.StatusInternalServerError)
@@ -220,7 +212,6 @@ func (c *Context) RespondWithNotImplemented() os.Error {
 
 // Responds with 302 Temporarily Moved (redirect)
 func (c *Context) RespondWithLocation(location string) os.Error {
-    c.ResponseWriter.Header().Set("Location", location)
-    return c.RespondWithStatus(302)
+	c.ResponseWriter.Header().Set("Location", location)
+	return c.RespondWithStatus(302)
 }
-

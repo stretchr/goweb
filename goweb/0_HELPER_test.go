@@ -102,9 +102,16 @@ func RouteMatcherFunc_DontCare(c *Context) RouteMatcherFuncValue {
 	return DontCare
 }
 
-type TestFormatter struct{}
+type TestFormatter struct {
+	LastContext *Context
+	LastInput interface{}
+}
 
-func (f *TestFormatter) Format(input interface{}) ([]uint8, os.Error) {
+func (f *TestFormatter) Format(context *Context, input interface{}) ([]uint8, os.Error) {
+	
+	f.LastContext = context
+	f.LastInput = input
+	
 	return []uint8(""), nil
 }
 func (f *TestFormatter) ContentType() string {
@@ -113,7 +120,7 @@ func (f *TestFormatter) ContentType() string {
 
 type TestFormatter2 struct{}
 
-func (f *TestFormatter2) Format(input interface{}) ([]uint8, os.Error) {
+func (f *TestFormatter2) Format(context *Context, input interface{}) ([]uint8, os.Error) {
 	return []uint8(""), nil
 }
 func (f *TestFormatter2) ContentType() string {
