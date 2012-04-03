@@ -2,10 +2,10 @@ package goweb
 
 import (
 	"testing"
-	"url"
+	"net/url"
 	"fmt"
 	"bytes"
-	"http"
+	"net/http"
 	"io/ioutil"
 	"strconv"
 	"reflect"
@@ -27,7 +27,7 @@ func makeFormData() string {
 	form := make(url.Values)
 	form.Add("Name", personName)
 	form.Add("Age", strconv.Itoa(personAge))
-	form.Add("Atoms", strconv.Itoa64(personAtoms))
+	form.Add("Atoms", strconv.FormatInt(personAtoms, 10))
 	for _, name := range personNicknames {
 		form.Add("Nicknames", name)
 	}

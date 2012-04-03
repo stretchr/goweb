@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 	"fmt"
-	"http"
+	"net/http"
 )
 
 // Wraps a controllerFunc to catch any panics, log them and

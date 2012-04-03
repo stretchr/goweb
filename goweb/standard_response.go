@@ -1,6 +1,6 @@
 package goweb
 
-import "http"
+import "net/http"
 
 // The standard API response object
 type standardResponse struct {

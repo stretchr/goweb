@@ -1,15 +1,15 @@
 package goweb
 
 import (
-	"os"
-	"json"
+	"encoding/json"
+	"errors"
 )
 
 // Interface describing an object responsible for 
 // handling transformed/formatted response data
 type Formatter interface {
 	// method to transform response
-	Format(context *Context, input interface{}) ([]uint8, os.Error)
+	Format(context *Context, input interface{}) ([]uint8, error)
 	// method that decides if this formatter will be used
 	Match(*Context) bool
 }
@@ -32,11 +32,11 @@ func ClearFormatters() {
 
 // Gets the relevant formatter for the specified context or
 // returns an error if no formatter is found
-func GetFormatter(cx *Context) (Formatter, os.Error) {
+func GetFormatter(cx *Context) (Formatter, error) {
 
 	// warn if someone cleared them all out
 	if formatters == nil {
-		return nil, os.NewError("There are no formatters set")
+		return nil, errors.New("There are no formatters set")
 	}
 
 	// check each formatter for a match
@@ -47,7 +47,7 @@ func GetFormatter(cx *Context) (Formatter, os.Error) {
 	}
 
 	// none found
-	return nil, os.NewError("No suitable Formatter could be found to deal with that request, consider calling ConfigureDefaultFormatters() or AddFormatter().  See http://code.google.com/p/goweb/wiki/APIDocumentation#Formatters")
+	return nil, errors.New("No suitable Formatter could be found to deal with that request, consider calling ConfigureDefaultFormatters() or AddFormatter().  See http://code.google.com/p/goweb/wiki/APIDocumentation#Formatters")
 
 }
 
@@ -61,7 +61,7 @@ func GetFormatter(cx *Context) (Formatter, os.Error) {
 type JsonFormatter struct{}
 
 // Readies response and converts input data into JSON
-func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
+func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, error) {
 	// marshal json
 	output, err := json.Marshal(input)
 	if err != nil {
@@ -98,7 +98,7 @@ func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Erro
 
 // Gets the "application/json" content type
 func (f *JsonFormatter) Match(cx *Context) bool {
-	return cx.Format == "JSON"
+	return cx.Format == "encoding/json"
 }
 
 // Adds the default formatters to goweb so that

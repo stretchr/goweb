@@ -2,8 +2,8 @@ package goweb
 
 import (
 	"testing"
-	"http"
-	"url"
+	"net/http"
+	"net/url"
 )
 
 func handleRequest(path string, httpMethod string) {

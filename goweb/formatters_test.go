@@ -108,7 +108,7 @@ func TestConfigureDefaultFormatterOptions(t *testing.T) {
 	ConfigureDefaultFormatters()
 
 	c := new(Context)
-	c.Format = "JSON"
+	c.Format = "encoding/json"
 
 	formatter, _ := GetFormatter(c)
 

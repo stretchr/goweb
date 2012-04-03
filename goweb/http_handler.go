@@ -1,9 +1,9 @@
 package goweb
 
 import (
-	"http"
-	"os"
+	"net/http"
 	"strings"
+	"errors"
 )
 
 // A handler type to handle actual http requests using the
@@ -33,7 +33,7 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 		// create the request context (with no parameter keys obviously)
 		context = makeContext(request, responseWriter, nil)
 
-		error := os.NewError(ERR_NO_MATCHING_ROUTE)
+		error := errors.New(ERR_NO_MATCHING_ROUTE)
 		handler.HandleError(context, error)
 
 	} else {
@@ -44,7 +44,7 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 		// make sure we have a controller
 		if controller == nil {
 
-			error := os.NewError(ERR_NO_CONTROLLER)
+			error := errors.New(ERR_NO_CONTROLLER)
 			handler.HandleError(context, error)
 
 		} else {
@@ -93,14 +93,14 @@ func (h *HttpHandler) GetMathingRoute(responseWriter http.ResponseWriter, reques
 }
 
 // Handles the specified error by passing it back to the user
-func (h *HttpHandler) HandleError(context *Context, error os.Error) {
+func (h *HttpHandler) HandleError(context *Context, error error) {
 
 	if context.ResponseWriter == nil {
 		panic("ResponseWriter cannot be nil")
 	}
 
 	// handle the error
-	errorString := ERR_STANDARD_PREFIX + error.String()
+	errorString := ERR_STANDARD_PREFIX + error.Error()
 	http.Error(context.ResponseWriter, errorString, http.StatusInternalServerError)
 
 }
@@ -125,6 +125,6 @@ var DefaultHttpHandler *HttpHandler = new(HttpHandler)
 //	   goweb.ListenAndServe(":8080")
 //   }
 //
-func ListenAndServe(pattern string) os.Error {
+func ListenAndServe(pattern string) error {
 	return http.ListenAndServe(pattern, DefaultHttpHandler)
 }

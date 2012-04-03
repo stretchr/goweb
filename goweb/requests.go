@@ -1,7 +1,7 @@
 package goweb
 
 import (
-	"http"
+	"net/http"
 	"strings"
 )
 
@@ -12,7 +12,7 @@ const HTML_FORMAT string = "HTML"
 const XML_FORMAT string = "XML"
 
 // Constant string for JSON format
-const JSON_FORMAT string = "JSON"
+const JSON_FORMAT string = "json"
 
 // The fallback format if one cannot be determined by the request
 const DEFAULT_FORMAT string = JSON_FORMAT

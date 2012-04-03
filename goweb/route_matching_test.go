@@ -2,7 +2,7 @@ package goweb
 
 import (
 	"testing"
-	"http"
+	"net/http"
 )
 
 func TestRouteMatcherFuncValue(t *testing.T) {

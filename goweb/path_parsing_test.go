@@ -100,7 +100,7 @@ func assertFileExtension(t *testing.T, path string, expected string) {
 }
 func TestGetFileExtension(t *testing.T) {
 
-	assertFileExtension(t, "/people.json", "json")
+	assertFileExtension(t, "/people.json", "encoding/json")
 	assertFileExtension(t, "http://www.test.com/people.yml", "yml")
 	assertFileExtension(t, "/people/123/groups/177.Xml", "Xml")
 	assertFileExtension(t, "/people/123/groups/177.XML", "XML")

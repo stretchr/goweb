@@ -2,8 +2,8 @@ package goweb
 
 import (
 	"testing"
-	"http"
-	"url"
+	"net/http"
+	"net/url"
 )
 
 func (c *Context) assertContentType(t *testing.T, contentType string) {
@@ -46,6 +46,7 @@ func TestMakeContext(t *testing.T) {
 	var request *http.Request = new(http.Request)
 	var responseWriter http.ResponseWriter
 	var pathParams ParameterValueMap = make(ParameterValueMap)
+	pathParams["something"] = "this"
 
 	context := makeContext(request, responseWriter, pathParams)
 
@@ -55,7 +56,7 @@ func TestMakeContext(t *testing.T) {
 	if context.ResponseWriter != responseWriter {
 		t.Errorf("context.ResponseWriter incorrect")
 	}
-	if context.PathParams != pathParams {
+	if context.PathParams["something"] != "this" {
 		t.Errorf("context.PathParams incorrect")
 	}
 

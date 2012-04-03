@@ -1,8 +1,7 @@
 package goweb
 
 import (
-	"http"
-	"os"
+	"net/http"
 	"strings"
 )
 
@@ -80,7 +79,7 @@ func (c *Context) IsDelete() bool {
 /*
 	RespondWith* methods
 */
-func (c *Context) Respond(data interface{}, statusCode int, errors []string, context *Context) os.Error {
+func (c *Context) Respond(data interface{}, statusCode int, errors []string, context *Context) error {
 
 	// make the standard response object
 	obj := makeStandardResponse()
@@ -95,9 +94,9 @@ func (c *Context) Respond(data interface{}, statusCode int, errors []string, con
 
 // Writes the specified object out (with the specified status code)
 // using the appropriate formatter
-func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
+func (c *Context) WriteResponse(obj interface{}, statusCode int) error {
 
-	var error os.Error
+	var error error
 
 	// get the formatter
 	formatter, error := GetFormatter(c)
@@ -114,7 +113,7 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 	}
 
 	// write the status code
-	if strings.Index(c.Request.URL.Raw, REQUEST_ALWAYS200_PARAMETER) > -1 {
+	if strings.Index(c.Request.URL.String(), REQUEST_ALWAYS200_PARAMETER) > -1 {
 
 		// "always200"
 		// write a fake 200 status code (regardless of what the actual code was)
@@ -135,49 +134,49 @@ func (c *Context) WriteResponse(obj interface{}, statusCode int) os.Error {
 
 }
 
-func (c *Context) writeInternalServerError(error os.Error, statusCode int) {
-	http.Error(c.ResponseWriter, error.String(), statusCode)
+func (c *Context) writeInternalServerError(error error, statusCode int) {
+	http.Error(c.ResponseWriter, error.Error(), statusCode)
 }
 
 // Responds with the specified HTTP status code defined in RFC 2616
 // see http://golang.org/src/pkg/http/status.go for options
-func (c *Context) RespondWithStatus(statusCode int) os.Error {
+func (c *Context) RespondWithStatus(statusCode int) error {
 	return c.Respond(nil, statusCode, nil, c)
 }
 
 // Responds with the specified HTTP status code defined in RFC 2616
 // and adds the description to the errors list
 // see http://golang.org/src/pkg/http/status.go for options
-func (c *Context) RespondWithError(statusCode int) os.Error {
+func (c *Context) RespondWithError(statusCode int) error {
 	return c.RespondWithErrorMessage(http.StatusText(statusCode), statusCode)
 }
 
-func (c *Context) RespondWithErrorMessage(message string, statusCode int) os.Error {
+func (c *Context) RespondWithErrorMessage(message string, statusCode int) error {
 	return c.Respond(nil, statusCode, []string{message}, c)
 }
 
 // Responds with the specified data
-func (c *Context) RespondWithData(data interface{}) os.Error {
+func (c *Context) RespondWithData(data interface{}) error {
 	return c.Respond(data, http.StatusOK, nil, c)
 }
 
 // Responds with OK status (200) and no data
-func (c *Context) RespondWithOK() os.Error {
+func (c *Context) RespondWithOK() error {
 	return c.RespondWithData(nil)
 }
 
 // Responds with 404 Not Found
-func (c *Context) RespondWithNotFound() os.Error {
+func (c *Context) RespondWithNotFound() error {
 	return c.RespondWithError(http.StatusNotFound)
 }
 
 // Responds with 501 Not Implemented
-func (c *Context) RespondWithNotImplemented() os.Error {
+func (c *Context) RespondWithNotImplemented() error {
 	return c.RespondWithError(http.StatusNotImplemented)
 }
 
 // Responds with 302 Temporarily Moved (redirect)
-func (c *Context) RespondWithLocation(location string) os.Error {
+func (c *Context) RespondWithLocation(location string) error {
 	c.ResponseWriter.Header().Set("Location", location)
 	return c.RespondWithStatus(302)
 }

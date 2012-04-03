@@ -2,9 +2,9 @@ package goweb
 
 import (
 	"testing"
-	"http"
+	"net/http"
 	"strings"
-	"url"
+	"net/url"
 )
 
 /*
@@ -63,28 +63,28 @@ func TestGetMatchingRoute_WithMethodOverrideParameter(t *testing.T) {
 
 	// handle the request
 	u, _ = url.Parse(testDomain + "/api")
-	testRequest, _ = http.NewRequest("GET", u.Raw, nil)
+	testRequest, _ = http.NewRequest("GET", u.String(), nil)
 	DefaultHttpHandler.ServeHTTP(testResponse, testRequest)
 	if lastMethod != "GET" {
 		t.Errorf("ServeHTTP with no method override parameter should the actual HTTP method.  GET expected but was '%s'", lastMethod)
 	}
 
 	u, _ = url.Parse(testDomain + "/api?" + REQUEST_METHOD_OVERRIDE_PARAMETER + "=post")
-	testRequest, _ = http.NewRequest("GET", u.Raw, nil)
+	testRequest, _ = http.NewRequest("GET", u.String(), nil)
 	DefaultHttpHandler.ServeHTTP(testResponse, testRequest)
 	if lastMethod != "POST" {
 		t.Errorf("ServeHTTP with method override parameter should use that method instead.  POST expected but was '%s'", lastMethod)
 	}
 
 	u, _ = url.Parse(testDomain + "/api?" + REQUEST_METHOD_OVERRIDE_PARAMETER + "=Put")
-	testRequest, _ = http.NewRequest("GET", u.Raw, nil)
+	testRequest, _ = http.NewRequest("GET", u.String(), nil)
 	DefaultHttpHandler.ServeHTTP(testResponse, testRequest)
 	if lastMethod != "PUT" {
 		t.Errorf("ServeHTTP with method override parameter should use that method instead.  PUT expected but was '%s'", lastMethod)
 	}
 
 	u, _ = url.Parse(testDomain + "/api?" + REQUEST_METHOD_OVERRIDE_PARAMETER + "=DELETE")
-	testRequest, _ = http.NewRequest("GET", u.Raw, nil)
+	testRequest, _ = http.NewRequest("GET", u.String(), nil)
 	DefaultHttpHandler.ServeHTTP(testResponse, testRequest)
 	if lastMethod != "DELETE" {
 		t.Errorf("ServeHTTP with method override parameter should use that method instead.  DELETE expected but was '%s'", lastMethod)

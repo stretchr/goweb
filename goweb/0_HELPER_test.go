@@ -1,8 +1,7 @@
 package goweb
 
 import (
-	"os"
-	"http"
+	"net/http"
 	"testing"
 )
 
@@ -79,7 +78,7 @@ func (rw *TestResponseWriter) Header() http.Header {
 
 	return rw.header
 }
-func (rw *TestResponseWriter) Write(bytes []byte) (int, os.Error) {
+func (rw *TestResponseWriter) Write(bytes []byte) (int, error) {
 
 	// add these bytes to the output string
 	rw.Output = rw.Output + string(bytes)
@@ -107,7 +106,7 @@ type TestFormatter struct {
 	LastInput   interface{}
 }
 
-func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
+func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, error) {
 	cx.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	f.LastContext = cx
 	f.LastInput = input
@@ -115,12 +114,12 @@ func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, os.Erro
 }
 
 func (f *TestFormatter) Match(cx *Context) bool {
-	return cx.Format == "ONE" || cx.Format == "JSON"
+	return cx.Format == "ONE" || cx.Format == "encoding/json"
 }
 
 type TestFormatter2 struct{}
 
-func (f *TestFormatter2) Format(cx *Context, input interface{}) ([]uint8, os.Error) {
+func (f *TestFormatter2) Format(cx *Context, input interface{}) ([]uint8, error) {
 	cx.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	return []uint8(""), nil
 }

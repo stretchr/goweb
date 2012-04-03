@@ -1,15 +1,14 @@
 package goweb
 
 import (
-	"os"
 	"reflect"
 	"strconv"
-	"url"
+	"net/url"
 	"fmt"
 )
 
 // Fill a struct `v` from the values in `form`
-func UnmarshalForm(form url.Values, v interface{}) os.Error {
+func UnmarshalForm(form url.Values, v interface{}) error {
 	// check v is valid
 	rv := reflect.ValueOf(v).Elem()
 	// dereference pointer
@@ -40,7 +39,7 @@ func UnmarshalForm(form url.Values, v interface{}) os.Error {
 	return nil
 }
 
-func unmarshalField(form url.Values, t reflect.StructField, v reflect.Value) os.Error {
+func unmarshalField(form url.Values, t reflect.StructField, v reflect.Value) error {
 	// form field value
 	fvs := form[t.Name]
 	if len(fvs) == 0 {
@@ -51,13 +50,13 @@ func unmarshalField(form url.Values, t reflect.StructField, v reflect.Value) os.
 	switch v.Kind() {
 	case reflect.Int64:
 		// convert to Int64
-		if i, err := strconv.Atoi64(fv); err == nil {
+		if i, err := strconv.ParseInt(fv, 10, 64); err == nil {
 			v.SetInt(i)
 		}
 	case reflect.Int:
 		// convert to Int
 		// convert to Int64
-		if i, err := strconv.Atoi64(fv); err == nil {
+		if i, err := strconv.ParseInt(fv, 10, 64); err == nil {
 			v.SetInt(i)
 		}
 	case reflect.String:
