@@ -1,12 +1,13 @@
 package goweb
 
 import (
-	"fmt"
 	"encoding/json"
-	"io/ioutil"
 	"encoding/xml"
+	"fmt"
+	"io/ioutil"
 	"strings"
 )
+
 // types that impliment RequestDecoder can unmarshal 
 // the request body into an apropriate type/struct
 type RequestDecoder interface {
@@ -34,8 +35,7 @@ func (d *XmlRequestDecoder) Unmarshal(cx *Context, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	buf := strings.NewReader(string(data))
-	return xml.Unmarshal(buf, v)
+	return xml.Unmarshal(data, v)
 }
 
 // a form-enc decoder for request body
