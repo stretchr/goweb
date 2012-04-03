@@ -17,7 +17,7 @@ func TestFormatStrings(t *testing.T) {
 	if XML_FORMAT != "XML" {
 		t.Errorf("XML_FORMAT should be XML")
 	}
-	if JSON_FORMAT != "encoding/json" {
+	if JSON_FORMAT != "json" {
 		t.Errorf("JSON_FORMAT should be JSON")
 	}
 

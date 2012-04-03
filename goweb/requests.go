@@ -12,7 +12,7 @@ const HTML_FORMAT string = "HTML"
 const XML_FORMAT string = "XML"
 
 // Constant string for JSON format
-const JSON_FORMAT string = "json"
+const JSON_FORMAT string = "JSON"
 
 // The fallback format if one cannot be determined by the request
 const DEFAULT_FORMAT string = JSON_FORMAT

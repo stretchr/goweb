@@ -114,7 +114,7 @@ func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, error) 
 }
 
 func (f *TestFormatter) Match(cx *Context) bool {
-	return cx.Format == "ONE" || cx.Format == "encoding/json"
+	return cx.Format == "ONE" || cx.Format == JSON_FORMAT
 }
 
 type TestFormatter2 struct{}

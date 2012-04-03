@@ -68,7 +68,7 @@ func TestContextFormat(t *testing.T) {
 
 	context = MakeTestContextWithUrl(testDomain + "/people/123.json")
 	if context.Format != JSON_FORMAT {
-		t.Errorf("Format should be JSON")
+		t.Errorf("Format should be JSON not %s", context.Format)
 	}
 
 	context = MakeTestContextWithUrl(testDomain + "/people/123.xml")
@@ -103,7 +103,7 @@ func TestWriteResponsePassesTheRightThingsToTheFormatter(t *testing.T) {
 	context.WriteResponse(data, 200)
 
 	if testFormatter.LastContext != context {
-		t.Error("Correct context object was not passed to the formatter")
+		t.Errorf("Correct context object was not passed to the formatter. ", testFormatter.LastContext, context)
 	}
 
 	if testFormatter.LastInput != data {
