@@ -272,7 +272,7 @@ func TestRespondWithData(t *testing.T) {
 		t.Errorf("RespondWithData should have written 200 status (not %d)", response.WrittenHeaderInt)
 	}
 
-	assertEqual(t, response.Output, "{\"C\":\"\",\"S\":200,\"D\":\"This is the data\",\"E\":[]}", "RespondWithData wrong")
+	assertEqual(t, response.Output, "{\"C\":\"\",\"S\":200,\"D\":\"This is the data\",\"E\":null}", "RespondWithData wrong")
 
 }
 
@@ -317,7 +317,7 @@ func TestRespondWithStatus(t *testing.T) {
 	if response.WrittenHeaderInt != http.StatusNotImplemented {
 		t.Errorf("RespondWithData should have written %d status (not %d)", http.StatusNotImplemented, response.WrittenHeaderInt)
 	}
-	assertEqual(t, response.Output, "{\"C\":\"\",\"S\":501,\"D\":null,\"E\":[]}", "for TestRespondWithStatus")
+	assertEqual(t, response.Output, "{\"C\":\"\",\"S\":501,\"D\":null,\"E\":null}", "for TestRespondWithStatus")
 
 }
 
@@ -347,7 +347,7 @@ func TestRespondWithOK(t *testing.T) {
 	if response.WrittenHeaderInt != http.StatusOK {
 		t.Errorf("RespondWithData should have written %d status (not %d)", http.StatusOK, response.WrittenHeaderInt)
 	}
-	assertEqual(t, response.Output, "{\"C\":\"123\",\"S\":200,\"D\":null,\"E\":[]}", "for TestRespondWithStatus")
+	assertEqual(t, response.Output, "{\"C\":\"123\",\"S\":200,\"D\":null,\"E\":null}", "for TestRespondWithStatus")
 
 }
 
@@ -376,7 +376,7 @@ func TestRespondWithObject_ContextIsPassedThrough(t *testing.T) {
 
 	gowebContext.RespondWithData("data")
 
-	assertEqual(t, response.Output, "{\"C\":\""+requestContext+"\",\"S\":200,\"D\":\"data\",\"E\":[]}", "for TestRespondWithObject_ContextIsPassedThrough")
+	assertEqual(t, response.Output, "{\"C\":\""+requestContext+"\",\"S\":200,\"D\":\"data\",\"E\":null}", "for TestRespondWithObject_ContextIsPassedThrough")
 
 }
 
@@ -393,7 +393,7 @@ func TestRespondWithData_WithCallbackFunction(t *testing.T) {
 		t.Errorf("RespondWithData should have written 200 status (not %d)", response.WrittenHeaderInt)
 	}
 
-	assertEqual(t, response.Output, "doSomething({\"C\":\"\",\"S\":200,\"D\":\"This is the data\",\"E\":[]})", "TestRespondWithData_WithCallbackFunction wrong")
+	assertEqual(t, response.Output, "doSomething({\"C\":\"\",\"S\":200,\"D\":\"This is the data\",\"E\":null})", "TestRespondWithData_WithCallbackFunction wrong")
 
 	context.assertContentType(t, JSONP_CONTENT_TYPE)
 
@@ -411,7 +411,7 @@ func TestRespondWithData_WithCallbackFunctionAndContext(t *testing.T) {
 		t.Errorf("RespondWithData should have written 200 status (not %d)", response.WrittenHeaderInt)
 	}
 
-	assertEqual(t, response.Output, "doSomething({\"C\":\"123\",\"S\":200,\"D\":\"This is the data\",\"E\":[]}, \"123\")", "TestRespondWithData_WithCallbackFunction wrong")
+	assertEqual(t, response.Output, "doSomething({\"C\":\"123\",\"S\":200,\"D\":\"This is the data\",\"E\":null}, \"123\")", "TestRespondWithData_WithCallbackFunction wrong")
 
 }
 
@@ -428,6 +428,6 @@ func TestAlways200(t *testing.T) {
 		t.Errorf("RespondWithData should have written 200 status (not %d) with ?always200", response.WrittenHeaderInt)
 	}
 
-	assertEqual(t, response.Output, "doSomething({\"C\":\"123\",\"S\":500,\"D\":null,\"E\":[]}, \"123\")", "TestAlways200 wrong")
+	assertEqual(t, response.Output, "doSomething({\"C\":\"123\",\"S\":500,\"D\":null,\"E\":null}, \"123\")", "TestAlways200 wrong")
 
 }
