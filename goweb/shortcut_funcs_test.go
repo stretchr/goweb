@@ -37,7 +37,7 @@ func assertRoute(t *testing.T, r *Route, expectedPath string, description string
 		var found bool = false
 
 		for _, existing := range r.MatcherFuncs {
-			if existing == expected {
+			if existing(nil) == expected(nil) {
 				found = true
 				break
 			}
@@ -150,16 +150,16 @@ func TestMapShortcut(t *testing.T) {
 			t.Errorf("MatcherFuncs should be 4 (not %d)", len(firstRoute.MatcherFuncs))
 		} else {
 
-			if firstRoute.MatcherFuncs[0] != RouteMatcherFunc_NoMatch {
+			if firstRoute.MatcherFuncs[0](nil) != RouteMatcherFunc_NoMatch(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[0] should be RouteMatcherFunc_NoMatch")
 			}
-			if firstRoute.MatcherFuncs[1] != RouteMatcherFunc_DontCare {
+			if firstRoute.MatcherFuncs[1](nil) != RouteMatcherFunc_DontCare(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[1] should be RouteMatcherFunc_DontCare")
 			}
-			if firstRoute.MatcherFuncs[2] != RouteMatcherFunc_DontCare {
+			if firstRoute.MatcherFuncs[2](nil) != RouteMatcherFunc_DontCare(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[2] should be RouteMatcherFunc_DontCare")
 			}
-			if firstRoute.MatcherFuncs[3] != RouteMatcherFunc_Match {
+			if firstRoute.MatcherFuncs[3](nil) != RouteMatcherFunc_Match(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[3] should be RouteMatcherFunc_Match")
 			}
 
@@ -200,16 +200,16 @@ func TestMapFuncShortcut(t *testing.T) {
 			t.Errorf("MatcherFuncs should be 4 (not %d)", len(firstRoute.MatcherFuncs))
 		} else {
 
-			if firstRoute.MatcherFuncs[0] != RouteMatcherFunc_NoMatch {
+			if firstRoute.MatcherFuncs[0](nil) != RouteMatcherFunc_NoMatch(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[0] should be RouteMatcherFunc_NoMatch")
 			}
-			if firstRoute.MatcherFuncs[1] != RouteMatcherFunc_DontCare {
+			if firstRoute.MatcherFuncs[1](nil) != RouteMatcherFunc_DontCare(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[1] should be RouteMatcherFunc_DontCare")
 			}
-			if firstRoute.MatcherFuncs[2] != RouteMatcherFunc_DontCare {
+			if firstRoute.MatcherFuncs[2](nil) != RouteMatcherFunc_DontCare(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[2] should be RouteMatcherFunc_DontCare")
 			}
-			if firstRoute.MatcherFuncs[3] != RouteMatcherFunc_Match {
+			if firstRoute.MatcherFuncs[3](nil) != RouteMatcherFunc_Match(nil) {
 				t.Errorf("firstRoute.MatcherFuncs[3] should be RouteMatcherFunc_Match")
 			}
 
