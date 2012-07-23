@@ -1,9 +1,9 @@
 package goweb
 
 import (
-	"testing"
 	"net/http"
 	"net/url"
+	"testing"
 )
 
 func handleRequest(path string, httpMethod string) {
@@ -31,13 +31,14 @@ func assertRoute(t *testing.T, r *Route, expectedPath string, description string
 		t.Errorf("route.Path inorrect. Expected \"%s\" but was \"%s\".", expectedPath, r.Path)
 	}
 
-	// ensue each matcher function is present
+	// ensure each matcher function is present
 	for _, expected := range matcherFuncs {
 
 		var found bool = false
 
 		for _, existing := range r.MatcherFuncs {
-			if existing(nil) == expected(nil) {
+			testContext := MakeTestContext()
+			if existing(testContext) == expected(testContext) {
 				found = true
 				break
 			}

@@ -1,9 +1,9 @@
 package goweb
 
 import (
-	"testing"
 	"net/http"
 	"net/url"
+	"testing"
 )
 
 /*

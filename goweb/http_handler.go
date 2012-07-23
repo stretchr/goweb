@@ -1,9 +1,9 @@
 package goweb
 
 import (
+	"errors"
 	"net/http"
 	"strings"
-	"errors"
 )
 
 // A handler type to handle actual http requests using the

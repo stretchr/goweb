@@ -3,6 +3,7 @@ package goweb
 import (
 	"encoding/json"
 	"errors"
+	"strings"
 )
 
 // Interface describing an object responsible for 
@@ -98,7 +99,7 @@ func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, error) 
 
 // Gets the "application/json" content type
 func (f *JsonFormatter) Match(cx *Context) bool {
-	return cx.Format == JSON_FORMAT
+	return strings.ToUpper(cx.Format) == JSON_FORMAT
 }
 
 // Adds the default formatters to goweb so that

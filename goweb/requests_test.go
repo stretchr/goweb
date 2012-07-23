@@ -1,9 +1,9 @@
 package goweb
 
 import (
-	"testing"
 	"net/http"
 	"net/url"
+	"testing"
 )
 
 func TestFormatStrings(t *testing.T) {
@@ -17,7 +17,7 @@ func TestFormatStrings(t *testing.T) {
 	if XML_FORMAT != "XML" {
 		t.Errorf("XML_FORMAT should be XML")
 	}
-	if JSON_FORMAT != "json" {
+	if JSON_FORMAT != "JSON" {
 		t.Errorf("JSON_FORMAT should be JSON")
 	}
 

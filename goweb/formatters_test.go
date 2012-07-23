@@ -1,8 +1,8 @@
 package goweb
 
 import (
-	"testing"
 	"reflect"
+	"testing"
 )
 
 func TestAddFormatter(t *testing.T) {
@@ -108,12 +108,18 @@ func TestConfigureDefaultFormatterOptions(t *testing.T) {
 	ConfigureDefaultFormatters()
 
 	c := new(Context)
-	c.Format = "encoding/json"
+	c.Format = "json"
 
-	formatter, _ := GetFormatter(c)
+	formatter, getFormatterErr := GetFormatter(c)
 
-	if reflect.TypeOf(formatter).Elem().Name() != "JsonFormatter" {
-		t.Error("ConfigureDefaultFormatters didn't set up the defualt JSON formatter")
+	if getFormatterErr != nil {
+		t.Errorf("GetFormatter returned error: %s", getFormatterErr)
+	} else {
+
+		if reflect.TypeOf(formatter).Elem().Name() != "JsonFormatter" {
+			t.Error("ConfigureDefaultFormatters didn't set up the defualt JSON formatter")
+		}
+
 	}
 
 }

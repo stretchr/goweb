@@ -1,14 +1,14 @@
 package goweb
 
 import (
-	"testing"
-	"net/url"
-	"fmt"
 	"bytes"
-	"net/http"
+	"fmt"
 	"io/ioutil"
-	"strconv"
+	"net/http"
+	"net/url"
 	"reflect"
+	"strconv"
+	"testing"
 )
 
 type personTestStruct struct {
@@ -153,9 +153,9 @@ func TestJsonDecoding(t *testing.T) {
 
 func makeXmlData() string {
 	return fmt.Sprintf(`<Person>
-        <name>%s</name>
-        <age>%d</age>
-        <atoms>%d</atoms>
+        <Name>%s</Name>
+        <Age>%d</Age>
+        <Atoms>%d</Atoms>
         <Nicknames>%s</Nicknames>
         <Nicknames>%s</Nicknames>
     </Person>`, personName, personAge, personAtoms, personNicknames[0], personNicknames[1])
@@ -173,6 +173,7 @@ func TestXmlDecoding(t *testing.T) {
 	if err != nil {
 		t.Errorf("xml-decoder:", err)
 	}
+
 	// check it
 	if person.Name != personName {
 		t.Errorf("xml-decoder: expected %v got %v", personName, person.Name)

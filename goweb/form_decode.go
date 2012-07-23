@@ -1,10 +1,10 @@
 package goweb
 
 import (
+	"fmt"
+	"net/url"
 	"reflect"
 	"strconv"
-	"net/url"
-	"fmt"
 )
 
 // Fill a struct `v` from the values in `form`

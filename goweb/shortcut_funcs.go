@@ -1,11 +1,11 @@
 package goweb
 
 import (
-	"runtime/debug"
-	"log"
-	"strings"
 	"fmt"
+	"log"
 	"net/http"
+	"runtime/debug"
+	"strings"
 )
 
 // Wraps a controllerFunc to catch any panics, log them and

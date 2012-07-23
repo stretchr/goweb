@@ -1,9 +1,9 @@
 package goweb
 
 import (
-	"testing"
 	"net/http"
 	"net/url"
+	"testing"
 )
 
 func (c *Context) assertContentType(t *testing.T, contentType string) {
