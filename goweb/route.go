@@ -84,7 +84,7 @@ func (route *Route) getParameterValueMap(path string) ParameterValueMap {
 // Checks whether a path matches a route or not
 func (route *Route) DoesMatchPath(path string) bool {
 
-	match, error := regexp.MatchString(route.pattern, path)
+	match, error := regexp.MatchString(route.pattern, strings.TrimRight(path, "/"))
 
 	if error == nil {
 		if match {
