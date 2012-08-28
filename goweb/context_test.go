@@ -23,7 +23,7 @@ func MakeTestContext() *Context {
 	ConfigureDefaultFormatters()
 
 	var request *http.Request = new(http.Request)
-	var responseWriter http.ResponseWriter
+	var responseWriter http.ResponseWriter = new(TestResponseWriter)
 	var pathParams ParameterValueMap = make(ParameterValueMap)
 
 	return makeContext(request, responseWriter, pathParams)
