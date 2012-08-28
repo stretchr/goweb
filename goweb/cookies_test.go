@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestSignedCookie(t *testing.T) {
+func TestAddSignedCookie(t *testing.T) {
 
 	context := MakeTestContext()
 	cookie := new(http.Cookie)
@@ -41,6 +41,73 @@ func TestSignedCookie(t *testing.T) {
 	assertEqual(t, signedCookie.Secure, cookie.Secure, "Secure")
 	assertEqual(t, signedCookie.HttpOnly, cookie.HttpOnly, "HttpOnly")
 	assertEqual(t, signedCookie.Raw, cookie.Raw, "Raw")
+
+}
+
+func TestSignedCookie(t *testing.T) {
+
+	context := MakeTestContext()
+
+	cookie := new(http.Cookie)
+	cookie.Name = "userId"
+	cookie.Value = "2468"
+
+	signedCookie, err := context.AddSignedCookie(cookie)
+
+	if err != nil {
+		t.Errorf("Shouldn't error: %s", err)
+	}
+
+	// set the request headers
+	context.Request.Header = make(http.Header)
+	context.Request.AddCookie(cookie)
+	context.Request.AddCookie(signedCookie)
+
+	returnedCookie, cookieErr := context.SignedCookie(cookie.Name)
+
+	if cookieErr != nil {
+		t.Errorf("SignedCookie shouldn't return error: %s", cookieErr)
+		return
+	}
+	if returnedCookie == nil {
+		t.Errorf("SignedCookie shouldn't return nil")
+		return
+	}
+
+	assertEqual(t, returnedCookie.Name, cookie.Name, "name")
+
+}
+
+func TestSignedCookie_Tempered(t *testing.T) {
+
+	context := MakeTestContext()
+
+	cookie := new(http.Cookie)
+	cookie.Name = "userId"
+	cookie.Value = "2468"
+
+	signedCookie, err := context.AddSignedCookie(cookie)
+
+	if err != nil {
+		t.Errorf("Shouldn't error: %s", err)
+	}
+
+	// temper with the cookie
+	cookie.Value = "something-else"
+
+	// set the request headers
+	context.Request.Header = make(http.Header)
+	context.Request.AddCookie(cookie)
+	context.Request.AddCookie(signedCookie)
+
+	returnedCookie, cookieErr := context.SignedCookie(cookie.Name)
+
+	if cookieErr == nil {
+		t.Errorf("SignedCookie SHOULD return error")
+	}
+	if returnedCookie != nil {
+		t.Errorf("ReturnedCookie should be nil")
+	}
 
 }
 
