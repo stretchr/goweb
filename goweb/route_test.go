@@ -59,7 +59,7 @@ func TestRouteGetParameterValueMapFromPath(t *testing.T) {
 
 func TestRouteDoesMatchPath(t *testing.T) {
 
-	var route1 *Route = makeRouteFromPath(routePathWithoutExtension)
+	var route1 *Route = makeRouteFromPath(routePathWithoutExtension) // "/people/{id}/groups/{group_id}"
 	var route2 *Route = makeRouteFromPath("/something-else/{id}/groups/{group_id}")
 
 	if !route1.DoesMatchPath("/people/123/groups/456") {
@@ -70,6 +70,19 @@ func TestRouteDoesMatchPath(t *testing.T) {
 	}
 	if route2.DoesMatchPath("/people/123/groups/456") {
 		t.Errorf("Route should NOT match given path")
+	}
+
+}
+
+func TestRouteDoesMatchPath_RootPath(t *testing.T) {
+
+	var route1 *Route = makeRouteFromPath("/")
+
+	if !route1.DoesMatchPath("") {
+		t.Errorf("Route should match given path ''")
+	}
+	if !route1.DoesMatchPath("/") {
+		t.Errorf("Route should match given path '/'")
 	}
 
 }

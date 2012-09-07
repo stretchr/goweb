@@ -35,6 +35,69 @@ func TestGetMathingRoute(t *testing.T) {
 
 }
 
+func TestGetMathingRoute_Root_WithSlash(t *testing.T) {
+
+	// setup the root route
+	DefaultRouteManager.ClearRoutes()
+	var route1 *Route = makeRouteFromPath("/")
+	DefaultRouteManager.AddRoute(route1)
+
+	// make a test request
+	var testRequest *http.Request = new(http.Request)
+	testRequest.URL, _ = url.Parse(testDomain + "/")
+
+	// get the route
+	_, route, _ := DefaultHttpHandler.GetMathingRoute(nil, testRequest)
+
+	// validate it
+	if route != route1 {
+		t.Errorf("Route1 expected (root)")
+	}
+
+}
+
+func TestGetMathingRoute_Root_WithoutSlash(t *testing.T) {
+
+	// setup the root route
+	DefaultRouteManager.ClearRoutes()
+	var route1 *Route = makeRouteFromPath("/")
+	DefaultRouteManager.AddRoute(route1)
+
+	// make a test request
+	var testRequest *http.Request = new(http.Request)
+	testRequest.URL, _ = url.Parse(testDomain)
+
+	// get the route
+	_, route, _ := DefaultHttpHandler.GetMathingRoute(nil, testRequest)
+
+	// validate it
+	if route != route1 {
+		t.Errorf("Route1 expected (root)")
+	}
+
+}
+
+func TestGetMathingRoute_Root_Localhost(t *testing.T) {
+
+	// setup the root route
+	DefaultRouteManager.ClearRoutes()
+	var route1 *Route = makeRouteFromPath("/")
+	DefaultRouteManager.AddRoute(route1)
+
+	// make a test request
+	var testRequest *http.Request = new(http.Request)
+	testRequest.URL, _ = url.Parse("http://localhost:8080")
+
+	// get the route
+	_, route, _ := DefaultHttpHandler.GetMathingRoute(nil, testRequest)
+
+	// validate it
+	if route != route1 {
+		t.Errorf("Route1 expected (root)")
+	}
+
+}
+
 func TestGetMatchingRoute_WithMethodOverrideParameter(t *testing.T) {
 
 	var lastMethod string = ""

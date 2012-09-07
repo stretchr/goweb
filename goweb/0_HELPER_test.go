@@ -10,7 +10,7 @@ var routePath string = "/people/{id}/groups/{group_id}.json"
 var routePathWithoutExtension string = "/people/{id}/groups/{group_id}"
 
 // expected test route regex
-var routePathRegex string = "/people/" + ROUTE_REGEX_PLACEHOLDER + "/groups/" + ROUTE_REGEX_PLACEHOLDER
+var routePathRegex string = "(/?)people/" + ROUTE_REGEX_PLACEHOLDER + "/groups/" + ROUTE_REGEX_PLACEHOLDER
 
 // Domain used for testing
 var testDomain string = "http://test.matryer.com"
