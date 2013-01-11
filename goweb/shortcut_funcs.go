@@ -1,7 +1,6 @@
 package goweb
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"runtime/debug"
@@ -94,7 +93,6 @@ func MapStatic(pathPrefix string, rootDirectory string) {
 			path = "/" + path
 		}
 		path = rootDirectory + path
-		fmt.Println("static:", path)
 		http.ServeFile(cx.ResponseWriter, cx.Request, path)
 	})
 }
