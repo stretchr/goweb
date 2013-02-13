@@ -8,7 +8,11 @@ import (
 
 // A handler type to handle actual http requests using the
 // DefaultRouteManager to route requests to the right places
-type HttpHandler struct{}
+type HttpHandler struct {
+	// A default http.ServeMux to use when a goweb routing match fails. Useful
+	// with http.DefaultServeMux to apply standard handlers.
+	Mux *http.ServeMux
+}
 
 // Serves the HTTP request and writes the response to the specified writer
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
@@ -28,13 +32,17 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 
 	if !found {
 
-		// no route found - this is an error
+		if handler.Mux != nil {
+			handler.Mux.ServeHTTP(responseWriter, request)
+		} else {
+			// no route found - this is an error
 
-		// create the request context (with no parameter keys obviously)
-		context = makeContext(request, responseWriter, nil)
+			// create the request context (with no parameter keys obviously)
+			context = makeContext(request, responseWriter, nil)
 
-		error := errors.New(ERR_NO_MATCHING_ROUTE)
-		handler.HandleError(context, error)
+			error := errors.New(ERR_NO_MATCHING_ROUTE)
+			handler.HandleError(context, error)
+		}
 
 	} else {
 
@@ -56,7 +64,7 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 }
 
 // Searches DefaultRouteManager to find the first matching route and returns it
-// along with a boolean describing whether any routes were found or not, and the 
+// along with a boolean describing whether any routes were found or not, and the
 // Context object built while searching for routes
 func (h *HttpHandler) GetMathingRoute(responseWriter http.ResponseWriter, request *http.Request) (bool, *Route, *Context) {
 
