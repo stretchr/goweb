@@ -60,6 +60,8 @@ func (cr *TestRestController) UpdateMany(cx *Context) {
 	cr.lastCall = "UpdateMany"
 	cr.lastId = "(none)"
 }
+func (cr *TestRestController) Options(cx *Context) { cr.lastCall = "Options"; cr.lastId = "(none)" }
+func (cr *TestRestController) Head(cx *Context)    { cr.lastCall = "Head"; cr.lastId = "(none)" }
 
 /*
 	Test ResponseWriter

@@ -35,5 +35,15 @@ type RestManyDeleter interface {
 	DeleteMany(c *Context)
 }
 
+// Handler method for OPTIONS method
+type RestOptions interface {
+	Options(c *Context)
+}
+
+// Handler method to get header
+type RestHead interface {
+	Head(c *Context)
+}
+
 // Interface for RESTful controllers
 type RestController interface{}

@@ -138,6 +138,16 @@ func AssertNotDelete(c *Context, t *testing.T) {
 		t.Errorf("IsDelete should be false for '%s' method.", c.Request.Method)
 	}
 }
+func AssertNotOptions(c *Context, t *testing.T) {
+	if c.IsOptions() {
+		t.Errorf("IsOptions should be false for '%s' method.", c.Request.Method)
+	}
+}
+func AssertNotHead(c *Context, t *testing.T) {
+	if c.IsHead() {
+		t.Errorf("IsHead should be false for '%s' method.", c.Request.Method)
+	}
+}
 func AssertGet(c *Context, t *testing.T) {
 	if !c.IsGet() {
 		t.Errorf("IsGet should be true for '%s' method.", c.Request.Method)
@@ -156,6 +166,16 @@ func AssertPut(c *Context, t *testing.T) {
 func AssertDelete(c *Context, t *testing.T) {
 	if !c.IsDelete() {
 		t.Errorf("IsDelete should be true for '%s' method.", c.Request.Method)
+	}
+}
+func AssertOptions(c *Context, t *testing.T) {
+	if !c.IsOptions() {
+		t.Errorf("IsOptions should be true for '%s' method.", c.Request.Method)
+	}
+}
+func AssertHead(c *Context, t *testing.T) {
+	if !c.IsHead() {
+		t.Errorf("IsHead should be true for '%s' method.", c.Request.Method)
 	}
 }
 
@@ -183,6 +203,8 @@ func TestIsPost(t *testing.T) {
 	AssertPost(context, t)
 	AssertNotPut(context, t)
 	AssertNotDelete(context, t)
+	AssertNotOptions(context, t)
+	AssertNotHead(context, t)
 
 }
 func TestIsPut(t *testing.T) {
@@ -196,6 +218,8 @@ func TestIsPut(t *testing.T) {
 	AssertNotPost(context, t)
 	AssertPut(context, t)
 	AssertNotDelete(context, t)
+	AssertNotOptions(context, t)
+	AssertNotHead(context, t)
 
 }
 func TestIsDelete(t *testing.T) {
@@ -209,6 +233,38 @@ func TestIsDelete(t *testing.T) {
 	AssertNotPost(context, t)
 	AssertNotPut(context, t)
 	AssertDelete(context, t)
+	AssertNotOptions(context, t)
+	AssertNotHead(context, t)
+
+}
+func TestIsOptions(t *testing.T) {
+
+	context := MakeTestContext()
+
+	// set the request method
+	context.Request.Method = OPTIONS_HTTP_METHOD
+
+	AssertNotGet(context, t)
+	AssertNotPost(context, t)
+	AssertNotPut(context, t)
+	AssertNotDelete(context, t)
+	AssertOptions(context, t)
+	AssertNotHead(context, t)
+
+}
+func TestIsHead(t *testing.T) {
+
+	context := MakeTestContext()
+
+	// set the request method
+	context.Request.Method = HEAD_HTTP_METHOD
+
+	AssertNotGet(context, t)
+	AssertNotPost(context, t)
+	AssertNotPut(context, t)
+	AssertNotDelete(context, t)
+	AssertNotOptions(context, t)
+	AssertHead(context, t)
 
 }
 

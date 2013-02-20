@@ -51,3 +51,23 @@ func PostMethod(c *Context) RouteMatcherFuncValue {
 	}
 	return DontCare
 }
+
+// Returns Match if the Method of the http.Request in the specified
+// Context is OPTIONS, otherwise returns DontCare
+func OptionsMethod(c *Context) RouteMatcherFuncValue {
+	if c.IsOptions() {
+		return Match
+	}
+
+	return DontCare
+}
+
+// Returns Match if the Method of the http.Request in the specified
+// Context is HEAD, otherwise returns DontCare
+func HeadMethod(c *Context) RouteMatcherFuncValue {
+	if c.IsHead() {
+		return Match
+	}
+
+	return DontCare
+}

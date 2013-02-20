@@ -12,6 +12,8 @@ const GET_HTTP_METHOD string = "GET"
 const POST_HTTP_METHOD string = "POST"
 const PUT_HTTP_METHOD string = "PUT"
 const DELETE_HTTP_METHOD string = "DELETE"
+const OPTIONS_HTTP_METHOD string = "OPTIONS"
+const HEAD_HTTP_METHOD string = "HEAD"
 
 /*
 	Error messages

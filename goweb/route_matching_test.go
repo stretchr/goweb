@@ -38,6 +38,12 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != DontCare {
 		t.Errorf("PostMethod on a GET context should DontCare")
 	}
+	if OptionsMethod(context) != DontCare {
+		t.Errorf("OptionsMethod on a GET context should DontCare")
+	}
+	if HeadMethod(context) != DontCare {
+		t.Errorf("HeadMethod on a GET context should DontCare")
+	}
 
 	request.Method = POST_HTTP_METHOD
 
@@ -52,6 +58,12 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	}
 	if PostMethod(context) != Match {
 		t.Errorf("PostMethod on a POST context should Match")
+	}
+	if OptionsMethod(context) != DontCare {
+		t.Errorf("OptionsMethod on a POST context should DontCare")
+	}
+	if HeadMethod(context) != DontCare {
+		t.Errorf("HeadMethod on a POST context should DontCare")
 	}
 
 	request.Method = PUT_HTTP_METHOD
@@ -68,6 +80,12 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != DontCare {
 		t.Errorf("PostMethod on a PUT context should DontCare")
 	}
+	if OptionsMethod(context) != DontCare {
+		t.Errorf("OptionsMethod on a PUT context should DontCare")
+	}
+	if HeadMethod(context) != DontCare {
+		t.Errorf("HeadMethod on a PUT context should DontCare")
+	}
 
 	request.Method = DELETE_HTTP_METHOD
 
@@ -75,7 +93,7 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 		t.Errorf("GetMethod on a DELETE context should DontCare")
 	}
 	if PutMethod(context) != DontCare {
-		t.Errorf("PutMethod on a DELETE context should Match")
+		t.Errorf("PutMethod on a DELETE context should DontCare")
 	}
 	if DeleteMethod(context) != Match {
 		t.Errorf("DeleteMethod on a DELETE context should Match")
@@ -83,5 +101,52 @@ func TestRouteMatcher_xMethods(t *testing.T) {
 	if PostMethod(context) != DontCare {
 		t.Errorf("PostMethod on a DELETE context should DontCare")
 	}
+	if OptionsMethod(context) != DontCare {
+		t.Errorf("OptionsMethod on a DELETE context should DontCare")
+	}
+	if HeadMethod(context) != DontCare {
+		t.Errorf("HeadMethod on a DELETE context should DontCare")
+	}
 
+	request.Method = OPTIONS_HTTP_METHOD
+
+	if GetMethod(context) != DontCare {
+		t.Errorf("GetMethod on a OPTIONS context should DontCare")
+	}
+	if PutMethod(context) != DontCare {
+		t.Errorf("PutMethod on a OPTIONS context should DontCare")
+	}
+	if DeleteMethod(context) != DontCare {
+		t.Errorf("DeleteMethod on a OPTIONS context should DontCare")
+	}
+	if PostMethod(context) != DontCare {
+		t.Errorf("PostMethod on a OPTIONS context should DontCare")
+	}
+	if OptionsMethod(context) != Match {
+		t.Errorf("OptionsMethod on a OPTIONS context should Match")
+	}
+	if HeadMethod(context) != DontCare {
+		t.Errorf("HeadMethod on a OPTIONS context should DontCare")
+	}
+
+	request.Method = HEAD_HTTP_METHOD
+
+	if GetMethod(context) != DontCare {
+		t.Errorf("GetMethod on a HEAD context should DontCare")
+	}
+	if PutMethod(context) != DontCare {
+		t.Errorf("PutMethod on a HEAD context should DontCare")
+	}
+	if DeleteMethod(context) != DontCare {
+		t.Errorf("DeleteMethod on a HEAD context should DontCare")
+	}
+	if PostMethod(context) != DontCare {
+		t.Errorf("PostMethod on a HEAD context should DontCare")
+	}
+	if OptionsMethod(context) != DontCare {
+		t.Errorf("OptionsMethod on a HEAD context should DontCare")
+	}
+	if HeadMethod(context) != Match {
+		t.Errorf("HeadMethod on a HEAD context should Match")
+	}
 }
