@@ -76,6 +76,16 @@ func (c *Context) IsDelete() bool {
 	return c.Request.Method == DELETE_HTTP_METHOD
 }
 
+// Checks whether the HTTP method is OPTIONS or not
+func (c *Context) IsOptions() bool {
+	return c.Request.Method == OPTIONS_HTTP_METHOD
+}
+
+// Checks whether the HTTP method is HEAD or not
+func (c *Context) IsHead() bool {
+	return c.Request.Method == HEAD_HTTP_METHOD
+}
+
 /*
 	RespondWith* methods
 */

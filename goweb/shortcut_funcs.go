@@ -83,6 +83,19 @@ func MapRest(pathPrefix string, controller RestController) {
 			rc.Create(c)
 		}, PostMethod)
 	}
+	// OPTION /resource
+	if rc, ok := controller.(RestOptions); ok {
+		MapFunc(pathPrefix, func(c *Context) {
+			rc.Options(c)
+		}, OptionsMethod)
+	}
+	// HEAD /resource
+	if rc, ok := controller.(RestHead); ok {
+		MapFunc(pathPrefix, func(c *Context) {
+			rc.Head(c)
+		}, HeadMethod)
+	}
+
 }
 
 // Maps a path to a static directory

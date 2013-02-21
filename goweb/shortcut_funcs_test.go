@@ -60,7 +60,7 @@ func TestMapRest(t *testing.T) {
 
 	MapRest("/people", testRestController)
 
-	if len(DefaultRouteManager.routes) != 7 {
+	if len(DefaultRouteManager.routes) != 9 {
 		t.Errorf("There shouldn't be %d route(s)", len(DefaultRouteManager.routes))
 	} else {
 
@@ -113,6 +113,20 @@ func TestMapRest(t *testing.T) {
 		assertRoute(t, route, "/people", "POST", PostMethod)
 		handleRequest("/people", "POST")
 		assertLastCall(t, testRestController.(*TestRestController), "Create")
+		assertNoLastId(t, testRestController.(*TestRestController))
+
+		// OPTIONS /people
+		route = DefaultRouteManager.routes[7]
+		assertRoute(t, route, "/people", "OPTIONS", OptionsMethod)
+		handleRequest("/people", "OPTIONS")
+		assertLastCall(t, testRestController.(*TestRestController), "Options")
+		assertNoLastId(t, testRestController.(*TestRestController))
+
+		// HEAD /people
+		route = DefaultRouteManager.routes[8]
+		assertRoute(t, route, "/people", "HEAD", HeadMethod)
+		handleRequest("/people", "HEAD")
+		assertLastCall(t, testRestController.(*TestRestController), "Head")
 		assertNoLastId(t, testRestController.(*TestRestController))
 
 	}
