@@ -10,7 +10,7 @@ import (
 // handling transformed/formatted response data
 type Formatter interface {
 	// method to transform response
-	Format(context *Context, input interface{}) ([]uint8, error)
+	Format(context *Context, input interface{}) ([]byte, error)
 	// method that decides if this formatter will be used
 	Match(*Context) bool
 }
@@ -62,7 +62,7 @@ func GetFormatter(cx *Context) (Formatter, error) {
 type JsonFormatter struct{}
 
 // Readies response and converts input data into JSON
-func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, error) {
+func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]byte, error) {
 	// marshal json
 	output, err := json.Marshal(input)
 	if err != nil {
@@ -87,7 +87,7 @@ func (f *JsonFormatter) Format(cx *Context, input interface{}) ([]uint8, error) 
 		cx.ResponseWriter.Header().Set("Content-Type", JSONP_CONTENT_TYPE)
 
 		// convert back
-		output = []uint8(outputString)
+		output = []byte(outputString)
 
 	} else {
 		// normal json content type 
