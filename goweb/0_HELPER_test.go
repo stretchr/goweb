@@ -108,11 +108,11 @@ type TestFormatter struct {
 	LastInput   interface{}
 }
 
-func (f *TestFormatter) Format(cx *Context, input interface{}) ([]uint8, error) {
+func (f *TestFormatter) Format(cx *Context, input interface{}) ([]byte, error) {
 	cx.ResponseWriter.Header().Set("Content-Type", "text/plain")
 	f.LastContext = cx
 	f.LastInput = input
-	return []uint8(""), nil
+	return []byte(""), nil
 }
 
 func (f *TestFormatter) Match(cx *Context) bool {
@@ -121,9 +121,9 @@ func (f *TestFormatter) Match(cx *Context) bool {
 
 type TestFormatter2 struct{}
 
-func (f *TestFormatter2) Format(cx *Context, input interface{}) ([]uint8, error) {
+func (f *TestFormatter2) Format(cx *Context, input interface{}) ([]byte, error) {
 	cx.ResponseWriter.Header().Set("Content-Type", "text/plain")
-	return []uint8(""), nil
+	return []byte(""), nil
 }
 func (f *TestFormatter2) Match(cx *Context) bool {
 	return cx.Format == "TWO"
