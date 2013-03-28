@@ -24,6 +24,28 @@ func TestGetPathSegments(t *testing.T) {
 
 }
 
+func TestGetPathSegments_WithEarlyDot(t *testing.T) {
+
+	var segments []string = getPathSegments("people/{id}/groups.with.dots/{group_id}.json")
+
+	if segments[0] != "people" {
+		t.Errorf("'%s' expected to be 'people'", segments[0])
+	}
+	if segments[1] != "{id}" {
+		t.Errorf("'%s' expected to be '{id}'", segments[1])
+	}
+	if segments[2] != "groups.with.dots" {
+		t.Errorf("'%s' expected to be 'groups.with.dots'", segments[2])
+	}
+	if segments[3] != "{group_id}" {
+		t.Errorf("'%s' expected to be '{group_id}'", segments[3])
+	}
+	if segments[4] != ".json" {
+		t.Errorf("'%s' expected to be '.json'", segments[4])
+	}
+
+}
+
 func TestGetPathSegments_WithoutExtension(t *testing.T) {
 
 	var segments []string = getPathSegments(routePathWithoutExtension)
@@ -90,6 +112,12 @@ func TestGetParameterValueMapFromPath(t *testing.T) {
 	if paramValues["group_id"] != "456" {
 		t.Errorf("paramKeys['group_id'] expected to be '456', but was %s", paramValues["group_id"])
 	}
+
+}
+
+func TestGetFileExtension_WhereExtensionIsWithinPath(t *testing.T) {
+
+	assertFileExtension(t, "http://test.com/something/this.is.not.an.extension/file-without-extension", "")
 
 }
 

@@ -1,6 +1,8 @@
 package goweb
 
-import "strings"
+import (
+	"strings"
+)
 
 /*
 	Path parsing
@@ -49,15 +51,18 @@ func getParameterValueMap(keys ParameterKeyMap, path string) ParameterValueMap {
 
 }
 
-// Gets the file extension (in uppercase) from a path
+// Gets the file extension from a path
 func getFileExtension(path string) string {
 
-	lastDot := strings.LastIndex(path, ".")
+	// get the last segment
+	segments := strings.Split(strings.Trim(path, "/"), "/")
+	lastSegment := segments[len(segments)-1]
+	lastDot := strings.LastIndex(lastSegment, ".")
 
 	if lastDot == -1 {
 		return "" /* no extension */
 	} else {
-		return path[lastDot+1:]
+		return lastSegment[lastDot+1:]
 	}
 
 	return ""
