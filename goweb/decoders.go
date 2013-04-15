@@ -23,7 +23,7 @@ func (d *JsonRequestDecoder) Unmarshal(cx *Context, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(data, v)
+	return json.Unmarshal(data, &v)
 }
 
 // an XML decoder for request body
