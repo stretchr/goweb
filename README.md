@@ -7,7 +7,7 @@ We plan on rewriting goweb using the knowledge gained from writing Stretchr. Thi
 
 A proper README will be forthcoming. :)
 
-
+  * UPDATE: v2 has started, want to help us?  https://github.com/stretchrcom/goweb/tree/v2
 
 ------
 
