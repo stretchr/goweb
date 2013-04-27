@@ -10,8 +10,13 @@ import (
 type Handler interface {
 
 	/*
-		WillHandle gets whether this 
+		WillHandle gets whether this handler will have it's Handle method
+		called for the specified Context or not.
 	*/
-	WillHandle(* context.Context) (bool, error)
+	WillHandle(*context.Context) (bool, error)
 
+	/*
+	   Handle tells the handler to do its work.
+	*/
+	Handle(*context.Context) error
 }
