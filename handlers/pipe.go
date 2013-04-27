@@ -12,9 +12,9 @@ type Pipe struct {
 }
 
 /**
-  AddHandler adds a handler to this pipe.
+  AppendHandler adds a handler to the end of this pipe.
 */
-func (p *Pipe) AddHandler(handler Handler) *Pipe {
+func (p *Pipe) AppendHandler(handler Handler) *Pipe {
 	p.handlers = append(p.handlers, handler)
 	return p
 }

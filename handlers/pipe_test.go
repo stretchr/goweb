@@ -29,7 +29,7 @@ func TestPipe_AddHandler(t *testing.T) {
 
 	// add the handlers to the pipe
 	p := new(Pipe)
-	assert.Equal(t, p, p.AddHandler(handler1))
+	assert.Equal(t, p, p.AppendHandler(handler1))
 
 	if assert.Equal(t, 1, len(p.handlers)) {
 		assert.Equal(t, handler1, p.handlers[0])
@@ -39,7 +39,7 @@ func TestPipe_AddHandler(t *testing.T) {
 
 func TestPipe_Handle(t *testing.T) {
 
-	ctx := context_test.GetTestContext()
+	ctx := context_test.MakeTestContext()
 
 	handler1 := new(handlers_test.TestHandler)
 	handler2 := new(handlers_test.TestHandler)
@@ -47,7 +47,7 @@ func TestPipe_Handle(t *testing.T) {
 
 	// add the handlers to the pipe
 	p := new(Pipe)
-	p.AddHandler(handler1).AddHandler(handler2).AddHandler(handler3)
+	p.AppendHandler(handler1).AppendHandler(handler2).AppendHandler(handler3)
 
 	// setup expectations
 	handler1.On("WillHandle", ctx).Return(true, nil)

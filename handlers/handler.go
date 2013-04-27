@@ -20,3 +20,8 @@ type Handler interface {
 	*/
 	Handle(*context.Context) error
 }
+
+/**
+HandlerFunc represents a function that can be used as a handler.
+*/
+type HandlerFunc func(*context.Context) error
