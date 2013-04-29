@@ -1,7 +1,8 @@
 package paths
 
 type PathMatch struct {
-	Matches bool
+	Matches    bool
+	Parameters map[string]string
 }
 
 var PathDoesntMatch *PathMatch = new(PathMatch)

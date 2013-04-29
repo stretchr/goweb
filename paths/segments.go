@@ -35,3 +35,7 @@ func getSegmentType(segment string) segmentType {
 	return segmentTypeLiteral
 
 }
+
+func cleanSegmentName(segment string) string {
+	return strings.Trim(segment, "{}[]")
+}

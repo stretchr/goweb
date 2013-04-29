@@ -14,3 +14,11 @@ func TestGetSegmentType(t *testing.T) {
 	assert.Equal(t, segmentType(segmentTypeCatchall), getSegmentType("..."))
 
 }
+
+func TestCleanSegmentName(t *testing.T) {
+
+	assert.Equal(t, "id", cleanSegmentName("id"))
+	assert.Equal(t, "id", cleanSegmentName("{id}"))
+	assert.Equal(t, "id", cleanSegmentName("[id]"))
+
+}

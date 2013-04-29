@@ -17,11 +17,6 @@ import (
 
 */
 
-func assertRegexPattern(t *testing.T, gowebPath, expectedRegex string) bool {
-	p, _ := NewGowebPath(gowebPath)
-	return assert.Equal(t, expectedRegex, p.RegexPattern())
-}
-
 func TestNewGowebPath(t *testing.T) {
 
 	path := "/people/{id}/books"
@@ -33,7 +28,18 @@ func TestNewGowebPath(t *testing.T) {
 
 }
 
-func TestGowebPath_GetPathMatch_(t *testing.T) {
+func TestGowebPath_GetPathMatch_Parameters(t *testing.T) {
+
+	gp, _ := NewGowebPath("/people/{id}/books/{title}/chapters/{chapter}")
+	m := gp.GetPathMatch(NewPath("people/123/books/origin-of-species/chapters/2"))
+
+	assert.Equal(t, m.Parameters["id"], "123")
+	assert.Equal(t, m.Parameters["title"], "origin-of-species")
+	assert.Equal(t, m.Parameters["chapter"], "2")
+
+}
+
+func TestGowebPath_GetPathMatch_Matches(t *testing.T) {
 
 	// {variable}
 	gp, _ := NewGowebPath("/people/{id}/books")

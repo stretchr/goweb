@@ -18,9 +18,8 @@ import (
     /people/{id:string}
 */
 type GowebPath struct {
-	RawPath      string
-	regexPattern string
-	path         *Path
+	RawPath string
+	path    *Path
 }
 
 func NewGowebPath(path string) (*GowebPath, error) {
@@ -36,6 +35,7 @@ func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
 
 	pathMatch := new(PathMatch)
 	pathMatch.Matches = true
+	pathMatch.Parameters = make(map[string]string)
 
 	checkSegments := p.path.Segments()
 	pathSegments := path.Segments()
@@ -68,7 +68,15 @@ func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
 				return PathDoesntMatch
 			}
 
+		case segmentTypeDynamic:
+
+			pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
+
 		case segmentTypeDynamicOptional:
+
+			if segmentIndex > len(pathSegments) {
+				pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
+			}
 
 		}
 
@@ -76,8 +84,4 @@ func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
 
 	return pathMatch
 
-}
-
-func (p *GowebPath) RegexPattern() string {
-	return p.regexPattern
 }
