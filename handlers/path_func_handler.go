@@ -9,7 +9,7 @@ const (
 	contextURLParametersDataKey string = "urlparams"
 )
 
-/**
+/*
   PathFuncHandler is a Handler that maps a path to handler code.
 */
 type PathFuncHandler struct {
@@ -18,7 +18,7 @@ type PathFuncHandler struct {
 	HandlerFunc HandlerFunc
 }
 
-/**
+/*
   WillHandle always return true for Pipes.
 */
 func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
@@ -30,7 +30,7 @@ func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
 	return match.Matches, nil
 }
 
-/**
+/*
   Handle gives each sub handle the opportinuty to handle the context.
 */
 func (p *PathFuncHandler) Handle(c *context.Context) error {
