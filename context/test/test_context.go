@@ -1,7 +1,10 @@
 package context_test
 
 import (
+	"fmt"
 	"github.com/stretchrcom/goweb/context"
+	http_test "github.com/stretchrcom/testify/http"
+	"net/http"
 )
 
 func MakeTestContext() *context.Context {
@@ -9,5 +12,9 @@ func MakeTestContext() *context.Context {
 }
 
 func MakeTestContextWithPath(path string) *context.Context {
-	return context.NewContext(path)
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", fmt.Sprintf("http://github.com/%s", path), nil)
+
+	return context.NewContext(responseWriter, testRequest)
 }
