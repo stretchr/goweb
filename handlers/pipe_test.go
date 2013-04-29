@@ -23,16 +23,36 @@ func TestPipe_WillHandle(t *testing.T) {
 
 }
 
-func TestPipe_AddHandler(t *testing.T) {
+func TestPipe_AppendHandler(t *testing.T) {
 
 	handler1 := new(handlers_test.TestHandler)
 
 	// add the handlers to the pipe
-	p := new(Pipe)
-	assert.Equal(t, p, p.AppendHandler(handler1))
+	p := make(Pipe, 0)
+	p = p.AppendHandler(handler1)
 
-	if assert.Equal(t, 1, len(p.handlers)) {
-		assert.Equal(t, handler1, p.handlers[0])
+	if assert.Equal(t, 1, len(p)) {
+		assert.Equal(t, handler1, p[0])
+	}
+
+}
+
+func TestPipe_PrependHandler(t *testing.T) {
+
+	handler1 := new(handlers_test.TestHandler)
+	handler2 := new(handlers_test.TestHandler)
+	handler3 := new(handlers_test.TestHandler)
+
+	// add the handlers to the pipe
+	p := make(Pipe, 0)
+	p = p.PrependHandler(handler1)
+	p = p.PrependHandler(handler2)
+	p = p.PrependHandler(handler3)
+
+	if assert.Equal(t, 3, len(p)) {
+		assert.Equal(t, handler3, p[0])
+		assert.Equal(t, handler2, p[1])
+		assert.Equal(t, handler1, p[2])
 	}
 
 }
@@ -46,8 +66,10 @@ func TestPipe_Handle(t *testing.T) {
 	handler3 := new(handlers_test.TestHandler)
 
 	// add the handlers to the pipe
-	p := new(Pipe)
-	p.AppendHandler(handler1).AppendHandler(handler2).AppendHandler(handler3)
+	p := make(Pipe, 0)
+	p = p.AppendHandler(handler1)
+	p = p.AppendHandler(handler2)
+	p = p.AppendHandler(handler3)
 
 	// setup expectations
 	handler1.On("WillHandle", ctx).Return(true, nil)

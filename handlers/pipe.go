@@ -4,38 +4,52 @@ import (
 	"github.com/stretchrcom/goweb/context"
 )
 
-/**
+/*
   Pipe represents a collection of handlers.
 */
-type Pipe struct {
-	handlers []Handler
-}
+type Pipe []Handler
 
-/**
+/*
   AppendHandler adds a handler to the end of this pipe.
 */
-func (p *Pipe) AppendHandler(handler Handler) *Pipe {
-	p.handlers = append(p.handlers, handler)
+func (p Pipe) AppendHandler(handler Handler) Pipe {
+	p = append(p, handler)
 	return p
 }
 
-/**
+/*
+  PrependHandler adds a handler to the start of this pipe.
+*/
+func (p Pipe) PrependHandler(handler Handler) Pipe {
+
+	// TODO: is there a better way to do prepends?
+
+	handlers := append(make([]Handler, 0), handler)
+	for _, handler := range p {
+		handlers = append(handlers, handler)
+	}
+	p = handlers
+
+	return p
+}
+
+/*
   WillHandle always return true for Pipes.
 */
-func (p *Pipe) WillHandle(*context.Context) (bool, error) {
+func (p Pipe) WillHandle(*context.Context) (bool, error) {
 	return true, nil
 }
 
-/**
+/*
   Handle gives each sub handle the opportinuty to handle the context.
 */
-func (p *Pipe) Handle(c *context.Context) error {
+func (p Pipe) Handle(c *context.Context) error {
 
 	var willHandle bool
 	var willHandleErr error
 	var handleErr error
 
-	for _, handler := range p.handlers {
+	for _, handler := range p {
 
 		willHandle, willHandleErr = handler.WillHandle(c)
 
