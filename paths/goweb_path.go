@@ -10,13 +10,13 @@ import (
 
   Valid paths include:
 
+    /*** - Matches everything
     /literal
     /{placeholder}
     /[optional placeholder]
-    /people/* - matches like a placeholder but doesn't care what it is
-    /something/... - Matches the start plus anything after it
-    /people/{id:int} - specific types
-    /people/{id:string}
+    /* - matches like a placeholder but doesn't care what it is
+    /something/*** - Matches the start plus anything after it
+
 */
 type GowebPath struct {
 	RawPath string
@@ -36,6 +36,12 @@ func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
 
 	pathMatch := new(PathMatch)
 	pathMatch.Matches = true
+
+	// if this is the root catch all, just return yes
+	if p.RawPath == segmentCatchAll {
+		return pathMatch
+	}
+
 	pathMatch.Parameters = make(map[string]string)
 
 	checkSegments := p.path.Segments()
