@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-/**
+/*
   Path represents the path segment of a URL.
 */
 type Path struct {
@@ -14,7 +14,7 @@ type Path struct {
 	extension string
 }
 
-/**
+/*
   NewPath creates a new Path with the given raw string.
 */
 func NewPath(rawPath string) *Path {
@@ -30,7 +30,7 @@ func cleanPath(path string) string {
 	return strings.TrimRight(strings.TrimLeft(path, PathSeperator), PathSeperator)
 }
 
-/**
+/*
   Segments gets the segments for this path.
 */
 func (p *Path) Segments() []string {
