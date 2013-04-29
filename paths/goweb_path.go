@@ -68,13 +68,9 @@ func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
 				return PathDoesntMatch
 			}
 
-		case segmentTypeDynamic:
+		case segmentTypeDynamic, segmentTypeDynamicOptional:
 
-			pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
-
-		case segmentTypeDynamicOptional:
-
-			if segmentIndex > len(pathSegments) {
+			if segmentIndex < len(pathSegments) {
 				pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
 			}
 
