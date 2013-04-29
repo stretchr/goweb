@@ -1,10 +1,7 @@
 package paths
 
-var PathSeperator string = "/"
-var FileExtensionSeparator string = "."
-
-var RegexDynamicSegment string = "(.*)"
-var RegexOptionalPathSeperator string = "(/?)"
+const PathSeperator string = "/"
+const FileExtensionSeparator string = "."
 
 /*
   Segments
