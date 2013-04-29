@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	contextURLParametersDataKey string = "urlparams"
+	contextURLParametersDataKey string = "path-params"
 )
 
 /*
@@ -19,7 +19,8 @@ type PathFuncHandler struct {
 }
 
 /*
-  WillHandle always return true for Pipes.
+  WillHandle checks whether this handler will be used to handle the specified
+  request or not.
 */
 func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
 	match := p.PathPattern.GetPathMatch(c.Path())
