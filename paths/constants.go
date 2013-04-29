@@ -10,9 +10,15 @@ var RegexOptionalPathSeperator string = "(/?)"
   Segments
 */
 
-var segmentDynamicPrefix string = "{"
-var segmentDynamicSuffix string = "}"
-var segmentOptionalDynamicPrefix string = "["
-var segmentOptionalDynamicSuffix string = "]"
-var segmentWildcard string = "*"
-var segmentCatchAll string = "***"
+const segmentDynamicPrefix string = "{"
+const segmentDynamicSuffix string = "}"
+const segmentOptionalDynamicPrefix string = "["
+const segmentOptionalDynamicSuffix string = "]"
+const segmentWildcard string = "*"
+const segmentCatchAll string = "***"
+
+/*
+  Public
+*/
+
+const MatchAllPaths string = segmentCatchAll

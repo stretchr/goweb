@@ -54,12 +54,14 @@ func TestGowebPath_GetPathMatch_Extensions(t *testing.T) {
 
 func TestGowebPath_GetPathMatch_Edges(t *testing.T) {
 
-	gp, _ := NewGowebPath(segmentCatchAll)
+	// everything
+	gp, _ := NewGowebPath(MatchAllPaths)
 	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
 	assert.True(t, gp.GetPathMatch(NewPath("/people")).Matches)
 	assert.True(t, gp.GetPathMatch(NewPath("/")).Matches)
 	assert.True(t, gp.GetPathMatch(NewPath("")).Matches)
 
+	// root
 	gp, _ = NewGowebPath("/")
 	assert.True(t, gp.GetPathMatch(NewPath("/")).Matches)
 	assert.True(t, gp.GetPathMatch(NewPath("")).Matches)
