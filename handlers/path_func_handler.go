@@ -2,13 +2,18 @@ package handlers
 
 import (
 	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchrcom/goweb/paths"
+)
+
+const (
+	contextURLParametersDataKey string = "urlparams"
 )
 
 /**
   PathFuncHandler is a Handler that maps a path to handler code.
 */
 type PathFuncHandler struct {
-	Path string
+	PathPattern *paths.PathPattern
 
 	HandlerFunc HandlerFunc
 }
@@ -17,7 +22,12 @@ type PathFuncHandler struct {
   WillHandle always return true for Pipes.
 */
 func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
-	return false, nil
+	match := p.PathPattern.GetPathMatch(c.Path())
+
+	// save the match parameters for later
+	c.Data().Set(contextURLParametersDataKey, match.Parameters)
+
+	return match.Matches, nil
 }
 
 /**

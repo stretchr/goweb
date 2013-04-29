@@ -26,12 +26,15 @@ func NewPath(rawPath string) *Path {
 
 }
 
+/*
+	cleanPath cleans returns the cleaned version of the specified path.
+*/
 func cleanPath(path string) string {
 	return strings.TrimRight(strings.TrimLeft(path, PathSeperator), PathSeperator)
 }
 
 /*
-  Segments gets the segments for this path.
+  Segments gets the segments for this path broken up by the PathSeparator.
 */
 func (p *Path) Segments() []string {
 

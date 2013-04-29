@@ -1,12 +1,12 @@
 package paths
 
 import (
+	"github.com/stretchrcom/stew/objects"
 	"strings"
 )
 
 /*
-  GowebPath represents a path that can contain special
-  matching segments.
+  PathPattern represents a path that can contain special matching segments.
 
   Valid paths include:
 
@@ -18,21 +18,28 @@ import (
     /something/*** - Matches the start plus anything after it
 
 */
-type GowebPath struct {
+type PathPattern struct {
+
+	// RawPath is the raw path.
 	RawPath string
-	path    *Path
+
+	path *Path
 }
 
-func NewGowebPath(path string) (*GowebPath, error) {
+func NewPathPattern(path string) (*PathPattern, error) {
 
-	p := new(GowebPath)
+	p := new(PathPattern)
 	p.RawPath = path
 	p.path = NewPath(path)
 
 	return p, nil
 }
 
-func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
+/*
+	GetPathMatch gets the PathMatch object describing the match or otherwise
+	between this PathPattern and the specified Path.
+*/
+func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 
 	pathMatch := new(PathMatch)
 	pathMatch.Matches = true
@@ -42,7 +49,7 @@ func (p *GowebPath) GetPathMatch(path *Path) *PathMatch {
 		return pathMatch
 	}
 
-	pathMatch.Parameters = make(map[string]string)
+	pathMatch.Parameters = make(objects.Map)
 
 	checkSegments := p.path.Segments()
 	pathSegments := path.Segments()

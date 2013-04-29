@@ -1,8 +1,12 @@
 package paths
 
+import (
+	"github.com/stretchrcom/stew/objects"
+)
+
 type PathMatch struct {
 	Matches    bool
-	Parameters map[string]string
+	Parameters objects.Map
 }
 
 var PathDoesntMatch *PathMatch = new(PathMatch)

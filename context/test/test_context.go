@@ -9,5 +9,5 @@ func MakeTestContext() *context.Context {
 }
 
 func MakeTestContextWithPath(path string) *context.Context {
-	return new(context.Context)
+	return context.NewContext(path)
 }
