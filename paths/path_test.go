@@ -13,12 +13,30 @@ func TestPath_RawPath(t *testing.T) {
 
 }
 
+func TestPath_cleanPath(t *testing.T) {
+
+	assert.Equal(t, "people/123/books", cleanPath("/people/123/books/"))
+	assert.Equal(t, "people/123/books", cleanPath("//people/123/books/"))
+	assert.Equal(t, "people/123/books", cleanPath("//people/123/books////"))
+
+}
+
 func TestPath_Segments(t *testing.T) {
 
 	p := NewPath("people/123/books")
+	s := p.Segments()
+	assert.Equal(t, "people", s[0])
+	assert.Equal(t, "123", s[1])
+	assert.Equal(t, "books", s[2])
 
-	s, _ := p.Segments()
+	p = NewPath("/people/123/books")
+	s = p.Segments()
+	assert.Equal(t, "people", s[0])
+	assert.Equal(t, "123", s[1])
+	assert.Equal(t, "books", s[2])
 
+	p = NewPath("/people/123/books/")
+	s = p.Segments()
 	assert.Equal(t, "people", s[0])
 	assert.Equal(t, "123", s[1])
 	assert.Equal(t, "books", s[2])
