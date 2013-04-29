@@ -28,6 +28,7 @@ func TestPathMatchHandler(t *testing.T) {
 	ctx2 := context_test.MakeTestContextWithPath("/collection")
 	will, _ = h.WillHandle(ctx2)
 	assert.False(t, will)
+	assert.Nil(t, ctx2.Data().Get(contextURLParametersDataKey))
 
 	assert.Nil(t, h.Handle(ctx2))
 	assert.True(t, called, "Handler func should get called")

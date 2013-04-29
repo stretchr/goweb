@@ -14,7 +14,6 @@ const (
 */
 type PathFuncHandler struct {
 	PathPattern *paths.PathPattern
-
 	HandlerFunc HandlerFunc
 }
 
@@ -25,8 +24,12 @@ type PathFuncHandler struct {
 func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
 	match := p.PathPattern.GetPathMatch(c.Path())
 
-	// save the match parameters for later
-	c.Data().Set(contextURLParametersDataKey, match.Parameters)
+	if match.Matches {
+
+		// save the match parameters for later
+		c.Data().Set(contextURLParametersDataKey, match.Parameters)
+
+	}
 
 	return match.Matches, nil
 }
