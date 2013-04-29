@@ -33,9 +33,38 @@ func TestGowebPath_GetPathMatch_Parameters(t *testing.T) {
 	gp, _ := NewGowebPath("/people/{id}/books/{title}/chapters/{chapter}")
 	m := gp.GetPathMatch(NewPath("people/123/books/origin-of-species/chapters/2"))
 
+	assert.True(t, m.Matches)
 	assert.Equal(t, m.Parameters["id"], "123")
 	assert.Equal(t, m.Parameters["title"], "origin-of-species")
 	assert.Equal(t, m.Parameters["chapter"], "2")
+
+}
+
+func TestGowebPath_GetPathMatch_Extensions(t *testing.T) {
+
+	gp, _ := NewGowebPath("/people/{id}/books/{title}/chapters/{chapter}")
+	m := gp.GetPathMatch(NewPath("people/123/books/origin.of.species/chapters/2.json"))
+
+	assert.True(t, m.Matches)
+	assert.Equal(t, m.Parameters["id"], "123")
+	assert.Equal(t, m.Parameters["title"], "origin.of.species")
+	assert.Equal(t, m.Parameters["chapter"], "2")
+
+}
+
+func TestGowebPath_GetPathMatch_Edges(t *testing.T) {
+
+	gp, _ := NewGowebPath(segmentCatchAll)
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/people")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("")).Matches)
+
+	gp, _ = NewGowebPath("/")
+	assert.True(t, gp.GetPathMatch(NewPath("/")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people")).Matches)
 
 }
 
@@ -55,7 +84,7 @@ func TestGowebPath_GetPathMatch_Matches(t *testing.T) {
 	assert.False(t, gp.GetPathMatch(NewPath("/people/123/books/hello")).Matches)
 
 	// ...
-	gp, _ = NewGowebPath("/people/{id}/books/...")
+	gp, _ = NewGowebPath("/people/{id}/books/***")
 	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/hello/how/do/you/do")).Matches)
 
 	// *

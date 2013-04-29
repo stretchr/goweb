@@ -13,7 +13,8 @@ import (
     /literal
     /{placeholder}
     /[optional placeholder]
-    /* - matches everything following this
+    /people/* - matches like a placeholder but doesn't care what it is
+    /something/... - Matches the start plus anything after it
     /people/{id:int} - specific types
     /people/{id:string}
 */

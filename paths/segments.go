@@ -16,19 +16,19 @@ const (
 
 func getSegmentType(segment string) segmentType {
 
-	if strings.HasPrefix(segment, "{") && strings.HasSuffix(segment, "}") {
+	if strings.HasPrefix(segment, segmentDynamicPrefix) && strings.HasSuffix(segment, segmentDynamicSuffix) {
 		return segmentTypeDynamic
 	}
 
-	if strings.HasPrefix(segment, "[") && strings.HasSuffix(segment, "]") {
+	if strings.HasPrefix(segment, segmentOptionalDynamicPrefix) && strings.HasSuffix(segment, segmentOptionalDynamicSuffix) {
 		return segmentTypeDynamicOptional
 	}
 
-	if segment == "*" {
+	if segment == segmentWildcard {
 		return segmentTypeWildcard
 	}
 
-	if segment == "..." {
+	if segment == segmentCatchAll {
 		return segmentTypeCatchall
 	}
 

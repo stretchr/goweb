@@ -41,4 +41,10 @@ func TestPath_Segments(t *testing.T) {
 	assert.Equal(t, "123", s[1])
 	assert.Equal(t, "books", s[2])
 
+	p = NewPath("/people/123/books.json")
+	s = p.Segments()
+	assert.Equal(t, "people", s[0])
+	assert.Equal(t, "123", s[1])
+	assert.Equal(t, "books", s[2])
+
 }
