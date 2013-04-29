@@ -13,8 +13,7 @@ type Pipe []Handler
   AppendHandler adds a handler to the end of this pipe.
 */
 func (p Pipe) AppendHandler(handler Handler) Pipe {
-	p = append(p, handler)
-	return p
+	return append(p, handler)
 }
 
 /*
@@ -24,13 +23,13 @@ func (p Pipe) PrependHandler(handler Handler) Pipe {
 
 	// TODO: is there a better way to do prepends?
 
-	handlers := append(make([]Handler, 0), handler)
-	for _, handler := range p {
-		handlers = append(handlers, handler)
+	handlers := make([]Handler, len(p)+1)
+	handlers[0] = handler
+	for hIndex, handler := range p {
+		handlers[hIndex+1] = handler
 	}
-	p = handlers
 
-	return p
+	return handlers
 }
 
 /*

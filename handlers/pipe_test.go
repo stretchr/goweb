@@ -66,10 +66,7 @@ func TestPipe_Handle(t *testing.T) {
 	handler3 := new(handlers_test.TestHandler)
 
 	// add the handlers to the pipe
-	p := make(Pipe, 0)
-	p = p.AppendHandler(handler1)
-	p = p.AppendHandler(handler2)
-	p = p.AppendHandler(handler3)
+	p := Pipe{handler1, handler2, handler3}
 
 	// setup expectations
 	handler1.On("WillHandle", ctx).Return(true, nil)
