@@ -23,13 +23,9 @@ func (p Pipe) AppendHandler(handler Handler) Pipe {
 */
 func (p Pipe) PrependHandler(handler Handler) Pipe {
 
-	// TODO: is there a better way to do prepends?
-
-	handlers := make([]Handler, len(p)+1)
-	handlers[0] = handler
-	for hIndex, handler := range p {
-		handlers[hIndex+1] = handler
-	}
+	handlers := make([]Handler, 0, len(p)+1)
+	handlers = append(handlers, handler)
+	handlers = append(handlers, p...)
 
 	return handlers
 }
