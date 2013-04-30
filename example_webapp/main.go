@@ -20,6 +20,7 @@ func main() {
 	/*
 		Map some routes
 	*/
+
 	goweb.Map("people/{id}", func(c context.Context) error {
 
 		goweb.API.Respond(c, 200, "Yes, this worked", nil)
