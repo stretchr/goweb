@@ -1,9 +1,5 @@
 package context
 
-/*
-  <partial name="context">
-*/
-
 import (
 	"github.com/stretchrcom/goweb/paths"
 	"github.com/stretchrcom/stew/objects"
@@ -16,7 +12,3 @@ type Context interface {
 	HttpResponseWriter() http.ResponseWriter
 	HttpRequest() *http.Request
 }
-
-/*
-  </partial>
-*/
