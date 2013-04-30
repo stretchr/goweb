@@ -10,18 +10,18 @@ const (
 )
 
 /*
-  PathFuncHandler is a Handler that maps a path to handler code.
+  PathMatchHandler is a Handler that maps a path to handler code.
 */
-type PathFuncHandler struct {
-	PathPattern *paths.PathPattern
-	HandlerFunc HandlerFunc
+type PathMatchHandler struct {
+	PathPattern   *paths.PathPattern
+	ExecutionFunc HandlerExecutionFunc
 }
 
 /*
   WillHandle checks whether this handler will be used to handle the specified
   request or not.
 */
-func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
+func (p *PathMatchHandler) WillHandle(c *context.Context) (bool, error) {
 	match := p.PathPattern.GetPathMatch(c.Path())
 
 	if match.Matches {
@@ -37,6 +37,6 @@ func (p *PathFuncHandler) WillHandle(c *context.Context) (bool, error) {
 /*
   Handle gives each sub handle the opportinuty to handle the context.
 */
-func (p *PathFuncHandler) Handle(c *context.Context) error {
-	return p.HandlerFunc(c)
+func (p *PathMatchHandler) Handle(c *context.Context) error {
+	return p.ExecutionFunc(c)
 }

@@ -14,7 +14,7 @@ func MakeTestContext() *context.Context {
 func MakeTestContextWithPath(path string) *context.Context {
 
 	responseWriter := new(http_test.TestResponseWriter)
-	testRequest, _ := http.NewRequest("GET", fmt.Sprintf("http://github.com/%s", path), nil)
+	testRequest, _ := http.NewRequest("GET", fmt.Sprintf("http://stretchr.org/%s", path), nil)
 
 	return context.NewContext(responseWriter, testRequest)
 }

@@ -70,10 +70,33 @@ func TestPipe_Handle(t *testing.T) {
 
 	// setup expectations
 	handler1.On("WillHandle", ctx).Return(true, nil)
-	handler1.On("Handle", ctx).Return(nil)
+	handler1.On("Handle", ctx).Return(false, nil)
 	handler2.On("WillHandle", ctx).Return(false, nil)
 	handler3.On("WillHandle", ctx).Return(true, nil)
-	handler3.On("Handle", ctx).Return(nil)
+	handler3.On("Handle", ctx).Return(false, nil)
+
+	// call handle
+	p.Handle(ctx)
+
+	// assert expectations
+	mock.AssertExpectationsForObjects(t, handler1.Mock, handler2.Mock, handler3.Mock)
+
+}
+
+func TestPipe_Handle_Stopping(t *testing.T) {
+
+	ctx := context_test.MakeTestContext()
+
+	handler1 := new(handlers_test.TestHandler)
+	handler2 := new(handlers_test.TestHandler)
+	handler3 := new(handlers_test.TestHandler)
+
+	// add the handlers to the pipe
+	p := Pipe{handler1, handler2, handler3}
+
+	// setup expectations
+	handler1.On("WillHandle", ctx).Return(true, nil)
+	handler1.On("Handle", ctx).Return(true, nil)
 
 	// call handle
 	p.Handle(ctx)

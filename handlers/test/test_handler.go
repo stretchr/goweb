@@ -21,10 +21,10 @@ func (h *TestHandler) WillHandle(c *context.Context) (bool, error) {
 
 }
 
-func (h *TestHandler) Handle(c *context.Context) error {
-	e := h.Called(c)[0]
-	if e == nil {
-		return nil
+func (h *TestHandler) Handle(c *context.Context) (bool, error) {
+	args := h.Called(c)
+	if args.Error(1) == nil {
+		return args.Bool(0), nil
 	}
-	return e.(error)
+	return args.Bool(0), args.Error(1)
 }

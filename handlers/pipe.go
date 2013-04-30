@@ -10,14 +10,16 @@ import (
 type Pipe []Handler
 
 /*
-  AppendHandler adds a handler to the end of this pipe.
+  AppendHandler adds a handler to the end of this pipe.  Returns a copy of the Pipe with the
+  specified handler appended.
 */
 func (p Pipe) AppendHandler(handler Handler) Pipe {
 	return append(p, handler)
 }
 
 /*
-  PrependHandler adds a handler to the start of this pipe.
+  PrependHandler adds a handler to the start of this pipe.  Returns a copy of the Pipe with the
+  specified handler prepended.
 */
 func (p Pipe) PrependHandler(handler Handler) Pipe {
 
@@ -42,32 +44,37 @@ func (p Pipe) WillHandle(*context.Context) (bool, error) {
 /*
   Handle gives each sub handle the opportinuty to handle the context.
 */
-func (p Pipe) Handle(c *context.Context) error {
+func (p Pipe) Handle(c *context.Context) (bool, error) {
 
 	var willHandle bool
 	var willHandleErr error
 	var handleErr error
+	var stop bool
 
 	for _, handler := range p {
 
 		willHandle, willHandleErr = handler.WillHandle(c)
 
 		if willHandleErr != nil {
-			return willHandleErr
+			return true, willHandleErr
 		}
 
 		if willHandle {
 
 			// call the handler
-			handleErr = handler.Handle(c)
+			stop, handleErr = handler.Handle(c)
 
 			if handleErr != nil {
-				return handleErr
+				return true, handleErr
+			}
+
+			if stop {
+				break
 			}
 
 		}
 	}
 
 	// everything went well
-	return nil
+	return false, nil
 }

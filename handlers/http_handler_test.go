@@ -10,10 +10,19 @@ import (
 	"testing"
 )
 
+func TestNewHttpHandler(t *testing.T) {
+
+	h := NewHttpHandler()
+
+	if assert.Equal(t, 3, len(h.Handlers)) {
+	}
+
+}
+
 func TestServeHTTP(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)
-	testRequest, _ := http.NewRequest("GET", "http://github.com/strecthrcom/goweb", nil)
+	testRequest, _ := http.NewRequest("GET", "http://stretchr.org/goweb", nil)
 	handler := NewHttpHandler()
 
 	// setup some test handlers
@@ -26,11 +35,11 @@ func TestServeHTTP(t *testing.T) {
 	handler.Handlers = append(handler.Handlers, handler3)
 
 	handler1.On("WillHandle", mock.Anything).Return(true, nil)
-	handler1.On("Handle", mock.Anything).Return(nil)
+	handler1.On("Handle", mock.Anything).Return(false, nil)
 	handler2.On("WillHandle", mock.Anything).Return(true, nil)
-	handler2.On("Handle", mock.Anything).Return(nil)
+	handler2.On("Handle", mock.Anything).Return(false, nil)
 	handler3.On("WillHandle", mock.Anything).Return(true, nil)
-	handler3.On("Handle", mock.Anything).Return(nil)
+	handler3.On("Handle", mock.Anything).Return(false, nil)
 
 	handler.ServeHTTP(responseWriter, testRequest)
 

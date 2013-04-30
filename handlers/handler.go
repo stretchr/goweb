@@ -18,10 +18,10 @@ type Handler interface {
 	/*
 	   Handle tells the handler to do its work.
 	*/
-	Handle(*context.Context) error
+	Handle(*context.Context) (stop bool, err error)
 }
 
-/**
-HandlerFunc represents a function that can be used as a handler.
+/*
+	HandlerExecutionFunc represents a function that can handle requests.
 */
-type HandlerFunc func(*context.Context) error
+type HandlerExecutionFunc func(*context.Context) error

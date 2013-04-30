@@ -13,7 +13,7 @@ func TestPathMatchHandler(t *testing.T) {
 
 	pathPattern, _ := paths.NewPathPattern("collection/{id}/name")
 	var called bool = false
-	h := PathFuncHandler{pathPattern, HandlerFunc(func(c *context.Context) error {
+	h := PathMatchHandler{pathPattern, HandlerExecutionFunc(func(c *context.Context) error {
 		called = true
 		return nil
 	})}
