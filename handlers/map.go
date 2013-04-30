@@ -5,6 +5,9 @@ import (
 	"github.com/stretchrcom/goweb/paths"
 )
 
+/*
+  Map maps an executor to the specified PathPattern.
+*/
 func (h *HttpHandler) Map(pathPattern string, executor func(context.Context) error) error {
 
 	path, pathErr := paths.NewPathPattern(pathPattern)
