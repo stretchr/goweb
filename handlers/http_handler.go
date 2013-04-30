@@ -65,7 +65,17 @@ func (h *HttpHandler) AppendPreHandler(handler Handler) {
 	h.Handlers[0] = h.PreHandlersPipe().AppendHandler(handler)
 }
 
+// PrepentPreHandler prepends a handler to be executed before processing begins.
+func (h *HttpHandler) PrependPreHandler(handler Handler) {
+	h.Handlers[0] = h.PreHandlersPipe().PrependHandler(handler)
+}
+
 // AppendPostHandler appends a handler to be executed after processing completes.
 func (h *HttpHandler) AppendPostHandler(handler Handler) {
 	h.Handlers[2] = h.PostHandlersPipe().AppendHandler(handler)
+}
+
+// PrependPostHandler prepends a handler to be executed after processing completes.
+func (h *HttpHandler) PrependPostHandler(handler Handler) {
+	h.Handlers[2] = h.PostHandlersPipe().PrependHandler(handler)
 }
