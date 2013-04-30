@@ -5,18 +5,6 @@ import (
 	"testing"
 )
 
-/*
-   GoWeb paths
-
-   /literal
-   /{placeholder}
-   /[optional placeholder]
-   /* - matches everything following this
-   /people/{id:int} - specific types
-   /people/{id:string}
-
-*/
-
 func TestNewPathPattern(t *testing.T) {
 
 	path := "/people/{id}/books"
