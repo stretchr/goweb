@@ -19,6 +19,54 @@ func TestNewHttpHandler(t *testing.T) {
 
 }
 
+func TestAppendHandler(t *testing.T) {
+
+	handler1 := new(handlers_test.TestHandler)
+	h := NewHttpHandler()
+
+	handler1.On("WillHandle", mock.Anything).Return(true, nil)
+	handler1.On("Handle", mock.Anything).Return(false, nil)
+
+	h.AppendHandler(handler1)
+	h.Handlers.Handle(nil)
+	assert.Equal(t, 1, len(h.HandlersPipe()))
+
+	mock.AssertExpectationsForObjects(t, handler1.Mock)
+
+}
+
+func TestAppendPreHandler(t *testing.T) {
+
+	handler1 := new(handlers_test.TestHandler)
+	h := NewHttpHandler()
+
+	handler1.On("WillHandle", mock.Anything).Return(true, nil)
+	handler1.On("Handle", mock.Anything).Return(false, nil)
+
+	h.AppendPreHandler(handler1)
+	h.Handlers.Handle(nil)
+	assert.Equal(t, 1, len(h.PreHandlersPipe()))
+
+	mock.AssertExpectationsForObjects(t, handler1.Mock)
+
+}
+
+func TestAppendPostHandler(t *testing.T) {
+
+	handler1 := new(handlers_test.TestHandler)
+	h := NewHttpHandler()
+
+	handler1.On("WillHandle", mock.Anything).Return(true, nil)
+	handler1.On("Handle", mock.Anything).Return(false, nil)
+
+	h.AppendPostHandler(handler1)
+	h.Handlers.Handle(nil)
+	assert.Equal(t, 1, len(h.PostHandlersPipe()))
+
+	mock.AssertExpectationsForObjects(t, handler1.Mock)
+
+}
+
 func TestServeHTTP(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)

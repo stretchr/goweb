@@ -6,4 +6,6 @@ import (
 
 func TestMap(t *testing.T) {
 
+	//defaultHttpHandler = handlers.NewHttpHandler()
+
 }

@@ -36,3 +36,33 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	}
 
 }
+
+// HandlersPipe gets the pipe for handlers.
+func (h *HttpHandler) HandlersPipe() Pipe {
+	return h.Handlers[1].(Pipe)
+}
+
+// PreHandlersPipe gets the handlers that are executed before processing begins.
+func (h *HttpHandler) PreHandlersPipe() Pipe {
+	return h.Handlers[0].(Pipe)
+}
+
+// PostHandlersPipe gets the handlers that are executed after processing completes.
+func (h *HttpHandler) PostHandlersPipe() Pipe {
+	return h.Handlers[2].(Pipe)
+}
+
+// AppendHandler appends a handler to the processing pipe.
+func (h *HttpHandler) AppendHandler(handler Handler) {
+	h.Handlers[1] = h.HandlersPipe().AppendHandler(handler)
+}
+
+// AppendPreHandler appends a handler to be executed before processing begins.
+func (h *HttpHandler) AppendPreHandler(handler Handler) {
+	h.Handlers[0] = h.PreHandlersPipe().AppendHandler(handler)
+}
+
+// AppendPostHandler appends a handler to be executed after processing completes.
+func (h *HttpHandler) AppendPostHandler(handler Handler) {
+	h.Handlers[2] = h.PostHandlersPipe().AppendHandler(handler)
+}
