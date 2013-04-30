@@ -9,7 +9,7 @@ type TestHandler struct {
 	mock.Mock
 }
 
-func (h *TestHandler) WillHandle(c *context.Context) (bool, error) {
+func (h *TestHandler) WillHandle(c context.Context) (bool, error) {
 
 	args := h.Called(c)
 
@@ -21,7 +21,7 @@ func (h *TestHandler) WillHandle(c *context.Context) (bool, error) {
 
 }
 
-func (h *TestHandler) Handle(c *context.Context) (bool, error) {
+func (h *TestHandler) Handle(c context.Context) (bool, error) {
 	args := h.Called(c)
 	if args.Error(1) == nil {
 		return args.Bool(0), nil

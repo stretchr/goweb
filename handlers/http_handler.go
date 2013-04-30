@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchrcom/goweb/webcontext"
 	"net/http"
 )
 
@@ -24,7 +24,7 @@ func NewHttpHandler() *HttpHandler {
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 
 	// make the context
-	ctx := context.NewContext(handler, responseWriter, request)
+	ctx := webcontext.NewWebContext(responseWriter, request)
 
 	// run it through the handlers
 	_, err := handler.Handlers.Handle(ctx)

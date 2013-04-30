@@ -1,3 +1,3 @@
-package context
+package webcontext
 
 type HttpHandler interface{}

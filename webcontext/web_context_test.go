@@ -1,4 +1,4 @@
-package context
+package webcontext
 
 import (
 	"github.com/stretchrcom/testify/assert"
@@ -12,7 +12,7 @@ func TestNewContext(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
 
-	c := NewContext(nil, responseWriter, testRequest)
+	c := NewWebContext(responseWriter, testRequest)
 
 	if assert.NotNil(t, c) {
 

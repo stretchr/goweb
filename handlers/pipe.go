@@ -37,14 +37,14 @@ func (p Pipe) PrependHandler(handler Handler) Pipe {
 /*
   WillHandle always return true for Pipes.
 */
-func (p Pipe) WillHandle(*context.Context) (bool, error) {
+func (p Pipe) WillHandle(context.Context) (bool, error) {
 	return true, nil
 }
 
 /*
   Handle gives each sub handle the opportinuty to handle the context.
 */
-func (p Pipe) Handle(c *context.Context) (bool, error) {
+func (p Pipe) Handle(c context.Context) (bool, error) {
 
 	var willHandle bool
 	var willHandleErr error

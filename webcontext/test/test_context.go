@@ -1,8 +1,8 @@
-package context_test
+package webcontext_test
 
 import (
 	"fmt"
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchrcom/goweb/webcontext"
 	http_test "github.com/stretchrcom/testify/http"
 	"net/http"
 )
@@ -10,14 +10,14 @@ import (
 var TestRequest *http.Request
 var TestResponseWriter *http_test.TestResponseWriter
 
-func MakeTestContext() *context.Context {
+func MakeTestContext() *webcontext.WebContext {
 	return MakeTestContextWithPath("/")
 }
 
-func MakeTestContextWithPath(path string) *context.Context {
+func MakeTestContextWithPath(path string) *webcontext.WebContext {
 
 	TestResponseWriter = new(http_test.TestResponseWriter)
 	TestRequest, _ = http.NewRequest("GET", fmt.Sprintf("http://stretchr.org/%s", path), nil)
 
-	return context.NewContext(nil, TestResponseWriter, TestRequest)
+	return webcontext.NewWebContext(TestResponseWriter, TestRequest)
 }

@@ -1,7 +1,7 @@
 package api
 
 import (
-	context_test "github.com/stretchrcom/goweb/context/test"
+	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
 	"testing"
 )

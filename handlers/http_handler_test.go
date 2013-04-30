@@ -94,10 +94,9 @@ func TestServeHTTP(t *testing.T) {
 	mock.AssertExpectationsForObjects(t, handler1.Mock, handler2.Mock, handler3.Mock)
 
 	// get the first context
-	ctx := handler1.Calls[0].Arguments[0].(*context.Context)
+	ctx := handler1.Calls[0].Arguments[0].(context.Context)
 
 	assert.Equal(t, responseWriter, ctx.HttpResponseWriter())
 	assert.Equal(t, testRequest, ctx.HttpRequest())
-	assert.Equal(t, handler, ctx.HttpHandler())
 
 }
