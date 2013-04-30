@@ -7,14 +7,17 @@ import (
 	"net/http"
 )
 
+var TestRequest *http.Request
+var TestResponseWriter *http_test.TestResponseWriter
+
 func MakeTestContext() *context.Context {
 	return MakeTestContextWithPath("/")
 }
 
 func MakeTestContextWithPath(path string) *context.Context {
 
-	responseWriter := new(http_test.TestResponseWriter)
-	testRequest, _ := http.NewRequest("GET", fmt.Sprintf("http://stretchr.org/%s", path), nil)
+	TestResponseWriter = new(http_test.TestResponseWriter)
+	TestRequest, _ = http.NewRequest("GET", fmt.Sprintf("http://stretchr.org/%s", path), nil)
 
-	return context.NewContext(nil, responseWriter, testRequest)
+	return context.NewContext(nil, TestResponseWriter, TestRequest)
 }
