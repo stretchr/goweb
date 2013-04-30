@@ -1,4 +1,4 @@
 /*
-  Goweb v2 - The most powerful web framework for Go.
+  Goweb v2 BETA - A simple, powerful web framework for Go.
 */
 package goweb
