@@ -86,8 +86,8 @@ func TestPrependPreHandler(t *testing.T) {
 	h.Handlers.Handle(nil)
 	assert.Equal(t, 2, len(h.PreHandlersPipe()))
 
-	assert.Equal(t, 2, h.PostHandlersPipe()[0].(*handlers_test.TestHandler).TestData().Get("id"))
-	assert.Equal(t, 1, h.PostHandlersPipe()[1].(*handlers_test.TestHandler).TestData().Get("id"))
+	assert.Equal(t, 2, h.PreHandlersPipe()[0].(*handlers_test.TestHandler).TestData().Get("id"))
+	assert.Equal(t, 1, h.PreHandlersPipe()[1].(*handlers_test.TestHandler).TestData().Get("id"))
 
 	mock.AssertExpectationsForObjects(t, handler1.Mock)
 
