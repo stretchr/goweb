@@ -1,7 +1,7 @@
-package context
+package goweb
 
 /*
-  <partial name="context">
+  <insert partial-name="context" from="context/context.go" />
 */
 
 import (
@@ -18,5 +18,5 @@ type Context interface {
 }
 
 /*
-  </partial>
+  </insert>
 */

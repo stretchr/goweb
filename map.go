@@ -15,7 +15,7 @@ func Map(pathPattern string, executor func(context.Context) error) error {
 	}
 
 	handler := &handlers.PathMatchHandler{path, executor}
-	defaultHttpHandler.AppendHandler(handler)
+	DefaultHttpHandler().AppendHandler(handler)
 
 	// ok
 	return nil
