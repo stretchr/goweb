@@ -9,10 +9,12 @@ type GowebAPIResponder struct {
 	codecService codecservices.CodecService
 }
 
+// SetCodecService sets the codec service to use.
 func (a *GowebAPIResponder) SetCodecService(service codecservices.CodecService) {
 	a.codecService = service
 }
 
+// GetCodecService gets the codec service that will be used by this object.
 func (a *GowebAPIResponder) GetCodecService() codecservices.CodecService {
 
 	if a.codecService == nil {
@@ -24,17 +26,30 @@ func (a *GowebAPIResponder) GetCodecService() codecservices.CodecService {
 
 // WriteResponseObject writes the status code and response object to the HttpResponseWriter in
 // the specified context.
-func (a *GowebAPIResponder) WriteResponseObject(ctx *context.Context, status int, responseObject interface{}) {
+func (a *GowebAPIResponder) WriteResponseObject(ctx *context.Context, status int, responseObject interface{}) error {
 
 	service := a.GetCodecService()
-	codec, _ := service.GetCodec("application/json")
-	output, _ := codec.Marshal(responseObject, nil)
+	codec, codecError := service.GetCodec("application/json")
+
+	if codecError != nil {
+		return codecError
+	}
+
+	output, marshalErr := codec.Marshal(responseObject, nil)
+
+	if marshalErr != nil {
+		return marshalErr
+	}
+
 	ctx.HttpResponseWriter().Write(output)
 	ctx.HttpResponseWriter().WriteHeader(status)
 
+	return nil
+
 }
 
-func (a *GowebAPIResponder) Respond(ctx *context.Context, status int, data interface{}, errors []string) {
+// Responds to the Context with the specified status, data and errors.
+func (a *GowebAPIResponder) Respond(ctx *context.Context, status int, data interface{}, errors []string) error {
 
 	sro := map[string]interface{}{"s": status}
 
@@ -45,6 +60,6 @@ func (a *GowebAPIResponder) Respond(ctx *context.Context, status int, data inter
 		sro["e"] = errors
 	}
 
-	a.WriteResponseObject(ctx, status, sro)
+	return a.WriteResponseObject(ctx, status, sro)
 
 }

@@ -25,9 +25,9 @@ type APIResponder interface {
 	*/
 
 	// Responds to the Context with the specified status, data and errors.
-	Respond(ctx *context.Context, status int, data interface{}, errors []string)
+	Respond(ctx *context.Context, status int, data interface{}, errors []string) error
 
 	// WriteResponseObject writes the status code and response object to the HttpResponseWriter in
 	// the specified context.
-	WriteResponseObject(ctx *context.Context, status int, responseObject interface{})
+	WriteResponseObject(ctx *context.Context, status int, responseObject interface{}) error
 }
