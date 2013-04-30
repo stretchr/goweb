@@ -20,9 +20,16 @@ func main() {
 	goweb.Map("people/{id}", func(c context.Context) error {
 
 		goweb.API.Respond(c, 200, "Yes, this worked", nil)
-
 		return nil
 
+	})
+
+	/*
+		Catch-all handler for everything that we don't understand
+	*/
+	goweb.Map("***", func(c context.Context) error {
+		goweb.API.Respond(c, 404, nil, []string{"File not found"})
+		return nil
 	})
 
 	/*
