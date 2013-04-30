@@ -6,6 +6,9 @@ import (
 )
 
 type HttpHandler struct {
+
+	// Handlers represent a pipe of handlers that will be used
+	// to handle requests.
 	Handlers Pipe
 }
 

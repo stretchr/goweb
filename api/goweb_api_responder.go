@@ -41,8 +41,8 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 		return marshalErr
 	}
 
-	ctx.HttpResponseWriter().Write(output)
 	ctx.HttpResponseWriter().WriteHeader(status)
+	ctx.HttpResponseWriter().Write(output)
 
 	return nil
 
