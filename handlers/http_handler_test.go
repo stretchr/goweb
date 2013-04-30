@@ -50,5 +50,6 @@ func TestServeHTTP(t *testing.T) {
 
 	assert.Equal(t, responseWriter, ctx.HttpResponseWriter())
 	assert.Equal(t, testRequest, ctx.HttpRequest())
+	assert.Equal(t, handler, ctx.HttpHandler())
 
 }

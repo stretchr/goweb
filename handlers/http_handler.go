@@ -24,7 +24,7 @@ func NewHttpHandler() *HttpHandler {
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 
 	// make the context
-	ctx := context.NewContext(responseWriter, request)
+	ctx := context.NewContext(handler, responseWriter, request)
 
 	// run it through the handlers
 	_, err := handler.Handlers.Handle(ctx)

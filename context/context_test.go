@@ -12,7 +12,7 @@ func TestNewContext(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
 
-	c := NewContext(responseWriter, testRequest)
+	c := NewContext(nil, responseWriter, testRequest)
 
 	if assert.NotNil(t, c) {
 

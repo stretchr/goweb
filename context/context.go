@@ -14,14 +14,16 @@ type Context struct {
 	data           objects.Map
 	request        *http.Request
 	responseWriter http.ResponseWriter
+	httpHandler    HttpHandler
 }
 
-func NewContext(responseWriter http.ResponseWriter, request *http.Request) *Context {
+func NewContext(httpHandler HttpHandler, responseWriter http.ResponseWriter, request *http.Request) *Context {
 
 	c := new(Context)
 
 	c.request = request
 	c.responseWriter = responseWriter
+	c.httpHandler = httpHandler
 
 	c.data = make(objects.Map)
 	c.path = paths.NewPath(request.URL.Path)
@@ -44,4 +46,8 @@ func (c *Context) HttpRequest() *http.Request {
 
 func (c *Context) HttpResponseWriter() http.ResponseWriter {
 	return c.responseWriter
+}
+
+func (c *Context) HttpHandler() HttpHandler {
+	return c.httpHandler
 }
