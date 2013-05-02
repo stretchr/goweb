@@ -1,4 +1,4 @@
-package api
+package responders
 
 import (
 	codecservices "github.com/stretchrcom/codecs/services"

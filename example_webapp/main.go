@@ -30,6 +30,8 @@ func main() {
 			goweb.API.Respond(c, 200, "Yes, this worked but you didn't specify an ID", nil)
 		}
 
+		c.RespondWithData("hello")
+
 		return nil
 
 	})

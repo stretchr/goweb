@@ -36,4 +36,21 @@ type Context interface {
 
 	// PathParams gets any parameters that were pulled from the URL path.
 	PathParams() objects.Map
+
+	/*
+		Deprecated (these functions should panic)
+		-----------------------------------------
+	*/
+
+	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
+	Respond(data interface{}, statusCode int, errors []string, context Context) error
+
+	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
+	RespondWithData(data interface{}) error
+
+	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
+	RespondWithError(statusCode int) error
+
+	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
+	RespondWithErrorMessage(message string, statusCode int) error
 }

@@ -1,4 +1,4 @@
-package api
+package responders
 
 import (
 	context_test "github.com/stretchrcom/goweb/webcontext/test"

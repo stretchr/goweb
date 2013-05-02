@@ -1,8 +1,8 @@
 package goweb
 
 import (
-	"github.com/stretchrcom/goweb/api"
+	"github.com/stretchrcom/goweb/responders"
 )
 
-// API is an api.APIResponder which provides the ability to make API responses.
-var API api.APIResponder = new(api.GowebAPIResponder)
+// API is an responders.APIResponder which provides the ability to make API responses.
+var API responders.APIResponder = new(responders.GowebAPIResponder)
