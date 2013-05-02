@@ -36,3 +36,10 @@ func (r *GowebHTTPResponder) WithRedirect(ctx context.Context, pathOrURL string)
 	return r.WithStatus(ctx, http.StatusTemporaryRedirect)
 
 }
+
+// WithPermanentRedirect responds with a redirection to the specific path or URL with the
+// http.StatusMovedPermanently status.
+func (r *GowebHTTPResponder) WithPermanentRedirect(ctx context.Context, pathOrURL string) error {
+	ctx.HttpResponseWriter().Header().Set("Location", pathOrURL)
+	return r.WithStatus(ctx, http.StatusMovedPermanently)
+}
