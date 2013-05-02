@@ -5,10 +5,6 @@ import (
 	"github.com/stretchrcom/goweb/paths"
 )
 
-const (
-	contextURLParametersDataKey string = "path-params"
-)
-
 /*
   PathMatchHandler is a Handler that maps a path to handler code.
 */
@@ -27,7 +23,7 @@ func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
 	if match.Matches {
 
 		// save the match parameters for later
-		c.Data().Set(contextURLParametersDataKey, match.Parameters)
+		c.Data().Set(context.DataKeyURLParameters, match.Parameters)
 
 	}
 
