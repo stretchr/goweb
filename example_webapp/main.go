@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/stretchrcom/goweb"
 	"github.com/stretchrcom/goweb/context"
 	"log"
@@ -21,9 +22,14 @@ func main() {
 		Map some routes
 	*/
 
-	goweb.Map("people/{id}", func(c context.Context) error {
+	goweb.Map("people/[id]", func(c context.Context) error {
 
-		goweb.API.Respond(c, 200, "Yes, this worked", nil)
+		if c.PathParams().Has("id") {
+			goweb.API.Respond(c, 200, fmt.Sprintf("Yes, this worked and your ID is %s", c.PathParams().Get("id")), nil)
+		} else {
+			goweb.API.Respond(c, 200, "Yes, this worked but you didn't specify an ID", nil)
+		}
+
 		return nil
 
 	})
@@ -31,7 +37,7 @@ func main() {
 	/*
 		Catch-all handler for everything that we don't understand
 	*/
-	goweb.Map("***", func(c context.Context) error {
+	goweb.Map(func(c context.Context) error {
 		goweb.API.Respond(c, 404, nil, []string{"File not found"})
 		return nil
 	})

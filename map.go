@@ -1,12 +1,13 @@
 package goweb
 
-import (
-	"github.com/stretchrcom/goweb/context"
-)
-
 /*
   Map maps an executor to the specified PathPattern on the DefaultHttpHandler.
 */
-func Map(pathPattern string, executor func(context.Context) error) error {
-	return DefaultHttpHandler().Map(pathPattern, executor)
+func Map(options ...interface{}) error {
+	return DefaultHttpHandler().Map(options...)
 }
+
+/*
+  DEVNOTE: This function is not tested because it simply passes the call on to the
+  DefaultHttpHandler.
+*/
