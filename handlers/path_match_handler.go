@@ -23,7 +23,7 @@ func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
 	if match.Matches {
 
 		// save the match parameters for later
-		c.Data().Set(context.DataKeyURLParameters, match.Parameters)
+		c.Data().Set(context.DataKeyPathParameters, match.Parameters)
 
 	}
 

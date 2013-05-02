@@ -57,5 +57,5 @@ func (c *WebContext) HttpResponseWriter() http.ResponseWriter {
 
 // PathParams gets any parameters that were pulled from the URL path.
 func (c *WebContext) PathParams() objects.Map {
-	return c.data.GetMap(context.DataKeyURLParameters)
+	return c.data.GetMap(context.DataKeyPathParameters)
 }

@@ -24,12 +24,12 @@ func TestPathMatchHandler(t *testing.T) {
 	assert.True(t, will)
 	h.Handle(ctx1)
 	assert.True(t, called, "Method should be called")
-	assert.Equal(t, "123", ctx1.Data().Get(context.DataKeyURLParameters).(objects.Map).Get("id"))
+	assert.Equal(t, "123", ctx1.Data().Get(context.DataKeyPathParameters).(objects.Map).Get("id"))
 
 	ctx2 := context_test.MakeTestContextWithPath("/collection")
 	will, _ = h.WillHandle(ctx2)
 	assert.False(t, will)
-	assert.Nil(t, ctx2.Data().Get(context.DataKeyURLParameters))
+	assert.Nil(t, ctx2.Data().Get(context.DataKeyPathParameters))
 
 	shouldStop, handleErr := h.Handle(ctx2)
 	assert.Nil(t, handleErr)

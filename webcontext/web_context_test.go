@@ -43,7 +43,7 @@ func TestPathParams(t *testing.T) {
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
 
 	c := NewWebContext(responseWriter, testRequest)
-	c.Data().Set(context.DataKeyURLParameters, objects.Map{"animal": "monkey"})
+	c.Data().Set(context.DataKeyPathParameters, objects.Map{"animal": "monkey"})
 
 	assert.Equal(t, "monkey", c.PathParams().Get("animal"))
 
