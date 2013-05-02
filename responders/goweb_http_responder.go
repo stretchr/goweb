@@ -29,8 +29,8 @@ func (r *GowebHTTPResponder) WithOK(ctx context.Context) error {
 	return r.WithStatus(ctx, http.StatusOK)
 }
 
-// WithLocation responds with a redirection to the specific path or URL.
-func (r *GowebHTTPResponder) WithLocation(ctx context.Context, pathOrURL string) error {
+// WithRedirect responds with a redirection to the specific path or URL.
+func (r *GowebHTTPResponder) WithRedirect(ctx context.Context, pathOrURL string) error {
 
 	ctx.HttpResponseWriter().Header().Set("Location", pathOrURL)
 	return r.WithStatus(ctx, http.StatusTemporaryRedirect)

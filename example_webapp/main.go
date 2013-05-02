@@ -22,7 +22,7 @@ func main() {
 		Map some routes
 	*/
 	goweb.Map("people/me", func(c context.Context) error {
-		return goweb.Respond.WithLocation(c, "/people/123")
+		return goweb.Respond.WithRedirect(c, "/people/123")
 	})
 
 	goweb.Map("people/[id]", func(c context.Context) error {

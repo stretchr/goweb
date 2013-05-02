@@ -15,6 +15,6 @@ type HTTPResponder interface {
 	// With writes a response to the request in the specified context.
 	With(ctx context.Context, httpStatus int, body []byte) error
 
-	// WithLocation responds with a redirection to the specific path or URL.
-	WithLocation(ctx context.Context, pathOrURL string) error
+	// WithRedirect responds with a redirection to the specific path or URL.
+	WithRedirect(ctx context.Context, pathOrURL string) error
 }
