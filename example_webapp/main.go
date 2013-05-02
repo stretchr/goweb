@@ -21,16 +21,17 @@ func main() {
 	/*
 		Map some routes
 	*/
+	goweb.Map("people/me", func(c context.Context) error {
+		return goweb.Respond.WithLocation(c, "/people/123")
+	})
 
 	goweb.Map("people/[id]", func(c context.Context) error {
 
 		if c.PathParams().Has("id") {
-			goweb.API.Respond(c, 200, fmt.Sprintf("Yes, this worked and your ID is %s", c.PathParams().Get("id")), nil)
+			return goweb.API.Respond(c, 200, fmt.Sprintf("Yes, this worked and your ID is %s", c.PathParams().Get("id")), nil)
 		} else {
-			goweb.API.Respond(c, 200, "Yes, this worked but you didn't specify an ID", nil)
+			return goweb.API.Respond(c, 200, "Yes, this worked but you didn't specify an ID", nil)
 		}
-
-		c.RespondWithData("hello")
 
 		return nil
 

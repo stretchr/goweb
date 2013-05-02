@@ -6,7 +6,14 @@ import (
 )
 
 type GowebAPIResponder struct {
-	codecService codecservices.CodecService
+	httpResponder HTTPResponder
+	codecService  codecservices.CodecService
+}
+
+func NewGowebAPIResponder(httpResponder HTTPResponder) *GowebAPIResponder {
+	api := new(GowebAPIResponder)
+	api.httpResponder = httpResponder
+	return api
 }
 
 // SetCodecService sets the codec service to use.
@@ -41,8 +48,8 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 		return marshalErr
 	}
 
-	ctx.HttpResponseWriter().WriteHeader(status)
-	ctx.HttpResponseWriter().Write(output)
+	// use the HTTP responder to respond
+	a.httpResponder.With(ctx, status, output)
 
 	return nil
 

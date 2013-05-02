@@ -6,9 +6,18 @@ import (
 	"testing"
 )
 
-func TestInterface(t *testing.T) {
+func TestAPI_Interface(t *testing.T) {
 
 	assert.Implements(t, (*APIResponder)(nil), new(GowebAPIResponder))
+
+}
+
+func TestNewGowebAPIResponder(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	api := NewGowebAPIResponder(http)
+
+	assert.Equal(t, http, api.httpResponder)
 
 }
 
@@ -20,7 +29,8 @@ func TestCodecService(t *testing.T) {
 
 func TestRespond(t *testing.T) {
 
-	var API *GowebAPIResponder = new(GowebAPIResponder)
+	http := new(GowebHTTPResponder)
+	API := NewGowebAPIResponder(http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
@@ -32,7 +42,8 @@ func TestRespond(t *testing.T) {
 
 func TestWriteResponseObject(t *testing.T) {
 
-	var API *GowebAPIResponder = new(GowebAPIResponder)
+	http := new(GowebHTTPResponder)
+	API := NewGowebAPIResponder(http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
