@@ -19,6 +19,10 @@ func TestNewGowebAPIResponder(t *testing.T) {
 
 	assert.Equal(t, http, api.httpResponder)
 
+	assert.Equal(t, api.StandardFieldStatusKey, "s")
+	assert.Equal(t, api.StandardFieldDataKey, "d")
+	assert.Equal(t, api.StandardFieldErrorsKey, "e")
+
 }
 
 func TestCodecService(t *testing.T) {
@@ -37,6 +41,22 @@ func TestRespond(t *testing.T) {
 	API.Respond(ctx, 200, data, nil)
 
 	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"d\":{\"name\":\"Mat\"},\"s\":200}")
+
+}
+
+func TestRespondWithCustomFieldnames(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	API := NewGowebAPIResponder(http)
+	ctx := context_test.MakeTestContext()
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.StandardFieldDataKey = "data"
+	API.StandardFieldStatusKey = "status"
+
+	API.Respond(ctx, 200, data, nil)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"data\":{\"name\":\"Mat\"},\"status\":200}")
 
 }
 

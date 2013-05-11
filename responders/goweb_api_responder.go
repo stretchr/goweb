@@ -5,14 +5,34 @@ import (
 	"github.com/stretchrcom/goweb/context"
 )
 
+const (
+	DefaultStandardFieldDataKey   string = "d"
+	DefaultStandardFieldStatusKey string = "s"
+	DefaultStandardFieldErrorsKey string = "e"
+)
+
 type GowebAPIResponder struct {
 	httpResponder HTTPResponder
 	codecService  codecservices.CodecService
+
+	// field names
+
+	// StandardFieldDataKey is the response object field name for the data.
+	StandardFieldDataKey string
+
+	// StandardFieldStatusKey is the response object field name for the status.
+	StandardFieldStatusKey string
+
+	// StandardFieldErrorsKey is the response object field name for the errors.
+	StandardFieldErrorsKey string
 }
 
 func NewGowebAPIResponder(httpResponder HTTPResponder) *GowebAPIResponder {
 	api := new(GowebAPIResponder)
 	api.httpResponder = httpResponder
+	api.StandardFieldDataKey = DefaultStandardFieldDataKey
+	api.StandardFieldStatusKey = DefaultStandardFieldStatusKey
+	api.StandardFieldErrorsKey = DefaultStandardFieldErrorsKey
 	return api
 }
 
@@ -58,13 +78,13 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 // Responds to the Context with the specified status, data and errors.
 func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interface{}, errors []string) error {
 
-	sro := map[string]interface{}{"s": status}
+	sro := map[string]interface{}{a.StandardFieldStatusKey: status}
 
 	if data != nil {
-		sro["d"] = data
+		sro[a.StandardFieldDataKey] = data
 	}
 	if len(errors) > 0 {
-		sro["e"] = errors
+		sro[a.StandardFieldErrorsKey] = errors
 	}
 
 	return a.WriteResponseObject(ctx, status, sro)
