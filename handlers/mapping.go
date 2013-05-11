@@ -16,7 +16,7 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 	switch len(options) {
 	case 0: // ()
 		// no arguments is an error
-		panic("Cannot call Map with no arguments")
+		panic("goweb: Cannot call Map with no arguments")
 		break
 	case 1: // (func)
 		// catch all assumption
