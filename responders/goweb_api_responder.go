@@ -52,7 +52,13 @@ func (a *GowebAPIResponder) GetCodecService() codecservices.CodecService {
 }
 
 // WriteResponseObject writes the status code and response object to the HttpResponseWriter in
-// the specified context.
+// the specified context, in the format best suited based on the request.
+//
+// Goweb uses the WebCodecService to decide which codec to use when responding
+// see http://godoc.org/github.com/stretchrcom/codecs/services#WebCodecService for more information.
+//
+// This method should be used when the Goweb Standard Response Object does not satisfy the needs of
+// the API, but other Respond* methods are recommended.
 func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int, responseObject interface{}) error {
 
 	service := a.GetCodecService()
@@ -78,6 +84,7 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 // Responds to the Context with the specified status, data and errors.
 func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interface{}, errors []string) error {
 
+	// make the standard response object
 	sro := map[string]interface{}{a.StandardFieldStatusKey: status}
 
 	if data != nil {

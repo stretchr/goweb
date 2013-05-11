@@ -25,12 +25,6 @@ func TestNewGowebAPIResponder(t *testing.T) {
 
 }
 
-func TestCodecService(t *testing.T) {
-
-	// TODO: this
-
-}
-
 func TestRespond(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
