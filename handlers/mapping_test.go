@@ -48,3 +48,16 @@ func TestMap_CatchAllAssumption(t *testing.T) {
 	assert.True(t, called)
 
 }
+
+/*
+func TestMapRest(t *testing.T) {
+
+	rest := new(controllers_test.TestController)
+
+	handler := NewHttpHandler()
+	handler.MapRest("people", rest)
+
+	assert.Equal(t, 1, len(handler.HandlersPipe()))
+
+}
+*/
