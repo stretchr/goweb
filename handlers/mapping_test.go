@@ -26,6 +26,25 @@ func TestMap(t *testing.T) {
 
 }
 
+func TestMap_WithMatcherFuncs(t *testing.T) {
+
+	handler := NewHttpHandler()
+
+	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	handler.Map("/people/{id}", func(c context.Context) error {
+		return nil
+	}, matcherFunc)
+
+	assert.Equal(t, 1, len(handler.HandlersPipe()))
+	h := handler.HandlersPipe()[0].(*PathMatchHandler)
+	assert.Equal(t, 1, len(h.MatcherFuncs))
+	assert.Equal(t, matcherFunc, h.MatcherFuncs[0])
+
+}
+
 func TestMap_CatchAllAssumption(t *testing.T) {
 
 	handler := NewHttpHandler()

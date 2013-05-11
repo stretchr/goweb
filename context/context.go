@@ -24,6 +24,14 @@ type Context interface {
 	HttpRequest() *http.Request
 
 	/*
+		Request helpers
+		----------------------------------------
+	*/
+
+	// MethodString gets the HTTP Method of the request as an uppercase string.
+	MethodString() string
+
+	/*
 		Data
 		----------------------------------------
 	*/

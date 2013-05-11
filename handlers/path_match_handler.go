@@ -11,6 +11,14 @@ import (
 type PathMatchHandler struct {
 	PathPattern   *paths.PathPattern
 	ExecutionFunc HandlerExecutionFunc
+	MatcherFuncs  []MatcherFunc
+}
+
+func NewPathMatchHandler(pathPattern *paths.PathPattern, executionFunc HandlerExecutionFunc) *PathMatchHandler {
+	handler := new(PathMatchHandler)
+	handler.PathPattern = pathPattern
+	handler.ExecutionFunc = executionFunc
+	return handler
 }
 
 /*
@@ -18,16 +26,52 @@ type PathMatchHandler struct {
   request or not.
 */
 func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
-	match := p.PathPattern.GetPathMatch(c.Path())
 
-	if match.Matches {
+	// check each matcher func
+	matcherFuncMatches := true
+	matcherFuncDecisionMade := false
+	for _, matcherFunc := range p.MatcherFuncs {
+		decision, matcherFuncErr := matcherFunc(c)
 
-		// save the match parameters for later
-		c.Data().Set(context.DataKeyPathParameters, match.Parameters)
+		if matcherFuncErr != nil {
+			return false, matcherFuncErr
+		}
+
+		switch decision {
+		case NoMatch:
+			matcherFuncMatches = false
+			matcherFuncDecisionMade = true
+			break
+		case Match:
+			matcherFuncMatches = true
+			matcherFuncDecisionMade = true
+			break
+		}
+
+		if matcherFuncDecisionMade {
+			break
+		}
 
 	}
 
-	return match.Matches, nil
+	pathMatch := p.PathPattern.GetPathMatch(c.Path())
+
+	var allMatch bool
+
+	if matcherFuncDecisionMade {
+		allMatch = matcherFuncMatches
+	} else {
+		allMatch = pathMatch.Matches
+	}
+
+	if allMatch {
+
+		// save the match parameters for later
+		c.Data().Set(context.DataKeyPathParameters, pathMatch.Parameters)
+
+	}
+
+	return allMatch, nil
 }
 
 /*

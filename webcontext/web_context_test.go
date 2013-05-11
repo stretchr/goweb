@@ -26,6 +26,38 @@ func TestNewContext(t *testing.T) {
 
 }
 
+func TestMethodString(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("get", "http://goweb.org/people/123", nil)
+
+	c := NewWebContext(responseWriter, testRequest)
+
+	assert.Equal(t, "GET", c.MethodString())
+
+	responseWriter = new(http_test.TestResponseWriter)
+	testRequest, _ = http.NewRequest("put", "http://goweb.org/people/123", nil)
+
+	c = NewWebContext(responseWriter, testRequest)
+
+	assert.Equal(t, "PUT", c.MethodString())
+
+	responseWriter = new(http_test.TestResponseWriter)
+	testRequest, _ = http.NewRequest("DELETE", "http://goweb.org/people/123", nil)
+
+	c = NewWebContext(responseWriter, testRequest)
+
+	assert.Equal(t, "DELETE", c.MethodString())
+
+	responseWriter = new(http_test.TestResponseWriter)
+	testRequest, _ = http.NewRequest("anything", "http://goweb.org/people/123", nil)
+
+	c = NewWebContext(responseWriter, testRequest)
+
+	assert.Equal(t, "ANYTHING", c.MethodString())
+
+}
+
 func TestData(t *testing.T) {
 
 	c := new(WebContext)

@@ -36,7 +36,28 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 		return pathErr
 	}
 
-	handler := &PathMatchHandler{path, executor}
+	handler := NewPathMatchHandler(path, executor)
+
+	// check match funcs too
+	if len(options) > 2 { // (string, func, matcherFuncs...)
+		// pattern and executor
+		pathPattern = options[0].(string)
+		executor = options[1].(func(context.Context) error)
+
+		// collect the matcher funcs too
+		var ok bool
+		matcherFuncs := make([]MatcherFunc, len(options)-2)
+		for i := 2; i < len(options); i++ {
+			if matcherFuncs[i-2], ok = options[i].(MatcherFunc); !ok {
+				panic("goweb: [2...] arguments passed to Map must be of type MatcherFunc.")
+			}
+		}
+
+		// set them
+		handler.MatcherFuncs = matcherFuncs
+
+	}
+
 	h.AppendHandler(handler)
 
 	// ok

@@ -5,6 +5,7 @@ import (
 	"github.com/stretchrcom/goweb/paths"
 	"github.com/stretchrcom/stew/objects"
 	"net/http"
+	"strings"
 )
 
 /*
@@ -42,6 +43,11 @@ func (c *WebContext) Data() objects.Map {
 		c.data = make(objects.Map)
 	}
 	return c.data
+}
+
+// MethodString gets the HTTP method of this request as an uppercase string.
+func (c *WebContext) MethodString() string {
+	return strings.ToUpper(c.HttpRequest().Method)
 }
 
 // HttpRequest gets the underlying http.Request that this Context represents.
