@@ -9,11 +9,22 @@ import (
   PathMatchHandler is a Handler that maps a path to handler code.
 */
 type PathMatchHandler struct {
-	PathPattern   *paths.PathPattern
+
+	// PathPattern is the pattern which paths must match in order for this
+	// object to handle the context.
+	PathPattern *paths.PathPattern
+
+	// ExecutionFunc is the function that will be executed if there is a successful
+	// match.
 	ExecutionFunc HandlerExecutionFunc
-	MatcherFuncs  []MatcherFunc
+
+	// MatcherFuncs are additional functions that are each consulted until a decision is
+	// made as to whether this object will handle the context or not.
+	MatcherFuncs []MatcherFunc
 }
 
+// NewPathMatchHandler makes a new PathMatchHandler with the specified PathPattern
+// and HandlerExecutionFunc.
 func NewPathMatchHandler(pathPattern *paths.PathPattern, executionFunc HandlerExecutionFunc) *PathMatchHandler {
 	handler := new(PathMatchHandler)
 	handler.PathPattern = pathPattern
