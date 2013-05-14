@@ -101,8 +101,9 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 			controller = restfulController
 			path = restfulController.Path()
 		} else {
-			// Invalid type for a controller
-			panic("goweb: MapController expects a single argument to implement the controllers.RestfulController interface.")
+			// use the default path
+			controller = options[0]
+			path = paths.PathPrefixForClass(options[0])
 		}
 		break
 	case 2: // (path, controller)

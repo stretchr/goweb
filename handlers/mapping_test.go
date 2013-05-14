@@ -117,6 +117,28 @@ func assertPathMatchHandler(t *testing.T, handler *PathMatchHandler, path, metho
 
 }
 
+func TestMapRest_SemiInterface(t *testing.T) {
+
+	semi := new(controllers_test.TestSemiRestfulController)
+
+	h := NewHttpHandler()
+	h.MapController(semi)
+
+	fmt.Printf("%s", h)
+
+	assert.Equal(t, 3, len(h.HandlersPipe()))
+
+	// create
+	assertPathMatchHandler(t, h.HandlersPipe()[0].(*PathMatchHandler), "/test-semi-restful", "POST", "create")
+
+	// read one
+	assertPathMatchHandler(t, h.HandlersPipe()[1].(*PathMatchHandler), "/test-semi-restful/123", "GET", "read one")
+
+	// read many
+	assertPathMatchHandler(t, h.HandlersPipe()[2].(*PathMatchHandler), "/test-semi-restful", "GET", "read many")
+
+}
+
 func TestMapRest(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
@@ -166,8 +188,6 @@ func TestMapRest_WithSpecificPath(t *testing.T) {
 
 	h := NewHttpHandler()
 	h.MapController("something", rest)
-
-	fmt.Printf("%s", h)
 
 	assert.Equal(t, 10, len(h.HandlersPipe()))
 

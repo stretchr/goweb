@@ -15,6 +15,11 @@
 //     // PeopleController controls the 'people' resources.
 //     type PeopleController struct {}
 //
+//     // Path gets the path prefix for this controller.
+//     func (c *PeopleController) Path() string {
+//       return paths.PathPrefixForClass(c)
+//     }
+//
 //     // ReadMany reads many people.
 //     func (c *PeopleController) ReadMany(ctx context.Context) error {
 //
@@ -48,4 +53,7 @@
 //     GET /people - ReadMany
 //     GET /people/{id} - Read
 //     POST /people - Create
+//
+// To add more RESTful features (like Update and Delete), you just have to add the relevant methods to the
+// controller and Goweb will do the rest for you.
 package goweb
