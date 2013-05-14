@@ -1,22 +1,23 @@
 package paths
 
 import (
+	"fmt"
 	"strings"
 )
 
-/*
-  Path represents the path segment of a URL.
-*/
+// Path represents the path segment of a URL.
 type Path struct {
+	// RawPath is the original raw string of this path.
 	RawPath string
 
-	segments  []string
+	// segments holds the path segments.
+	segments []string
+
+	// extension holds the file extension of this path.
 	extension string
 }
 
-/*
-  NewPath creates a new Path with the given raw string.
-*/
+// NewPath creates a new Path with the given raw string.
 func NewPath(rawPath string) *Path {
 
 	p := new(Path)
@@ -26,16 +27,24 @@ func NewPath(rawPath string) *Path {
 
 }
 
-/*
-	cleanPath cleans returns the cleaned version of the specified path.
-*/
+// cleanPath cleans returns the cleaned version of the specified path.
 func cleanPath(path string) string {
 	return strings.TrimRight(strings.TrimLeft(path, PathSeperator), PathSeperator)
 }
 
-/*
-  Segments gets the segments for this path broken up by the PathSeparator.
-*/
+// PathFromSegments turns the arguments into a path string.
+func PathFromSegments(segments ...interface{}) string {
+
+	var theStrings []string = make([]string, len(segments))
+
+	for segIndex, seg := range segments {
+		theStrings[segIndex] = fmt.Sprintf("%v", seg)
+	}
+
+	return strings.Join(theStrings, PathSeperator)
+}
+
+// Segments gets the segments for this path broken up by the PathSeparator.
 func (p *Path) Segments() []string {
 
 	if len(p.segments) == 0 {

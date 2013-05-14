@@ -17,9 +17,9 @@ type HTTPResponder interface {
 
 	// WithRedirect responds with a redirection to the specific path or URL with the
 	// http.StatusTemporaryRedirect status.
-	WithRedirect(ctx context.Context, pathOrURL string) error
+	WithRedirect(ctx context.Context, pathOrURLSegments ...interface{}) error
 
 	// WithPermanentRedirect responds with a redirection to the specific path or URL with the
 	// http.StatusMovedPermanently status.
-	WithPermanentRedirect(ctx context.Context, pathOrURL string) error
+	WithPermanentRedirect(ctx context.Context, pathOrURLSegments ...interface{}) error
 }

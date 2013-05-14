@@ -2,6 +2,7 @@ package responders
 
 import (
 	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchrcom/goweb/paths"
 	"net/http"
 )
 
@@ -30,16 +31,16 @@ func (r *GowebHTTPResponder) WithOK(ctx context.Context) error {
 }
 
 // WithRedirect responds with a redirection to the specific path or URL.
-func (r *GowebHTTPResponder) WithRedirect(ctx context.Context, pathOrURL string) error {
+func (r *GowebHTTPResponder) WithRedirect(ctx context.Context, pathOrURLSegments ...interface{}) error {
 
-	ctx.HttpResponseWriter().Header().Set("Location", pathOrURL)
+	ctx.HttpResponseWriter().Header().Set("Location", paths.PathFromSegments(pathOrURLSegments...))
 	return r.WithStatus(ctx, http.StatusTemporaryRedirect)
 
 }
 
 // WithPermanentRedirect responds with a redirection to the specific path or URL with the
 // http.StatusMovedPermanently status.
-func (r *GowebHTTPResponder) WithPermanentRedirect(ctx context.Context, pathOrURL string) error {
-	ctx.HttpResponseWriter().Header().Set("Location", pathOrURL)
+func (r *GowebHTTPResponder) WithPermanentRedirect(ctx context.Context, pathOrURLSegments ...interface{}) error {
+	ctx.HttpResponseWriter().Header().Set("Location", paths.PathFromSegments(pathOrURLSegments...))
 	return r.WithStatus(ctx, http.StatusMovedPermanently)
 }
