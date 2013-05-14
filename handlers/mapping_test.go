@@ -132,30 +132,32 @@ func TestMapRest(t *testing.T) {
 	assertPathMatchHandler(t, h.HandlersPipe()[0].(*PathMatchHandler), "/test", "POST", "create")
 
 	// read one
-	assertPathMatchHandler(t, h.HandlersPipe()[1].(*PathMatchHandler), "/test/{id}", "GET", "read one")
+	assertPathMatchHandler(t, h.HandlersPipe()[1].(*PathMatchHandler), "/test/123", "GET", "read one")
 
 	// read many
 	assertPathMatchHandler(t, h.HandlersPipe()[2].(*PathMatchHandler), "/test", "GET", "read many")
 
 	// delete one
-	assertPathMatchHandler(t, h.HandlersPipe()[3].(*PathMatchHandler), "/test/{id}", "DELETE", "delete one")
+	assertPathMatchHandler(t, h.HandlersPipe()[3].(*PathMatchHandler), "/test/123", "DELETE", "delete one")
 
 	// delete many
 	assertPathMatchHandler(t, h.HandlersPipe()[4].(*PathMatchHandler), "/test", "DELETE", "delete many")
 
 	// update one
-	assertPathMatchHandler(t, h.HandlersPipe()[5].(*PathMatchHandler), "/test/{id}", "PUT", "update one")
+	assertPathMatchHandler(t, h.HandlersPipe()[5].(*PathMatchHandler), "/test/123", "PUT", "update one")
 
 	// update many
 	assertPathMatchHandler(t, h.HandlersPipe()[6].(*PathMatchHandler), "/test", "PUT", "update many")
 
 	// replace one
-	assertPathMatchHandler(t, h.HandlersPipe()[7].(*PathMatchHandler), "/test/{id}", "POST", "replace")
+	assertPathMatchHandler(t, h.HandlersPipe()[7].(*PathMatchHandler), "/test/123", "POST", "replace")
 
 	// head
+	assertPathMatchHandler(t, h.HandlersPipe()[8].(*PathMatchHandler), "/test/123", "HEAD", "head")
 	assertPathMatchHandler(t, h.HandlersPipe()[8].(*PathMatchHandler), "/test", "HEAD", "head")
 
 	// options
+	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/test/123", "OPTIONS", "options")
 	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/test", "OPTIONS", "options")
 
 }

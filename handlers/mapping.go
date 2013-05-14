@@ -118,7 +118,8 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		controller = options[1]
 	}
 
-	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}") // e.g.  people/123
+	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}")         // e.g.  people/123
+	pathWithOptionalID := stewstrings.MergeStrings(path, "/[", RestfulIDParameterName, "]") // e.g.  people/[123]
 
 	// POST /resource  -  Create
 	if restfulController, ok := controller.(controllers.RestfulCreator); ok {
@@ -174,14 +175,14 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// HEAD /resource/[id]  -  Head
 	if restfulController, ok := controller.(controllers.RestfulHead); ok {
-		h.Map(http.MethodHead, path, func(ctx context.Context) error {
+		h.Map(http.MethodHead, pathWithOptionalID, func(ctx context.Context) error {
 			return restfulController.Head(ctx)
 		})
 	}
 
 	// HEAD /resource/[id]  -  Options
 	if restfulController, ok := controller.(controllers.RestfulOptions); ok {
-		h.Map(http.MethodOptions, path, func(ctx context.Context) error {
+		h.Map(http.MethodOptions, pathWithOptionalID, func(ctx context.Context) error {
 			return restfulController.Options(ctx)
 		})
 	}
