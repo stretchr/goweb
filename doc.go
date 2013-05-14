@@ -1,23 +1,51 @@
-/*
-  Goweb v2 BETA - A simple, powerful web framework for Go.
-
-  Routing
-
-  Telling Goweb how to handle requests based on URLs is the most powerful feature of
-  Goweb.
-
-    goweb.Map(options)
-
-  The options arguments can be either:
-
-     1 argument: A single func(context.Context)error, which will handle all requests
-    2 arguments: A path pattern string and a func(context.Context)error,
-                 which will map the func to the path pattern
-  > 2 arguments: A path pattern string, a func(context.Context) error, and additional 
-                 MatcherFunc's which do additional checking before a decision is made.
-
-  Matching is attempted in the order in which they are mapped, so do the most specific mappings
-  first and the most generic ones afterwards.
-
-*/
+// Goweb v2 BETA - A simple, powerful web framework for Go.
+//
+// Overview
+//
+// Goweb follows the MVC pattern where you build controller objects, and map them to routes
+// of URLs using the goweb.MapController function.  Controller objects should adhear to one or
+// more of the controllers.Restful* interfaces in order to be mapped correctly.
+//
+// If you are not following RESTful patterns, you can do custom routing using the goweb.Map function.
+//
+// Example
+//
+// Your controllers, following a RESTful pattern, might look like this:
+//
+//     // PeopleController controls the 'people' resources.
+//     type PeopleController struct {}
+//
+//     // ReadMany reads many people.
+//     func (c *PeopleController) ReadMany(ctx context.Context) error {
+//
+//       // TODO: show all people
+//
+//     }
+//
+//     // Read reads one person.
+//     func (c *PeopleController) Read(id string, ctx context.Context) error {
+// 
+//       // TODO: show one person
+//
+//     }
+//
+//     // Create creates a new person.
+//     func (c *PeopleController) Create(ctx context.Context) error {
+//       
+//       // TODO: create a person, and redirect to the Read method
+//
+//     }
+//
+// In the above controller code, we are providing three RESTful methods, Read, ReadMany and Create. 
+//
+// To map this in Goweb, we use the MapController function like this:
+//
+//     mapErr := goweb.MapController(PeopleController{})
+//   
+// This will map the two functions (since they follow the standards defined in the controllers package)
+// to the appropriate RESTful URLs:
+//
+//     GET /people - ReadMany
+//     GET /people/{id} - Read
+//     POST /people - Create
 package goweb
