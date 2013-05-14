@@ -35,6 +35,11 @@ func (c *TestController) Update(id string, ctx context.Context) error {
 func (c *TestController) UpdateMany(ctx context.Context) error {
 	return c.Called(ctx).Error(0)
 }
+
+func (c *TestController) Replace(id string, ctx context.Context) error {
+	return c.Called(ctx).Error(0)
+}
+
 func (c *TestController) Options(ctx context.Context) error {
 	return c.Called(ctx).Error(0)
 }
