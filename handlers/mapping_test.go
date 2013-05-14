@@ -161,3 +161,48 @@ func TestMapRest(t *testing.T) {
 	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/test", "OPTIONS", "options")
 
 }
+
+func TestMapRest_WithSpecificPath(t *testing.T) {
+
+	rest := new(controllers_test.TestController)
+
+	h := NewHttpHandler()
+	h.MapController("something", rest)
+
+	fmt.Printf("%s", h)
+
+	assert.Equal(t, 10, len(h.HandlersPipe()))
+
+	// create
+	assertPathMatchHandler(t, h.HandlersPipe()[0].(*PathMatchHandler), "/something", "POST", "create")
+
+	// read one
+	assertPathMatchHandler(t, h.HandlersPipe()[1].(*PathMatchHandler), "/something/123", "GET", "read one")
+
+	// read many
+	assertPathMatchHandler(t, h.HandlersPipe()[2].(*PathMatchHandler), "/something", "GET", "read many")
+
+	// delete one
+	assertPathMatchHandler(t, h.HandlersPipe()[3].(*PathMatchHandler), "/something/123", "DELETE", "delete one")
+
+	// delete many
+	assertPathMatchHandler(t, h.HandlersPipe()[4].(*PathMatchHandler), "/something", "DELETE", "delete many")
+
+	// update one
+	assertPathMatchHandler(t, h.HandlersPipe()[5].(*PathMatchHandler), "/something/123", "PUT", "update one")
+
+	// update many
+	assertPathMatchHandler(t, h.HandlersPipe()[6].(*PathMatchHandler), "/something", "PUT", "update many")
+
+	// replace one
+	assertPathMatchHandler(t, h.HandlersPipe()[7].(*PathMatchHandler), "/something/123", "POST", "replace")
+
+	// head
+	assertPathMatchHandler(t, h.HandlersPipe()[8].(*PathMatchHandler), "/something/123", "HEAD", "head")
+	assertPathMatchHandler(t, h.HandlersPipe()[8].(*PathMatchHandler), "/something", "HEAD", "head")
+
+	// options
+	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/something/123", "OPTIONS", "options")
+	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/something", "OPTIONS", "options")
+
+}
