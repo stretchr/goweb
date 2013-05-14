@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/stretchrcom/goweb/context"
 	"github.com/stretchrcom/goweb/paths"
 )
@@ -21,6 +22,10 @@ type PathMatchHandler struct {
 	// MatcherFuncs are additional functions that are each consulted until a decision is
 	// made as to whether this object will handle the context or not.
 	MatcherFuncs []MatcherFunc
+
+	// HttpMethods contains a list of HTTP Methods that will match, or an empty list if all
+	// methods match.
+	HttpMethods []string
 }
 
 // NewPathMatchHandler makes a new PathMatchHandler with the specified PathPattern
@@ -91,4 +96,9 @@ func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
 func (p *PathMatchHandler) Handle(c context.Context) (bool, error) {
 	err := p.ExecutionFunc(c)
 	return true, err
+}
+
+// String gets a human readable string describing this PathMatchHandler.
+func (p *PathMatchHandler) String() string {
+	return fmt.Sprintf("%v\t%v - %d matcher func(s).", p.PathPattern.RawPath, p.ExecutionFunc, len(p.MatcherFuncs))
 }

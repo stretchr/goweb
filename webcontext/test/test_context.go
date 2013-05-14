@@ -15,9 +15,12 @@ func MakeTestContext() *webcontext.WebContext {
 }
 
 func MakeTestContextWithPath(path string) *webcontext.WebContext {
+	return MakeTestContextWithDetails(path, "GET")
+}
 
+func MakeTestContextWithDetails(path, method string) *webcontext.WebContext {
 	TestResponseWriter = new(http_test.TestResponseWriter)
-	TestRequest, _ = http.NewRequest("GET", fmt.Sprintf("http://stretchr.org/%s", path), nil)
+	TestRequest, _ = http.NewRequest(method, fmt.Sprintf("http://stretchr.org/%s", path), nil)
 
 	return webcontext.NewWebContext(TestResponseWriter, TestRequest)
 }

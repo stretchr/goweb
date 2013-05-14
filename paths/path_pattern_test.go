@@ -16,6 +16,13 @@ func TestNewPathPattern(t *testing.T) {
 
 }
 
+func TestPathPattern_String(t *testing.T) {
+
+	gp, _ := NewPathPattern("/people/{id}/books/{title}/chapters/{chapter}")
+	assert.Equal(t, gp.String(), "{PathPattern:\"/people/{id}/books/{title}/chapters/{chapter}\"}")
+
+}
+
 func TestPathPattern_GetPathMatch_Parameters(t *testing.T) {
 
 	gp, _ := NewPathPattern("/people/{id}/books/{title}/chapters/{chapter}")

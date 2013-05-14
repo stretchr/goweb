@@ -51,6 +51,12 @@ type RestfulUpdater interface {
 	Update(id string, ctx context.Context) error
 }
 
+// RestfulReplacer represents a controller capable of replacing a single resource.
+type RestfulReplacer interface {
+	// Replace replaces a single resource.
+	Replace(id string, ctx context.Context) error
+}
+
 // RestfulManyUpdater represents a controller capable of updating many resources.
 type RestfulManyUpdater interface {
 	// UpdateMany updates many resources at once.

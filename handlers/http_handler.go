@@ -1,8 +1,10 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/stretchrcom/goweb/webcontext"
 	"net/http"
+	"strings"
 )
 
 type HttpHandler struct {
@@ -78,4 +80,33 @@ func (h *HttpHandler) AppendPostHandler(handler Handler) {
 // PrependPostHandler prepends a handler to be executed after processing completes.
 func (h *HttpHandler) PrependPostHandler(handler Handler) {
 	h.Handlers[2] = h.PostHandlersPipe().PrependHandler(handler)
+}
+
+/*
+	Debug and information
+*/
+
+// String generates a list of the handlers registered inside this HttpHandler.
+func (h *HttpHandler) String() string {
+	return stringForHandlers(h.Handlers, 0)
+}
+
+// stringForHandlers generates the string for the handlers array indented to the
+// appropriate level.
+func stringForHandlers(handlers []Handler, level int) string {
+
+	lines := []string{}
+	var levelStr string = strings.Repeat("  ", level)
+
+	for handlerIndex, handler := range handlers {
+		if pipe, ok := handler.(Pipe); ok {
+			lines = append(lines, fmt.Sprintf("%sPipe %d:", levelStr, handlerIndex))
+			lines = append(lines, stringForHandlers(pipe, level+1))
+		} else {
+			lines = append(lines, fmt.Sprintf("%s%s", levelStr, handler))
+		}
+	}
+
+	return strings.Join(lines, "\n")
+
 }

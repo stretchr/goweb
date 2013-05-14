@@ -2,6 +2,7 @@ package paths
 
 import (
 	"github.com/stretchrcom/stew/objects"
+	stewstrings "github.com/stretchrcom/stew/strings"
 	"strings"
 )
 
@@ -33,6 +34,10 @@ func NewPathPattern(path string) (*PathPattern, error) {
 	p.path = NewPath(path)
 
 	return p, nil
+}
+
+func (p *PathPattern) String() string {
+	return stewstrings.MergeStrings("{PathPattern:\"", p.RawPath, "\"}")
 }
 
 /*
