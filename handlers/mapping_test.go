@@ -124,8 +124,6 @@ func TestMapRest(t *testing.T) {
 	h := NewHttpHandler()
 	h.MapController(rest)
 
-	fmt.Printf("%s", h)
-
 	assert.Equal(t, 10, len(h.HandlersPipe()))
 
 	// create

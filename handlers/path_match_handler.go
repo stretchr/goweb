@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"github.com/stretchrcom/goweb/context"
 	"github.com/stretchrcom/goweb/paths"
+	"strings"
 )
 
-/*
-  PathMatchHandler is a Handler that maps a path to handler code.
-*/
+// PathMatchHandler is a Handler that maps a path to handler code.
 type PathMatchHandler struct {
 
 	// PathPattern is the pattern which paths must match in order for this
@@ -37,10 +36,8 @@ func NewPathMatchHandler(pathPattern *paths.PathPattern, executionFunc HandlerEx
 	return handler
 }
 
-/*
-  WillHandle checks whether this handler will be used to handle the specified
-  request or not.
-*/
+// WillHandle checks whether this handler will be used to handle the specified
+// request or not.
 func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
 
 	// check each matcher func
@@ -100,5 +97,11 @@ func (p *PathMatchHandler) Handle(c context.Context) (bool, error) {
 
 // String gets a human readable string describing this PathMatchHandler.
 func (p *PathMatchHandler) String() string {
-	return fmt.Sprintf("%v\t%v - %d matcher func(s).", p.PathPattern.RawPath, p.ExecutionFunc, len(p.MatcherFuncs))
+
+	var methods string
+	if len(p.HttpMethods) > 0 {
+		methods = fmt.Sprintf("%s ", strings.Join(p.HttpMethods, "|"))
+	}
+
+	return fmt.Sprintf("%s%v\t\t\t%v - %d matcher func(s).", methods, p.PathPattern.RawPath, p.ExecutionFunc, len(p.MatcherFuncs))
 }
