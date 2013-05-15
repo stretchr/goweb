@@ -7,8 +7,11 @@ import (
 )
 
 const (
-	DefaultStandardFieldDataKey   string = "d"
+	// DefaultStandardFieldDataKey is the default response object field for the data.
+	DefaultStandardFieldDataKey string = "d"
+	// DefaultStandardFieldStatusKey is the default response object field for the status.
 	DefaultStandardFieldStatusKey string = "s"
+	// DefaultStandardFieldErrorsKey is the default response object field for the errors.
 	DefaultStandardFieldErrorsKey string = "e"
 )
 

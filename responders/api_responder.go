@@ -28,7 +28,13 @@ type APIResponder interface {
 	Respond(ctx context.Context, status int, data interface{}, errors []string) error
 
 	// WriteResponseObject writes the status code and response object to the HttpResponseWriter in
-	// the specified context.
+	// the specified context, in the format best suited based on the request.
+	//
+	// Goweb uses the WebCodecService to decide which codec to use when responding
+	// see http://godoc.org/github.com/stretchrcom/codecs/services#WebCodecService for more information.
+	//
+	// This method should be used when the Goweb Standard Response Object does not satisfy the needs of
+	// the API, but other Respond* methods are recommended.
 	WriteResponseObject(ctx context.Context, status int, responseObject interface{}) error
 
 	// RespondWithData responds with the specified data, no errors and a 200 StatusOK response.
