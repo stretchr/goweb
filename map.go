@@ -78,7 +78,8 @@ func Map(options ...interface{}) error {
 //     RestfulHead.Head(context.Context) error
 //
 // This code will map the controller and use the Path() method on the
-// controller to determine the path prefix:
+// controller to determine the path prefix (or it will try to guess the URL part
+// based on the name of the struct):
 //
 //     MapController(controller)
 //
