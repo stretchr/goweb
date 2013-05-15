@@ -50,6 +50,9 @@ type Context interface {
 	// RequestData gets the data out of the body of the request as a usable object.
 	RequestData() (interface{}, error)
 
+	// RequestDataArray gets the RequestData as an []interface{} for ease.
+	RequestDataArray() ([]interface{}, error)
+
 	// RequestBody gets the byte data out of the body of the request.
 	RequestBody() ([]byte, error)
 

@@ -80,6 +80,18 @@ func (c *WebContext) RequestData() (interface{}, error) {
 	return obj, unmarhsalErr
 }
 
+// RequestDataArray gets the RequestData as an []interface{} for ease.
+func (c *WebContext) RequestDataArray() ([]interface{}, error) {
+
+	obj, err := c.RequestData()
+	if err != nil {
+		return nil, err
+	}
+
+	return obj.([]interface{}), nil
+
+}
+
 // RequestBody gets the byte data out of the body of the request.
 func (c *WebContext) RequestBody() ([]byte, error) {
 

@@ -110,3 +110,24 @@ func TestRequestData(t *testing.T) {
 	}
 
 }
+
+func TestRequestData_ArrayOfData(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	bod, _ := c.RequestBody()
+	assert.Equal(t, "[{\"something\":true},{\"something\":false}]", string(bod))
+	dat, datErr := c.RequestData()
+
+	if assert.NoError(t, datErr) {
+		assert.NotNil(t, dat.([]interface{}))
+		responseDataArray, _ := c.RequestDataArray()
+		assert.Equal(t, dat.([]interface{}), responseDataArray)
+	}
+
+}
