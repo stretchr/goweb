@@ -1,4 +1,4 @@
-# GoWeb 2
+# Goweb 2
 
   * BETA is ready to use
 
