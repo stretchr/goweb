@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
 	controllers_test "github.com/stretchrcom/goweb/controllers/test"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
@@ -11,7 +12,8 @@ import (
 
 func TestMap(t *testing.T) {
 
-	handler := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
 
 	called := false
 	handler.Map("/people/{id}", func(c context.Context) error {
@@ -30,7 +32,8 @@ func TestMap(t *testing.T) {
 
 func TestMap_WithSpecificMethod(t *testing.T) {
 
-	handler := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
 
 	called := false
 	handler.Map("GET", "/people/{id}", func(c context.Context) error {
@@ -50,7 +53,8 @@ func TestMap_WithSpecificMethod(t *testing.T) {
 
 func TestMap_WithMatcherFuncs(t *testing.T) {
 
-	handler := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
 
 	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
 		return Match, nil
@@ -69,7 +73,8 @@ func TestMap_WithMatcherFuncs(t *testing.T) {
 
 func TestMap_CatchAllAssumption(t *testing.T) {
 
-	handler := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
 
 	called := false
 	handler.Map(func(c context.Context) error {
@@ -121,7 +126,8 @@ func TestMapRest_SemiInterface(t *testing.T) {
 
 	semi := new(controllers_test.TestSemiRestfulController)
 
-	h := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
 	h.MapController(semi)
 
 	fmt.Printf("%s", h)
@@ -143,7 +149,8 @@ func TestMapRest(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
 
-	h := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
 	h.MapController(rest)
 
 	assert.Equal(t, 10, len(h.HandlersPipe()))
@@ -186,7 +193,8 @@ func TestMapRest_WithSpecificPath(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
 
-	h := NewHttpHandler()
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
 	h.MapController("something", rest)
 
 	assert.Equal(t, 10, len(h.HandlersPipe()))

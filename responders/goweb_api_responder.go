@@ -33,8 +33,9 @@ type GowebAPIResponder struct {
 	StandardFieldErrorsKey string
 }
 
-func NewGowebAPIResponder(httpResponder HTTPResponder) *GowebAPIResponder {
+func NewGowebAPIResponder(codecService codecservices.CodecService, httpResponder HTTPResponder) *GowebAPIResponder {
 	api := new(GowebAPIResponder)
+	api.SetCodecService(codecService)
 	api.httpResponder = httpResponder
 	api.StandardFieldDataKey = DefaultStandardFieldDataKey
 	api.StandardFieldStatusKey = DefaultStandardFieldStatusKey

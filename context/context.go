@@ -1,6 +1,7 @@
 package context
 
 import (
+	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/paths"
 	"github.com/stretchrcom/stew/objects"
 	"net/http"
@@ -42,23 +43,19 @@ type Context interface {
 	// Data gets a map of data about the context.
 	Data() objects.Map
 
+	// CodecService gets the codecservices.CodecService that this Context will use to marshal
+	// and unmarshal data to and from objects.
+	CodecService() codecservices.CodecService
+
+	// RequestData gets the data out of the body of the request as a usable object.
+	RequestData() (interface{}, error)
+
+	// RequestBody gets the byte data out of the body of the request.
+	RequestBody() ([]byte, error)
+
 	// PathParams gets any parameters that were pulled from the URL path.
 	PathParams() objects.Map
 
-	/*
-		Deprecated (these functions should panic)
-		-----------------------------------------
-	*/
-
-	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
-	Respond(data interface{}, statusCode int, errors []string, context Context) error
-
-	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
-	RespondWithData(data interface{}) error
-
-	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
-	RespondWithError(statusCode int) error
-
-	// Deprecated: Code should be tweaked to use goweb.API.Respond methods instead.
-	RespondWithErrorMessage(message string, statusCode int) error
+	// PathParam the parameter from PathParams() with the specified key.
+	PathParam(key string) string
 }

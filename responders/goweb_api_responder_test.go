@@ -1,6 +1,7 @@
 package responders
 
 import (
+	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
@@ -16,9 +17,11 @@ func TestAPI_Interface(t *testing.T) {
 func TestNewGowebAPIResponder(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	api := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	api := NewGowebAPIResponder(codecService, http)
 
 	assert.Equal(t, http, api.httpResponder)
+	assert.Equal(t, codecService, api.GetCodecService())
 
 	assert.Equal(t, api.StandardFieldStatusKey, "s")
 	assert.Equal(t, api.StandardFieldDataKey, "d")
@@ -29,7 +32,8 @@ func TestNewGowebAPIResponder(t *testing.T) {
 func TestRespond(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	API := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
@@ -42,7 +46,8 @@ func TestRespond(t *testing.T) {
 func TestRespondWithCustomFieldnames(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	API := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
@@ -58,7 +63,8 @@ func TestRespondWithCustomFieldnames(t *testing.T) {
 func TestWriteResponseObject(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	API := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
@@ -71,7 +77,8 @@ func TestWriteResponseObject(t *testing.T) {
 func TestAPI_StandardResponseObjectTransformer(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	API := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
@@ -93,7 +100,8 @@ func TestAPI_StandardResponseObjectTransformer(t *testing.T) {
 func TestAPI_RespondWithData(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	API := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
@@ -106,7 +114,8 @@ func TestAPI_RespondWithData(t *testing.T) {
 func TestAPI_RespondWithError(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
-	API := NewGowebAPIResponder(http)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
 	ctx := context_test.MakeTestContext()
 	errObject := "error message"
 
