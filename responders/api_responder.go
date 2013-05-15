@@ -30,4 +30,7 @@ type APIResponder interface {
 	// WriteResponseObject writes the status code and response object to the HttpResponseWriter in
 	// the specified context.
 	WriteResponseObject(ctx context.Context, status int, responseObject interface{}) error
+
+	// RespondWithData responds with the specified data, no errors and a 200 StatusOK response.
+	RespondWithData(ctx context.Context, data interface{}) error
 }

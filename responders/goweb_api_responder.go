@@ -3,6 +3,7 @@ package responders
 import (
 	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
+	"net/http"
 )
 
 const (
@@ -95,5 +96,12 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 	}
 
 	return a.WriteResponseObject(ctx, status, sro)
+
+}
+
+// RespondWithData responds with the specified data, no errors and a 200 StatusOK response.
+func (a *GowebAPIResponder) RespondWithData(ctx context.Context, data interface{}) error {
+
+	return a.Respond(ctx, http.StatusOK, data, nil)
 
 }

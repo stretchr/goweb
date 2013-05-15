@@ -66,3 +66,16 @@ func TestWriteResponseObject(t *testing.T) {
 	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"name\":\"Mat\"}")
 
 }
+
+func TestAPI_RespondWithData(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	API := NewGowebAPIResponder(http)
+	ctx := context_test.MakeTestContext()
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.RespondWithData(ctx, data)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"d\":{\"name\":\"Mat\"},\"s\":200}")
+
+}
