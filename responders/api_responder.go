@@ -21,6 +21,18 @@ type APIResponder interface {
 	GetCodecService() codecservices.CodecService
 
 	/*
+		Transformers
+	*/
+
+	// TransformStandardResponseObject transforms the standard response object before it is written to the response if a
+	// transformer func has been set via SetStandardResponseObjectTransformer.
+	TransformStandardResponseObject(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)
+
+	// SetStandardResponseObjectTransformer sets the function to use to transform the standard response object beore it is
+	// written to the response.
+	SetStandardResponseObjectTransformer(transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error))
+
+	/*
 	   Responding
 	*/
 

@@ -1,6 +1,7 @@
 package responders
 
 import (
+	"github.com/stretchrcom/goweb/context"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
 	"testing"
@@ -64,6 +65,28 @@ func TestWriteResponseObject(t *testing.T) {
 	API.WriteResponseObject(ctx, 200, data)
 
 	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"name\":\"Mat\"}")
+
+}
+
+func TestAPI_StandardResponseObjectTransformer(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	API := NewGowebAPIResponder(http)
+	ctx := context_test.MakeTestContext()
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.SetStandardResponseObjectTransformer(func(ctx context.Context, sro map[string]interface{}) (map[string]interface{}, error) {
+
+		return map[string]interface{}{
+			"sro":       sro,
+			"something": true,
+		}, nil
+
+	})
+
+	API.RespondWithData(ctx, data)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"something\":true,\"sro\":{\"d\":{\"name\":\"Mat\"},\"s\":200}}")
 
 }
 

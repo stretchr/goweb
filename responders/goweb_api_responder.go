@@ -19,6 +19,8 @@ type GowebAPIResponder struct {
 	httpResponder HTTPResponder
 	codecService  codecservices.CodecService
 
+	transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)
+
 	// field names
 
 	// StandardFieldDataKey is the response object field name for the data.
@@ -53,6 +55,21 @@ func (a *GowebAPIResponder) GetCodecService() codecservices.CodecService {
 	}
 
 	return a.codecService
+}
+
+// TransformStandardResponseObject transforms the standard response object before it is written to the response if a
+// transformer func has been set via SetStandardResponseObjectTransformer.
+func (a *GowebAPIResponder) TransformStandardResponseObject(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error) {
+	if a.transformer != nil {
+		return a.transformer(ctx, object)
+	}
+	return object, nil
+}
+
+// SetStandardResponseObjectTransformer sets the function to use to transform the standard response object beore it is
+// written to the response.
+func (a *GowebAPIResponder) SetStandardResponseObjectTransformer(transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)) {
+	a.transformer = transformer
 }
 
 // WriteResponseObject writes the status code and response object to the HttpResponseWriter in
@@ -96,6 +113,14 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 	}
 	if len(errors) > 0 {
 		sro[a.StandardFieldErrorsKey] = errors
+	}
+
+	// transofm the object
+	var transformErr error
+	sro, transformErr = a.TransformStandardResponseObject(ctx, sro)
+
+	if transformErr != nil {
+		return transformErr
 	}
 
 	return a.WriteResponseObject(ctx, status, sro)
