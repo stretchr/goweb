@@ -79,3 +79,16 @@ func TestAPI_RespondWithData(t *testing.T) {
 	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"d\":{\"name\":\"Mat\"},\"s\":200}")
 
 }
+
+func TestAPI_RespondWithError(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	API := NewGowebAPIResponder(http)
+	ctx := context_test.MakeTestContext()
+	errObject := "error message"
+
+	API.RespondWithError(ctx, 500, errObject)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"e\":[\"error message\"],\"s\":500}")
+
+}

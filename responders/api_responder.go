@@ -33,4 +33,7 @@ type APIResponder interface {
 
 	// RespondWithData responds with the specified data, no errors and a 200 StatusOK response.
 	RespondWithData(ctx context.Context, data interface{}) error
+
+	// RespondWithError responds with the specified error message and status code.
+	RespondWithError(ctx context.Context, status int, err string) error
 }

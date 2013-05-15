@@ -101,7 +101,10 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 
 // RespondWithData responds with the specified data, no errors and a 200 StatusOK response.
 func (a *GowebAPIResponder) RespondWithData(ctx context.Context, data interface{}) error {
-
 	return a.Respond(ctx, http.StatusOK, data, nil)
+}
 
+// RespondWithError responds with the specified error and status code.
+func (a *GowebAPIResponder) RespondWithError(ctx context.Context, status int, err string) error {
+	return a.Respond(ctx, status, nil, []string{err})
 }
