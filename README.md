@@ -1,6 +1,20 @@
 # Goweb 2
 
   * BETA is ready to use
+  
+## Features
+
+  * Drastically improved path matching
+  * Cleaner interface for responding (e.g. `goweb.API.RespondWithData`, and `goweb.Respond.WithRedirect`)
+  * More control over standard response object for API responses
+  * Cleaner RESTful interface design
+  * Much easier to write testable code
+  * Better package structure
+  * Modular design, making adding new stuff easy
+  * Handler mechanism to easily add pre and post handlers to certain requests
+  * Uses [stretchrcom/codecs](https://github.com/stretchrcom/codecs) package allowing better support for multiple formats
+  * Better error management
+  * Performance improvements
 
 ## Get started
 
