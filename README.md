@@ -3,11 +3,7 @@ goweb
 
 A lightweight RESTful web framework for Go
 
-We plan on rewriting goweb using the knowledge gained from writing Stretchr. This will happen soon, hopefully. In the meantime, feel free to use goweb as-is! It's completely functional!
-
-A proper README will be forthcoming. :)
-
-  * UPDATE: v2 has started, want to help us?  https://github.com/stretchrcom/goweb/tree/v2
+  * UPDATE: v2 BETA is now ready - check it out: https://github.com/stretchrcom/goweb/tree/v2
 
 ------
 
