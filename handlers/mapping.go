@@ -13,14 +13,11 @@ var (
 	RestfulIDParameterName string = "id"
 )
 
-// Map maps a handler function to a specified path and optional HTTP method.
-//
-// For more information, see goweb.Map.
-func (h *HttpHandler) Map(options ...interface{}) error {
+func (h *HttpHandler) handlerForOptions(options ...interface{}) (*PathMatchHandler, error) {
 
 	if len(options) == 0 {
 		// no arguments is an error
-		panic("goweb: Cannot call Map with no arguments.")
+		panic("goweb: Cannot call Map functions with no arguments.")
 	}
 
 	var matcherFuncStartPos int = -1
@@ -63,7 +60,7 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 	pathPattern, pathErr := paths.NewPathPattern(path)
 
 	if pathErr != nil {
-		return pathErr
+		return nil, pathErr
 	}
 
 	handler := NewPathMatchHandler(pathPattern, executor)
@@ -75,6 +72,22 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 
 	// do we have any MatcherFuncs?
 	handler.MatcherFuncs = matcherFuncs
+
+	// return the handler
+	return handler, nil
+
+}
+
+// Map maps a handler function to a specified path and optional HTTP method.
+//
+// For more information, see goweb.Map.
+func (h *HttpHandler) Map(options ...interface{}) error {
+
+	handler, err := h.handlerForOptions(options...)
+
+	if err != nil {
+		return err
+	}
 
 	// append the handler
 	h.AppendHandler(handler)
