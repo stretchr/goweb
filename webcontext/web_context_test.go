@@ -22,12 +22,35 @@ func TestNewContext(t *testing.T) {
 	if assert.NotNil(t, c) {
 
 		assert.Equal(t, "people/123", c.Path().RawPath)
-		assert.Equal(t, testRequest, c.request)
-		assert.Equal(t, responseWriter, c.responseWriter)
+		assert.Equal(t, testRequest, c.httpRequest)
+		assert.Equal(t, responseWriter, c.httpResponseWriter)
 		assert.Equal(t, codecService, c.codecService)
 		assert.Equal(t, codecService, c.CodecService())
 
 	}
+
+}
+
+func TestSetHttpResponseWriter(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	responseWriter2 := new(http_test.TestResponseWriter)
+	responseWriter2.Header().Set("Something", "true")
+	testRequest2, _ := http.NewRequest("PUT", "http://goweb.org/people/123", nil)
+
+	c.SetHttpRequest(testRequest2)
+	c.SetHttpResponseWriter(responseWriter2)
+
+	req := c.HttpRequest()
+	res := c.HttpResponseWriter()
+
+	assert.Equal(t, &testRequest2, &req)
+	assert.Equal(t, responseWriter2, res)
 
 }
 

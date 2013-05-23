@@ -14,12 +14,12 @@ import (
   WebContext is a real context.Context that represents a single request.
 */
 type WebContext struct {
-	path           *paths.Path
-	data           objects.Map
-	request        *http.Request
-	responseWriter http.ResponseWriter
-	requestBody    []byte
-	codecService   codecservices.CodecService
+	path               *paths.Path
+	data               objects.Map
+	httpRequest        *http.Request
+	httpResponseWriter http.ResponseWriter
+	requestBody        []byte
+	codecService       codecservices.CodecService
 }
 
 // NewWebContext creates a new WebContext with the given request and response objects.
@@ -27,8 +27,8 @@ func NewWebContext(responseWriter http.ResponseWriter, request *http.Request, co
 
 	c := new(WebContext)
 
-	c.request = request
-	c.responseWriter = responseWriter
+	c.httpRequest = request
+	c.httpResponseWriter = responseWriter
 	c.codecService = codecService
 
 	c.path = paths.NewPath(request.URL.Path)
@@ -117,13 +117,36 @@ func (c *WebContext) MethodString() string {
 
 // HttpRequest gets the underlying http.Request that this Context represents.
 func (c *WebContext) HttpRequest() *http.Request {
-	return c.request
+	return c.httpRequest
 }
 
 // HttpResponseWriter gets the underlying http.ResponseWriter that will be used
 // to respond to this request.
 func (c *WebContext) HttpResponseWriter() http.ResponseWriter {
-	return c.responseWriter
+	return c.httpResponseWriter
+}
+
+// SetHttpResponseWriter sets the HttpResponseWriter that will be used to respond
+// to the request.
+//
+// This is set by Goweb, but can be overridden if you want to intercept the usual
+// writes to do something lower level with them.
+// For example, save the response in memory for testing or
+// logging purposes.
+//
+// For production, if you set your own ResponseWriter, be sure to also write the
+// response to the original ResponseWriter so that clients actually receive it.  You can
+// get the original ResponseWriter by calling the HttpResponseWriter() method on this
+// object.
+func (c *WebContext) SetHttpResponseWriter(responseWriter http.ResponseWriter) {
+	c.httpResponseWriter = responseWriter
+}
+
+// SetHttpRequest sets the HttpRequest that represents the original request that
+// issued the interaction.  This is set automatically by Goweb, but can be overridden for
+// advanced cases.
+func (c *WebContext) SetHttpRequest(httpRequest *http.Request) {
+	c.httpRequest = httpRequest
 }
 
 // PathParams gets any parameters that were pulled from the URL path.

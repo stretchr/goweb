@@ -24,6 +24,25 @@ type Context interface {
 	// HttpRequest gets the underlying http.Request that this Context represents.
 	HttpRequest() *http.Request
 
+	// SetHttpResponseWriter sets the HttpResponseWriter that will be used to respond
+	// to the request.
+	//
+	// This is set by Goweb, but can be overridden if you want to intercept the usual
+	// writes to do something lower level with them.
+	// For example, save the response in memory for testing or
+	// logging purposes.
+	//
+	// For production, if you set your own ResponseWriter, be sure to also write the
+	// response to the original ResponseWriter so that clients actually receive it.  You can
+	// get the original ResponseWriter by calling the HttpResponseWriter() method on this
+	// object.
+	SetHttpResponseWriter(responseWriter http.ResponseWriter)
+
+	// SetHttpRequest sets the HttpRequest that represents the original request that
+	// issued the interaction.  This is set automatically by Goweb, but can be overridden for
+	// advanced cases.
+	SetHttpRequest(httpRequest *http.Request)
+
 	/*
 		Request helpers
 		----------------------------------------
