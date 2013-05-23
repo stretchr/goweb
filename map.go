@@ -4,17 +4,20 @@ package goweb
 // 
 // The Map function has many flavours.
 //
-// The path pattern, and the handler function, followed by any optional matcher funcs will cause
+// 1. Implementing and passing in your own handlers.Handler object will just map the handler
+// directly.
+//
+// 2. The path pattern, and the handler function, followed by any optional matcher funcs will cause
 // the func to be executed when the path pattern matches.
 //
 //     (pathPattern, func [, matcherFuncs])
 //
-// The HTTP method, the path pettern, the handler function, followed by optional matcher funcs will cause
+// 3. The HTTP method, the path pettern, the handler function, followed by optional matcher funcs will cause
 // the func to be executed when the path and HTTP method match.
 //
 //     (method, pathPattern, func [, matcherFuncs])
 //
-// Just the handler function, and any optional matcher funcs will add a catch-all handler.  This should
+// 4. Just the handler function, and any optional matcher funcs will add a catch-all handler.  This should
 // be the last call to Map that you make.
 //
 //     (func [, matcherFuncs])
@@ -56,6 +59,32 @@ package goweb
 //     })
 func Map(options ...interface{}) error {
 	return DefaultHttpHandler().Map(options...)
+}
+
+// MapBefore adds a new mapping to the DefaultHttpHandler that
+// will be executed before other handlers.
+//
+// The usage is the same as the goweb.Map function.
+//
+// Before handlers are called before any of the normal handlers, 
+// and before any processing has begun.  Setting headers is appropriate
+// for before handlers, but be careful not to actually write anything or
+// Goweb will likely end up trying to write the headers twice and headers set
+// in the processing handlers will have no effect.
+func MapBefore(options ...interface{}) error {
+	return DefaultHttpHandler().MapBefore(options...)
+}
+
+// MapAfter adds a new mapping to the DefaultHttpHandler that
+// will be executed after other handlers.
+//
+// The usage is the same as the goweb.Map function.
+//
+// After handlers are called after the normal processing handlers are
+// finished, and usually after the response has been written.  Setting headers
+// or writing additional bytes will have no effect in after handlers.
+func MapAfter(options ...interface{}) error {
+	return DefaultHttpHandler().MapAfter(options...)
 }
 
 // MapController maps a controller in the handler.

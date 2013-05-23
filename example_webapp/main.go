@@ -19,6 +19,24 @@ const (
 func main() {
 
 	/*
+		Add a pre-handler to save the referrer
+	*/
+	goweb.MapBefore(func(c context.Context) error {
+
+		// add a custom header
+		c.HttpResponseWriter().Header().Set("X-Custom-Header", "Goweb")
+
+		return nil
+	})
+
+	/*
+		Add a post-handler to write a repsonse header
+	*/
+	goweb.MapAfter(func(c context.Context) error {
+		return nil
+	})
+
+	/*
 		Map some routes
 	*/
 	goweb.Map("people/me", func(c context.Context) error {

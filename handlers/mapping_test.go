@@ -5,10 +5,26 @@ import (
 	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
 	controllers_test "github.com/stretchrcom/goweb/controllers/test"
+	handlers_test "github.com/stretchrcom/goweb/handlers/test"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
+	http_test "github.com/stretchrcom/testify/http"
+	"github.com/stretchrcom/testify/mock"
+	"net/http"
 	"testing"
 )
+
+func TestHandlerForOptions_PlainHandler(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	httpHandler := NewHttpHandler(codecService)
+	handler1 := new(handlers_test.TestHandler)
+
+	itself, _ := httpHandler.handlerForOptions(handler1)
+
+	assert.Equal(t, handler1, itself, "handlerForOptions with existing handler should just return the handler")
+
+}
 
 func TestMap(t *testing.T) {
 
@@ -94,6 +110,93 @@ func TestMap_CatchAllAssumption(t *testing.T) {
 	assert.True(t, called)
 
 }
+
+func TestMapBefore_WithMatcherFuncs(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	handler.MapBefore("/people/{id}", func(c context.Context) error {
+		return nil
+	}, matcherFunc)
+
+	assert.Equal(t, 1, len(handler.PreHandlersPipe()))
+	h := handler.PreHandlersPipe()[0].(*PathMatchHandler)
+	assert.Equal(t, 1, len(h.MatcherFuncs))
+	assert.Equal(t, matcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
+
+}
+
+func TestMapAfter_WithMatcherFuncs(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	handler.MapAfter("/people/{id}", func(c context.Context) error {
+		return nil
+	}, matcherFunc)
+
+	assert.Equal(t, 1, len(handler.PostHandlersPipe()))
+	h := handler.PostHandlersPipe()[0].(*PathMatchHandler)
+	assert.Equal(t, 1, len(h.MatcherFuncs))
+	assert.Equal(t, matcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
+
+}
+
+func TestBeforeAndAfterHandlers(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://stretchr.org/goweb", nil)
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	// setup some test handlers
+	handler1 := new(handlers_test.TestHandler)
+	handler2 := new(handlers_test.TestHandler)
+	handler3 := new(handlers_test.TestHandler)
+
+	handler.MapBefore(func(c context.Context) error {
+		_, err := handler1.Handle(c)
+		return err
+	})
+	handler.Map(func(c context.Context) error {
+		_, err := handler2.Handle(c)
+		return err
+	})
+	handler.MapAfter(func(c context.Context) error {
+		_, err := handler3.Handle(c)
+		return err
+	})
+
+	handler1.On("Handle", mock.Anything).Return(false, nil)
+	handler2.On("Handle", mock.Anything).Return(false, nil)
+	handler3.On("Handle", mock.Anything).Return(false, nil)
+
+	handler.ServeHTTP(responseWriter, testRequest)
+
+	mock.AssertExpectationsForObjects(t, handler1.Mock, handler2.Mock, handler3.Mock)
+
+	// make sure it's always the same context
+	ctx1 := handler1.Calls[0].Arguments[0].(context.Context)
+	ctx2 := handler2.Calls[0].Arguments[0].(context.Context)
+	ctx3 := handler3.Calls[0].Arguments[0].(context.Context)
+
+	assert.Equal(t, ctx1, ctx2, "Contexts should be the same")
+	assert.Equal(t, ctx2, ctx3, "Contexts should be the same")
+
+}
+
+/*
+	MapController
+*/
 
 func assertPathMatchHandler(t *testing.T, handler *PathMatchHandler, path, method string, message string) bool {
 

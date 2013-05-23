@@ -37,6 +37,7 @@ func (handler *HttpHandler) CodecService() codecservices.CodecService {
 	return handler.codecService
 }
 
+// ServeHTTP servers the 
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 
 	// make the context

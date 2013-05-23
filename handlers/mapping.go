@@ -13,7 +13,9 @@ var (
 	RestfulIDParameterName string = "id"
 )
 
-func (h *HttpHandler) handlerForOptions(options ...interface{}) (*PathMatchHandler, error) {
+// handlerForOptions gets or creates a Handler object based on the specified
+// options.  See goweb.Map for details of valid options.
+func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error) {
 
 	if len(options) == 0 {
 		// no arguments is an error
@@ -41,6 +43,8 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (*PathMatchHandl
 			executor = options[1].(func(context.Context) error)
 			matcherFuncStartPos = 2
 		}
+	case Handler: // actual handler object
+		return options[0].(Handler), nil
 	default: // (executor)
 		matcherFuncStartPos = 1
 		path = "***"
@@ -80,7 +84,7 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (*PathMatchHandl
 
 // Map maps a handler function to a specified path and optional HTTP method.
 //
-// For more information, see goweb.Map.
+// For usage information, see goweb.Map.
 func (h *HttpHandler) Map(options ...interface{}) error {
 
 	handler, err := h.handlerForOptions(options...)
@@ -91,6 +95,44 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 
 	// append the handler
 	h.AppendHandler(handler)
+
+	return nil
+
+}
+
+// Map maps a handler function to a specified path and optional HTTP method 
+// to be executed before any other handlers.
+//
+// For usage information, see goweb.Map.
+func (h *HttpHandler) MapBefore(options ...interface{}) error {
+
+	handler, err := h.handlerForOptions(options...)
+
+	if err != nil {
+		return err
+	}
+
+	// append the handler
+	h.AppendPreHandler(handler)
+
+	return nil
+
+}
+
+// Map maps a handler function to a specified path and optional HTTP method 
+// to be executed after any other handlers.
+//
+// For usage information, see goweb.Map.
+func (h *HttpHandler) MapAfter(options ...interface{}) error {
+
+	handler, err := h.handlerForOptions(options...)
+
+	if err != nil {
+		return err
+	}
+
+	// append the handler
+	h.AppendPostHandler(handler)
 
 	return nil
 

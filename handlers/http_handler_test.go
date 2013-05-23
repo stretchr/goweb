@@ -159,4 +159,12 @@ func TestServeHTTP(t *testing.T) {
 	assert.Equal(t, responseWriter, ctx.HttpResponseWriter())
 	assert.Equal(t, testRequest, ctx.HttpRequest())
 
+	// make sure it's always the same context
+	ctx1 := handler1.Calls[0].Arguments[0].(context.Context)
+	ctx2 := handler2.Calls[0].Arguments[0].(context.Context)
+	ctx3 := handler3.Calls[0].Arguments[0].(context.Context)
+
+	assert.Equal(t, ctx1, ctx2, "Contexts should be the same")
+	assert.Equal(t, ctx2, ctx3, "Contexts should be the same")
+
 }
