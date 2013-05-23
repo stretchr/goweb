@@ -219,7 +219,7 @@ func TestErrorHandlerGetsUsedOnError(t *testing.T) {
 		ctx := errorHandler.Calls[0].Arguments[0].(context.Context)
 
 		// make sure the error data field was set
-		assert.Equal(t, theError, ctx.Data().Get("error"), "the error should be set in the data with the 'error' key")
+		assert.Equal(t, theError.Error(), ctx.Data().Get("error").(HandlerError).Error(), "the error should be set in the data with the 'error' key")
 
 		assert.Equal(t, responseWriter, ctx.HttpResponseWriter())
 		assert.Equal(t, testRequest, ctx.HttpRequest())

@@ -103,5 +103,5 @@ func (p *PathMatchHandler) String() string {
 		methods = fmt.Sprintf("%s ", strings.Join(p.HttpMethods, "|"))
 	}
 
-	return fmt.Sprintf("%s%v\t\t\t%v - %d matcher func(s).", methods, p.PathPattern.RawPath, p.ExecutionFunc, len(p.MatcherFuncs))
+	return fmt.Sprintf("%s%v\t\t\t%v - %d matcher func(s).\n", methods, p.PathPattern.RawPath, p.ExecutionFunc, len(p.MatcherFuncs))
 }

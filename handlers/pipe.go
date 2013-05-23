@@ -61,7 +61,20 @@ func (p Pipe) Handle(c context.Context) (bool, error) {
 			stop, handleErr = handler.Handle(c)
 
 			if handleErr != nil {
-				return true, handleErr
+
+				// already a HandlerError?
+				if handlerError, ok := handleErr.(HandlerError); ok {
+
+					// just return it plain
+					return true, handlerError
+
+				} else {
+
+					// wrap it and record the handler that caused the error
+					return true, HandlerError{handler, handleErr}
+
+				}
+
 			}
 
 			if stop {

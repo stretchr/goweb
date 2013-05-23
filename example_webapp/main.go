@@ -41,7 +41,8 @@ func main() {
 		Map some routes
 	*/
 	goweb.Map("people/me", func(c context.Context) error {
-		return goweb.Respond.WithRedirect(c, "/people/123")
+		hostname, _ := os.Hostname()
+		return goweb.Respond.WithRedirect(c, fmt.Sprintf("/people/%s", hostname))
 	})
 
 	// /people (with optional ID)
@@ -59,7 +60,7 @@ func main() {
 
 	// /errortest should throw a system error and be handled by the 
 	// DefaultHttpHandler().ErrorHandler() Handler.
-	goweb.Map("errortest", func(c context.Context) error {
+	goweb.Map("/errortest", func(c context.Context) error {
 		return errors.New("This is a test error!")
 	})
 
@@ -100,6 +101,14 @@ func main() {
 	if listenErr != nil {
 		log.Fatalf("Could not listen: %s", listenErr)
 	}
+
+	log.Println("")
+	log.Print("Some things to try in your browser:")
+	log.Printf("\t  http://localhost%s/people", Address)
+	log.Printf("\t  http://localhost%s/people/123", Address)
+	log.Printf("\t  http://localhost%s/people/anything", Address)
+	log.Printf("\t  http://localhost%s/people/me (will redirect)", Address)
+	log.Printf("\t  http://localhost%s/errortest", Address)
 
 	go func() {
 		for _ = range c {
