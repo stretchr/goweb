@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
 	handlers_test "github.com/stretchrcom/goweb/handlers/test"
@@ -166,5 +167,63 @@ func TestServeHTTP(t *testing.T) {
 
 	assert.Equal(t, ctx1, ctx2, "Contexts should be the same")
 	assert.Equal(t, ctx2, ctx3, "Contexts should be the same")
+
+}
+
+/*
+	Errors
+*/
+
+func TestGetAndSetErrorHandler(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	errorHandler := new(handlers_test.TestHandler)
+
+	// default one should be made
+	assert.NotNil(t, handler.ErrorHandler())
+
+	//... but if we set one explicitally
+	handler.SetErrorHandler(errorHandler)
+
+	//... it should be set!
+	assert.Equal(t, errorHandler, handler.ErrorHandler())
+
+}
+
+func TestErrorHandlerGetsUsedOnError(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://stretchr.org/goweb", nil)
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	errorHandler := new(handlers_test.TestHandler)
+	handler.SetErrorHandler(errorHandler)
+
+	errorHandler.On("Handle", mock.Anything).Return(false, nil)
+
+	// make a handler throw an error
+	var theError error = errors.New("Test error")
+	handler.Map(func(c context.Context) error {
+		return theError
+	})
+
+	handler.ServeHTTP(responseWriter, testRequest)
+
+	if mock.AssertExpectationsForObjects(t, errorHandler.Mock) {
+
+		// get the first context
+		ctx := errorHandler.Calls[0].Arguments[0].(context.Context)
+
+		// make sure the error data field was set
+		assert.Equal(t, theError, ctx.Data().Get("error"), "the error should be set in the data with the 'error' key")
+
+		assert.Equal(t, responseWriter, ctx.HttpResponseWriter())
+		assert.Equal(t, testRequest, ctx.HttpRequest())
+
+	}
 
 }

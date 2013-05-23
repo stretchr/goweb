@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/stretchrcom/goweb"
 	"github.com/stretchrcom/goweb/context"
@@ -43,6 +44,7 @@ func main() {
 		return goweb.Respond.WithRedirect(c, "/people/123")
 	})
 
+	// /people (with optional ID)
 	goweb.Map("people/[id]", func(c context.Context) error {
 
 		if c.PathParams().Has("id") {
@@ -53,6 +55,12 @@ func main() {
 
 		return nil
 
+	})
+
+	// /errortest should throw a system error and be handled by the 
+	// DefaultHttpHandler().ErrorHandler() Handler.
+	goweb.Map("errortest", func(c context.Context) error {
+		return errors.New("This is a test error!")
 	})
 
 	/*

@@ -17,6 +17,9 @@ type HttpHandler struct {
 	// Handlers represent a pipe of handlers that will be used
 	// to handle requests.
 	Handlers Pipe
+
+	// errorHandler represents the Handler that will be used to handle errors.
+	errorHandler Handler
 }
 
 func NewHttpHandler(codecService codecservices.CodecService) *HttpHandler {
@@ -46,12 +49,48 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	// run it through the handlers
 	_, err := handler.Handlers.Handle(ctx)
 
+	// do we need to handle an error?
 	if err != nil {
 
-		// TODO: handle errors
+		// set the error
+		ctx.Data().Set("error", err)
+
+		// tell the handler to handle it
+		handler.ErrorHandler().Handle(ctx)
 
 	}
 
+}
+
+// ErrorHandler gets the Handler that will be used to handle errors.
+//
+// If no error handler has been set, a default error handler will be returned
+// which will just write the error out in plain text.  If you are building an API,
+// it is recommended that you roll your own ErrorHandler.
+//
+// For more information on rolling your own ErrorHandler, see the SetErrorHandler
+// method.
+func (h *HttpHandler) ErrorHandler() Handler {
+
+	if h.errorHandler == nil {
+
+		h.errorHandler = &DefaultErrorHandler{}
+
+	}
+
+	return h.errorHandler
+}
+
+// SetErrorHandler sets the Handler that will be used to handle errors.
+//
+// The error handler is like a normal Handler, except with a few oddities. 
+// The WillHandle method never gets called on the ErrorHandler, and any errors
+// returned from the Handle method are ignored (as is the stop argument).
+// If you want to log errors, you should do so from within the ErrorHandler.
+//
+// Goweb will place the error object into the context.Data().Get("error") map.
+func (h *HttpHandler) SetErrorHandler(errorHandler Handler) {
+	h.errorHandler = errorHandler
 }
 
 // HandlersPipe gets the pipe for handlers.
