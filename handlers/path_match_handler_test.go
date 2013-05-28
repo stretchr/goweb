@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/stretchrcom/goweb/context"
 	//"github.com/stretchrcom/goweb/webcontext"
 	"github.com/stretchrcom/goweb/paths"
@@ -53,6 +54,36 @@ func TestPathMatchHandler(t *testing.T) {
 	assert.Nil(t, handleErr)
 	assert.True(t, shouldStop)
 	assert.True(t, called, "Handler func should get called")
+
+}
+
+func assertPathMatches(t *testing.T, pattern, path string, shouldMatch bool) bool {
+
+	pathPattern, _ := paths.NewPathPattern(pattern)
+	ctx := context_test.MakeTestContextWithPath(path)
+
+	h := NewPathMatchHandler(pathPattern, HandlerExecutionFunc(func(c context.Context) error { return nil }))
+
+	willHandle, _ := h.WillHandle(ctx)
+	return assert.Equal(t, shouldMatch, willHandle, fmt.Sprintf("WillHandle should be %v for '%s' with path '%s'.", shouldMatch, pattern, path))
+
+}
+
+func TestPathMatches(t *testing.T) {
+
+	// people/{id}/books
+	assertPathMatches(t, "/people/{id}/books", "people/123/books", true)
+	assertPathMatches(t, "/people/{id}/books", "/people/123/books", true)
+	assertPathMatches(t, "/people/{id}/books", "people/123", false)
+	assertPathMatches(t, "people/{id}/books", "people/123/books", true)
+	assertPathMatches(t, "people/{id}/books", "/people/123/books", true)
+	assertPathMatches(t, "people/{id}/books", "people/123", false)
+
+	// /
+	assertPathMatches(t, "/", "", true)
+	assertPathMatches(t, "/", "/", true)
+	assertPathMatches(t, "/", "/people", false)
+	assertPathMatches(t, "/", "/123", false)
 
 }
 
