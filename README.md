@@ -8,6 +8,7 @@
   * Cleaner interface for responding (e.g. `goweb.API.RespondWithData`, and `goweb.Respond.WithRedirect`)
   * More control over standard response object for API responses
   * Cleaner RESTful interface design
+    * Default OPTIONS implementation that informs clients what methods the controller exposes
   * Much easier to write testable code
   * Better package structure
   * Modular design, making adding new stuff easy
