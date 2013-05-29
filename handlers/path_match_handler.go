@@ -67,6 +67,32 @@ func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
 
 	}
 
+	// check HTTP methods
+	var httpMethodMatch bool = false
+
+	if len(p.HttpMethods) == 0 {
+
+		// no specific HTTP methods
+		httpMethodMatch = true
+
+	} else {
+
+		for _, httpMethod := range p.HttpMethods {
+			if httpMethod == c.MethodString() {
+				httpMethodMatch = true
+				break
+			}
+		}
+
+	}
+
+	// cancel early if we didn't get an HTTP Method match
+	if !httpMethodMatch {
+		return false, nil
+	}
+
+	// check path match
+
 	pathMatch := p.PathPattern.GetPathMatch(c.Path())
 
 	var allMatch bool

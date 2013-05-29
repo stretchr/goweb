@@ -94,6 +94,25 @@ func TestPathMatches(t *testing.T) {
 
 }
 
+func TestPathMatches_WithHttpMethod(t *testing.T) {
+
+	pathPattern, _ := paths.NewPathPattern("people/123")
+
+	h := NewPathMatchHandler(pathPattern, HandlerExecutionFunc(func(c context.Context) error { return nil }))
+	h.HttpMethods = []string{"POST"}
+
+	ctx := context_test.MakeTestContextWithDetails("/people/123", "GET")
+
+	willHandle, _ := h.WillHandle(ctx)
+	assert.Equal(t, false, willHandle)
+
+	ctx2 := context_test.MakeTestContextWithDetails("/people/123", "POST")
+
+	willHandle, _ = h.WillHandle(ctx2)
+	assert.Equal(t, true, willHandle)
+
+}
+
 func TestPathMatchHandler_WithMatcherFuncs_NoMatch(t *testing.T) {
 
 	matcherFuncCalled := false
