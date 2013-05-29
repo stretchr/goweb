@@ -57,6 +57,8 @@ package goweb
 //       return nil
 //
 //     })
+//
+// For a full overview of valid paths, see the "Mapping paths" section above.
 func Map(options ...interface{}) error {
 	return DefaultHttpHandler().Map(options...)
 }

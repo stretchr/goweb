@@ -51,4 +51,30 @@
 //
 // To add more RESTful features (like Update and Delete), you just have to add the relevant methods to the
 // controller and Goweb will do the rest for you.
+//
+// Mapping paths
+//
+// If you want to map specific paths with Goweb, you can use the `goweb.Map` function with
+// the following kinds of paths:
+//
+// 
+//     /literals - Normal text will be considered literal, meaning the path would
+//                 have to match it exactly.
+//
+//     {variable} - Curly braces represent a segment of path that can be anything,
+//                  and which will be made available via the `context.PathParam` method.
+//
+//     [optional-variable] - Square braces represent an optional segment.  If present,
+//                           will be made available via the `context.PathParam` method
+//                           but otherwise the path will still be a match.
+//
+//     * - A single `*` is similar to using `{}`, except the value is ignored.
+//
+//     *** - Three `*`'s matches anything in this segment, and any subsequent segments.
+//           For example, `/people/***` would match `/people/123` and `/people/123/books/456`
+//           but not just `/people`.
+//
+//     [***] - Three `*`'s inside square braces is similar to `***`, but also allows
+//             there to be nothing in the first segment.  For example, `/people/[***]`
+//             would match `/people` as well as `/people/who/do/stuff`.
 package goweb
