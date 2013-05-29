@@ -65,6 +65,9 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 	// at the end of the check path
 	if len(checkSegments) < len(pathSegments) {
 
+		// check segments: /people/{id}
+		// path segments:  /people
+
 		// is the last segment a catchall?
 		if lastCheckSegmentType != segmentTypeCatchall {
 			return PathDoesntMatch
@@ -72,6 +75,11 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 
 	} else if len(checkSegments) > len(pathSegments) {
 
+		// check segments: /poeple/{something}
+		// path segments: /people/something/more
+
+		// this situation is only OK if the last segment is optional, or
+		// if it's the catch-all.
 		if lastCheckSegmentType != segmentTypeDynamicOptional &&
 			lastCheckSegmentType != segmentTypeCatchall {
 			return PathDoesntMatch
