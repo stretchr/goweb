@@ -97,6 +97,7 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 	}
 
 	// use the HTTP responder to respond
+	ctx.HttpResponseWriter().Header().Set("Content-Type", codec.ContentType()) // TODO: test me
 	a.httpResponder.With(ctx, status, output)
 
 	return nil
