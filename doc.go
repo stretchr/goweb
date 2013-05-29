@@ -71,10 +71,5 @@
 //     * - A single `*` is similar to using `{}`, except the value is ignored.
 //
 //     *** - Three `*`'s matches anything in this segment, and any subsequent segments.
-//           For example, `/people/***` would match `/people/123` and `/people/123/books/456`
-//           but not just `/people`.
-//
-//     [***] - Three `*`'s inside square braces is similar to `***`, but also allows
-//             there to be nothing in the first segment.  For example, `/people/[***]`
-//             would match `/people` as well as `/people/who/do/stuff`.
+//           For example, `/people/***` would match `/people`, `/people/123` and `/people/123/books/456`.
 package goweb

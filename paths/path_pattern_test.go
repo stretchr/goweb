@@ -80,9 +80,12 @@ func TestPathPattern_GetPathMatch_Matches(t *testing.T) {
 	assert.False(t, gp.GetPathMatch(NewPath("/people/123")).Matches)
 	assert.False(t, gp.GetPathMatch(NewPath("/people/123/books/hello")).Matches)
 
-	// ...
+	// ***
 	gp, _ = NewPathPattern("/people/{id}/books/***")
-	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/hello/how/do/you/do")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/hello/how/do/you/do")).Matches, "/people/123/books/hello/how/do/you/do")
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/hello")).Matches, "/people/123/books/hello")
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches, "/people/123/books")
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/")).Matches, "/people/123/books/")
 
 	// *
 	gp, _ = NewPathPattern("/people/*/books")

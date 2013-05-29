@@ -86,7 +86,8 @@ func TestPathMatches(t *testing.T) {
 	assertPathMatches(t, "/", "/123", false)
 
 	// people/{id}/books/***
-	assertPathMatches(t, "/people/{id}/books/[***]", "people/123/books", true)
+	assertPathMatches(t, "/people/{id}/books/***", "people/123/books/", true)
+	assertPathMatches(t, "/people/{id}/books/***", "people/123/books", true)
 	assertPathMatches(t, "/people/{id}/books/***", "people/123/books/123", true)
 	assertPathMatches(t, "/people/{id}/books/***", "people/123/books/123/something", true)
 	assertPathMatches(t, "/people/{id}/books/***", "people/123/books/123/something/else", true)

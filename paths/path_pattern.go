@@ -59,18 +59,21 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 	checkSegments := p.path.Segments()
 	pathSegments := path.Segments()
 
+	lastCheckSegmentType := getSegmentType(checkSegments[len(checkSegments)-1])
+
 	// make sure the segments match in length, or there is a catchall
 	// at the end of the check path
 	if len(checkSegments) < len(pathSegments) {
 
 		// is the last segment a catchall?
-		if getSegmentType(checkSegments[len(checkSegments)-1]) != segmentTypeCatchall {
+		if lastCheckSegmentType != segmentTypeCatchall {
 			return PathDoesntMatch
 		}
 
 	} else if len(checkSegments) > len(pathSegments) {
 
-		if getSegmentType(checkSegments[len(checkSegments)-1]) != segmentTypeDynamicOptional {
+		if lastCheckSegmentType != segmentTypeDynamicOptional &&
+			lastCheckSegmentType != segmentTypeCatchall {
 			return PathDoesntMatch
 		}
 
@@ -92,7 +95,6 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 			if segmentIndex < len(pathSegments) {
 				pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
 			}
-
 		}
 
 	}
