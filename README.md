@@ -2,7 +2,7 @@
 
   * BETA is ready to use
 
-  ![Alt text](GowebLogoBig.jpg "Goweb 2 - Logo")
+![Alt text](GowebLogoBig.jpg "Goweb 2 - Logo")
   
 ## Features
 
