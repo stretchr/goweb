@@ -10,6 +10,7 @@ import (
 	"github.com/stretchrcom/testify/assert"
 	http_test "github.com/stretchrcom/testify/http"
 	"github.com/stretchrcom/testify/mock"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -233,9 +234,7 @@ func TestMapRest_SemiInterface(t *testing.T) {
 	h := NewHttpHandler(codecService)
 	h.MapController(semi)
 
-	fmt.Printf("%s", h)
-
-	assert.Equal(t, 3, len(h.HandlersPipe()))
+	assert.Equal(t, 5, len(h.HandlersPipe()))
 
 	// create
 	assertPathMatchHandler(t, h.HandlersPipe()[0].(*PathMatchHandler), "/test-semi-restful", "POST", "create")
@@ -248,7 +247,7 @@ func TestMapRest_SemiInterface(t *testing.T) {
 
 }
 
-func TestMapRest(t *testing.T) {
+func TestMapController(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
 
@@ -292,7 +291,7 @@ func TestMapRest(t *testing.T) {
 
 }
 
-func TestMapRest_WithSpecificPath(t *testing.T) {
+func TestMapController_WithSpecificPath(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
 
@@ -333,5 +332,26 @@ func TestMapRest_WithSpecificPath(t *testing.T) {
 	// options
 	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/something/123", "OPTIONS", "options")
 	assertPathMatchHandler(t, h.HandlersPipe()[9].(*PathMatchHandler), "/something", "OPTIONS", "options")
+
+}
+
+func TestMapController_DefaultOptions(t *testing.T) {
+
+	semi := new(controllers_test.TestSemiRestfulController)
+
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
+	h.MapController(semi)
+
+	assert.Equal(t, 5, len(h.HandlersPipe()))
+
+	// get the last two
+	handler1 := h.HandlersPipe()[len(h.HandlersPipe())-2]
+
+	log.Printf("%s", h.HandlersPipe())
+
+	handler2 := h.HandlersPipe()[len(h.HandlersPipe())-1]
+	assertPathMatchHandler(t, handler1.(*PathMatchHandler), "/test-semi-restful", "OPTIONS", "options")
+	assertPathMatchHandler(t, handler2.(*PathMatchHandler), "/test-semi-restful/{id}", "OPTIONS", "options")
 
 }

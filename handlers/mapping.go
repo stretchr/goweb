@@ -174,7 +174,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		h.Map(http.MethodPost, path, func(ctx context.Context) error { return restfulController.Create(ctx) })
 	}
 
-	// GET /resource/{id}  -  ReadOne
+	// GET /resource/{id}  -  Read
 	if restfulController, ok := controller.(controllers.RestfulReader); ok {
 		h.Map(http.MethodGet, pathWithID, func(ctx context.Context) error {
 			return restfulController.Read(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
@@ -186,7 +186,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		h.Map(http.MethodGet, path, func(ctx context.Context) error { return restfulController.ReadMany(ctx) })
 	}
 
-	// DELETE /resource/{id}  -  DeleteOne
+	// DELETE /resource/{id}  -  Delete
 	if restfulController, ok := controller.(controllers.RestfulDeletor); ok {
 		h.Map(http.MethodDelete, pathWithID, func(ctx context.Context) error {
 			return restfulController.Delete(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
@@ -228,11 +228,29 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		})
 	}
 
-	// HEAD /resource/[id]  -  Options
+	// OPTIONS /resource/[id]  -  Options
 	if restfulController, ok := controller.(controllers.RestfulOptions); ok {
+
 		h.Map(http.MethodOptions, pathWithOptionalID, func(ctx context.Context) error {
 			return restfulController.Options(ctx)
 		})
+
+	} else {
+
+		// use the default options implementation
+
+		h.Map(http.MethodOptions, path, func(ctx context.Context) error {
+			ctx.HttpResponseWriter().Header().Set("Allow", controllers.OptionsListForResourceCollection(controller))
+			ctx.HttpResponseWriter().WriteHeader(200)
+			return nil
+		})
+
+		h.Map(http.MethodOptions, pathWithID, func(ctx context.Context) error {
+			ctx.HttpResponseWriter().Header().Set("Allow", controllers.OptionsListForSingleResource(controller))
+			ctx.HttpResponseWriter().WriteHeader(200)
+			return nil
+		})
+
 	}
 
 	// everything ok
