@@ -52,6 +52,8 @@
 // To add more RESTful features (like Update and Delete), you just have to add the relevant methods to the
 // controller and Goweb will do the rest for you.
 //
+// For a full list of the supported methods, see the MapController function.
+//
 // Mapping paths
 //
 // If you want to map specific paths with Goweb, you can use the `goweb.Map` function with
@@ -72,4 +74,7 @@
 //
 //     *** - Three `*`'s matches anything in this segment, and any subsequent segments.
 //           For example, `/people/***` would match `/people`, `/people/123` and `/people/123/books/456`.
+//
+// For some real examples of mapping paths, see the goweb.Map function, or check out the
+// example_webapp in the code.
 package goweb

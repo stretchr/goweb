@@ -6,6 +6,9 @@ import (
 	"github.com/stretchrcom/testify/mock"
 )
 
+// TestController ia a mocked (using testify/mock) objects that acts like
+// a RESTful controller.  It is used internally for testing code, but you can
+// use it yourself if you need to in your test code too.
 type TestController struct {
 	mock.Mock
 }
@@ -42,5 +45,11 @@ func (c *TestController) Options(ctx context.Context) error {
 	return c.Called(ctx).Error(0)
 }
 func (c *TestController) Head(ctx context.Context) error {
+	return c.Called(ctx).Error(0)
+}
+func (c *TestController) Before(ctx context.Context) error {
+	return c.Called(ctx).Error(0)
+}
+func (c *TestController) After(ctx context.Context) error {
 	return c.Called(ctx).Error(0)
 }
