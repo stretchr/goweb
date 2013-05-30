@@ -104,7 +104,7 @@ func MapAfter(options ...interface{}) error {
 
 // MapController maps a controller in the handler.
 //
-// A controller is any object that inherits from one or more of the controllers.Restful*
+// A controller is any object that implements one or more of the controllers.Restful*
 // interfaces.
 //
 // They include:
@@ -120,6 +120,26 @@ func MapAfter(options ...interface{}) error {
 //     RestfulManyUpdater.UpdateMany(context.Context) error
 //     RestfulOptions.Options(context.Context) error
 //     RestfulHead.Head(context.Context) error
+//
+// Optionally, you can map Before and After methods too, to allow controller specific
+// code to run at appropriate times:
+//
+//     BeforeHandler.Before(context.Context) error
+//     AfterHandler.After(context.Context) error
+//
+// To implement any of these methods, you just need to provide a method with the
+// same name and signature.  For example, a simple RESTful controller that just
+// provides a simple GET might look like this:
+//
+//     type MyController struct{}
+//
+//     func (c *MyController) ReadMany(ctx context.Context) error {
+//       // TODO: do something
+//     }
+//
+// The above code would map only `GET /my`.
+//
+// Controller Paths
 //
 // This code will map the controller and use the Path() method on the
 // controller to determine the path prefix (or it will try to guess the URL part

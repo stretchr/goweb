@@ -151,13 +151,13 @@ func stringForHandlers(handlers []Handler, level int) string {
 
 	for handlerIndex, handler := range handlers {
 		if pipe, ok := handler.(Pipe); ok {
-			lines = append(lines, fmt.Sprintf("%sPipe %d:", levelStr, handlerIndex))
+			lines = append(lines, fmt.Sprintf("\n%sPipe %d:\n", levelStr, handlerIndex))
 			lines = append(lines, stringForHandlers(pipe, level+1))
 		} else {
 			lines = append(lines, fmt.Sprintf("%s%s", levelStr, handler))
 		}
 	}
 
-	return strings.Join(lines, "\n")
+	return strings.Join(lines, "")
 
 }

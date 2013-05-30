@@ -117,6 +117,7 @@ func main() {
 	log.Printf("\t  http://localhost%s/errortest", Address)
 
 	log.Println("")
+	log.Println("Also try some of these routes:")
 	log.Printf("%s", goweb.DefaultHttpHandler())
 
 	go func() {
@@ -166,6 +167,16 @@ type ThingsController struct {
 	// Things holds the things... obviously, you would never do this
 	// in the real world - you'd be reading from some kind of datastore.
 	Things []*Thing
+}
+
+// Before gets called before any other method.
+func (r *ThingsController) Before(ctx context.Context) error {
+
+	// set a Things specific header
+	ctx.HttpResponseWriter().Header().Set("X-Things-Controller", "true")
+
+	return nil
+
 }
 
 func (r *ThingsController) Create(ctx context.Context) error {

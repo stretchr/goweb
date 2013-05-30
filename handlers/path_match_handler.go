@@ -25,6 +25,19 @@ type PathMatchHandler struct {
 	// HttpMethods contains a list of HTTP Methods that will match, or an empty list if all
 	// methods match.
 	HttpMethods []string
+
+	// BreakCurrentPipeline indicates whether the rest of the handlers in the Pipe
+	// should be skipped once this handler has done its work.
+	//
+	// Usually for the main pipe, these handlers will skip as they are responsible
+	// for actually returning a response to the clients.
+	//
+	// In Before and After handlers however, the likelihood is that all handlers
+	// in the pipe will want to do something without being skipped.
+	//
+	// goweb.Map will set this value to true, whereas goweb.MapBefore and goweb.MapAfter
+	// will set it to false.
+	BreakCurrentPipeline bool
 }
 
 // NewPathMatchHandler makes a new PathMatchHandler with the specified PathPattern
@@ -118,7 +131,7 @@ func (p *PathMatchHandler) WillHandle(c context.Context) (bool, error) {
 */
 func (p *PathMatchHandler) Handle(c context.Context) (bool, error) {
 	err := p.ExecutionFunc(c)
-	return true, err
+	return p.BreakCurrentPipeline, err
 }
 
 // String gets a human readable string describing this PathMatchHandler.

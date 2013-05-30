@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"github.com/stretchrcom/goweb/http"
-	"strings"
 )
 
-func OptionsListForResourceCollection(controller interface{}) string {
+func OptionsListForResourceCollection(controller interface{}) []string {
 
 	var methods []string
 
@@ -36,11 +35,11 @@ func OptionsListForResourceCollection(controller interface{}) string {
 
 	methods = append(methods, http.MethodOptions)
 
-	return strings.Join(methods, ",")
+	return methods
 
 }
 
-func OptionsListForSingleResource(controller interface{}) string {
+func OptionsListForSingleResource(controller interface{}) []string {
 
 	var methods []string
 
@@ -72,6 +71,6 @@ func OptionsListForSingleResource(controller interface{}) string {
 	}
 
 	methods = append(methods, http.MethodOptions)
-	return strings.Join(methods, ",")
+	return methods
 
 }

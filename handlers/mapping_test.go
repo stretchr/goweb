@@ -64,6 +64,7 @@ func TestMap_WithSpecificMethod(t *testing.T) {
 
 	assert.True(t, called)
 	assert.Equal(t, "GET", handler.HandlersPipe()[0].(*PathMatchHandler).HttpMethods[0])
+	assert.True(t, handler.HandlersPipe()[0].(*PathMatchHandler).BreakCurrentPipeline)
 
 }
 
@@ -150,6 +151,7 @@ func TestMapBefore_WithMatcherFuncs(t *testing.T) {
 	h := handler.PreHandlersPipe()[0].(*PathMatchHandler)
 	assert.Equal(t, 1, len(h.MatcherFuncs))
 	assert.Equal(t, matcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
+	assert.False(t, handler.PreHandlersPipe()[0].(*PathMatchHandler).BreakCurrentPipeline)
 
 }
 
@@ -170,6 +172,7 @@ func TestMapAfter_WithMatcherFuncs(t *testing.T) {
 	h := handler.PostHandlersPipe()[0].(*PathMatchHandler)
 	assert.Equal(t, 1, len(h.MatcherFuncs))
 	assert.Equal(t, matcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
+	assert.False(t, handler.PostHandlersPipe()[0].(*PathMatchHandler).BreakCurrentPipeline)
 
 }
 
@@ -388,17 +391,18 @@ func TestBeforeHandler(t *testing.T) {
 
 	h.MapController(cont)
 
-	// should be 3 handlers mapped
-	assert.Equal(t, 3, len(h.HandlersPipe()))
-
-	if assert.Equal(t, 1, len(h.PreHandlersPipe()), "A pre handler is expected") {
-		beforeHandler := h.PreHandlersPipe()[0]
-		assertPathMatchHandler(t, beforeHandler.(*PathMatchHandler), "/test", "POST", "options")
+	if assert.Equal(t, 2, len(h.PreHandlersPipe()), "2 pre handler's expected") {
+		assertPathMatchHandler(t, h.PreHandlersPipe()[0].(*PathMatchHandler), "/test", "POST", "before POST /test")
+		assertPathMatchHandler(t, h.PreHandlersPipe()[1].(*PathMatchHandler), "/test/123", "POST", "before POST /test/123")
+		assertPathMatchHandler(t, h.PreHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "before options /test")
+		assertPathMatchHandler(t, h.PreHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "before options /test/123")
 	}
 
-	if assert.Equal(t, 1, len(h.PostHandlersPipe()), "A post handler is expected") {
-		afterHandler := h.PostHandlersPipe()[0]
-		assertPathMatchHandler(t, afterHandler.(*PathMatchHandler), "/test", "POST", "options")
+	if assert.Equal(t, 2, len(h.PostHandlersPipe()), "2 post handler's expected") {
+		assertPathMatchHandler(t, h.PostHandlersPipe()[0].(*PathMatchHandler), "/test", "POST", "after POST /test")
+		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "POST", "after POST /test/123")
+		assertPathMatchHandler(t, h.PostHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "after options /test")
+		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "after options /test/123")
 	}
 
 }

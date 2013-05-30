@@ -50,10 +50,38 @@ func TestPathMatchHandler(t *testing.T) {
 	assert.False(t, will)
 	assert.Nil(t, ctx2.Data().Get(context.DataKeyPathParameters))
 
+	h.BreakCurrentPipeline = true
 	shouldStop, handleErr := h.Handle(ctx2)
 	assert.Nil(t, handleErr)
 	assert.True(t, shouldStop)
 	assert.True(t, called, "Handler func should get called")
+
+}
+
+func TestPathMatchHandler_BreakCurrentPipeline(t *testing.T) {
+
+	pathPattern, _ := paths.NewPathPattern("collection/{id}/name")
+	h := NewPathMatchHandler(pathPattern, HandlerExecutionFunc(func(c context.Context) error {
+		return nil
+	}))
+	h.BreakCurrentPipeline = true
+
+	ctx1 := context_test.MakeTestContextWithPath("/collection/123/name")
+
+	breakCurrentPipeline, _ := h.Handle(ctx1)
+
+	assert.True(t, breakCurrentPipeline)
+
+	h = NewPathMatchHandler(pathPattern, HandlerExecutionFunc(func(c context.Context) error {
+		return nil
+	}))
+	h.BreakCurrentPipeline = false
+
+	ctx1 = context_test.MakeTestContextWithPath("/collection/123/name")
+
+	breakCurrentPipeline, _ = h.Handle(ctx1)
+
+	assert.False(t, breakCurrentPipeline)
 
 }
 

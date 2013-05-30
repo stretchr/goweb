@@ -98,6 +98,12 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 
 	handler, err := h.handlerForOptions(options...)
 
+	// normally mapped handlers should only execute one,
+	// then it should break
+	if pathMatchHandler, ok := handler.(*PathMatchHandler); ok {
+		pathMatchHandler.BreakCurrentPipeline = true
+	}
+
 	if err != nil {
 		return err
 	}
@@ -187,13 +193,28 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
 
 		// map the collective before handler
-		h.Map(collectiveMethods, path, func(ctx context.Context) error {
+		h.MapBefore(collectiveMethods, path, func(ctx context.Context) error {
 			return beforeController.Before(ctx)
 		})
 
 		// map the singular before handler
-		h.Map(singularMethods, pathWithID, func(ctx context.Context) error {
+		h.MapBefore(singularMethods, pathWithID, func(ctx context.Context) error {
 			return beforeController.Before(ctx)
+		})
+
+	}
+
+	// AfterHandler
+	if afterController, ok := controller.(controllers.AfterHandler); ok {
+
+		// map the collective after handler
+		h.MapAfter(collectiveMethods, path, func(ctx context.Context) error {
+			return afterController.After(ctx)
+		})
+
+		// map the singular after handler
+		h.MapAfter(singularMethods, pathWithID, func(ctx context.Context) error {
+			return afterController.After(ctx)
 		})
 
 	}
