@@ -12,10 +12,10 @@ package goweb
 //
 //     (pathPattern, func [, matcherFuncs])
 //
-// 3. The HTTP method, the path pettern, the handler function, followed by optional matcher funcs will cause
-// the func to be executed when the path and HTTP method match.
+// 3. The HTTP method (or an array of HTTP methods), the path pettern, the handler function, followed by
+// optional matcher funcs will cause the func to be executed when the path and HTTP method match.
 //
-//     (method, pathPattern, func [, matcherFuncs])
+//     (method|methods, pathPattern, func [, matcherFuncs])
 //
 // 4. Just the handler function, and any optional matcher funcs will add a catch-all handler.  This should
 // be the last call to Map that you make.
@@ -26,6 +26,7 @@ package goweb
 //
 // The following code snippets are real examples of how to use the Map function:
 //
+//     // POST /events
 //     handler.Map(http.MethodPost, "/events", func(c context.Context) error {
 //
 //       // TODO: Add an event
@@ -35,6 +36,17 @@ package goweb
 //
 //     })
 //
+//     // POST|PUT /events
+//     handler.Map([]string{http.MethodPost, http.MethodPut}, "/events", func(c context.Context) error {
+//
+//       // TODO: Add an event
+//
+//       // no errors
+//       return nil
+//
+//     })
+//
+//     // POST|PUT|DELETE|GET /articles/2013/05/01
 //     handler.Map("/articles/{year}/{month}/{day}", func(c context.Context) error {
 //  
 //       day := c.PathParams().Get("day")
@@ -48,6 +60,7 @@ package goweb
 //
 //     })
 //
+//     // All requests
 //     handler.Map(func(c context.Context) error {
 //     
 //       // everything else is a 404

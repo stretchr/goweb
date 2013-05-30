@@ -10,7 +10,6 @@ import (
 	"github.com/stretchrcom/testify/assert"
 	http_test "github.com/stretchrcom/testify/http"
 	"github.com/stretchrcom/testify/mock"
-	"log"
 	"net/http"
 	"testing"
 )
@@ -65,6 +64,28 @@ func TestMap_WithSpecificMethod(t *testing.T) {
 
 	assert.True(t, called)
 	assert.Equal(t, "GET", handler.HandlersPipe()[0].(*PathMatchHandler).HttpMethods[0])
+
+}
+
+func TestMap_WithSpecificMethods(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	called := false
+	handler.Map([]string{"GET", "POST"}, "/people/{id}", func(c context.Context) error {
+		called = true
+		return nil
+	})
+
+	assert.Equal(t, 1, len(handler.HandlersPipe()))
+
+	ctx := context_test.MakeTestContextWithPath("people/123")
+	handler.Handlers.Handle(ctx)
+
+	assert.True(t, called)
+	assert.Equal(t, "GET", handler.HandlersPipe()[0].(*PathMatchHandler).HttpMethods[0])
+	assert.Equal(t, "POST", handler.HandlersPipe()[0].(*PathMatchHandler).HttpMethods[1])
 
 }
 
@@ -348,10 +369,36 @@ func TestMapController_DefaultOptions(t *testing.T) {
 	// get the last two
 	handler1 := h.HandlersPipe()[len(h.HandlersPipe())-2]
 
-	log.Printf("%s", h.HandlersPipe())
-
 	handler2 := h.HandlersPipe()[len(h.HandlersPipe())-1]
 	assertPathMatchHandler(t, handler1.(*PathMatchHandler), "/test-semi-restful", "OPTIONS", "options")
 	assertPathMatchHandler(t, handler2.(*PathMatchHandler), "/test-semi-restful/{id}", "OPTIONS", "options")
+
+}
+
+/*
+	Before and After handlers
+*/
+
+func TestBeforeHandler(t *testing.T) {
+
+	cont := new(controllers_test.TestHandlerWithBeforeAndAfters)
+
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
+
+	h.MapController(cont)
+
+	// should be 3 handlers mapped
+	assert.Equal(t, 3, len(h.HandlersPipe()))
+
+	if assert.Equal(t, 1, len(h.PreHandlersPipe()), "A pre handler is expected") {
+		beforeHandler := h.PreHandlersPipe()[0]
+		assertPathMatchHandler(t, beforeHandler.(*PathMatchHandler), "/test", "POST", "options")
+	}
+
+	if assert.Equal(t, 1, len(h.PostHandlersPipe()), "A post handler is expected") {
+		afterHandler := h.PostHandlersPipe()[0]
+		assertPathMatchHandler(t, afterHandler.(*PathMatchHandler), "/test", "POST", "options")
+	}
 
 }

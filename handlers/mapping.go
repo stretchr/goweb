@@ -7,6 +7,7 @@ import (
 	"github.com/stretchrcom/goweb/http"
 	"github.com/stretchrcom/goweb/paths"
 	stewstrings "github.com/stretchrcom/stew/strings"
+	"strings"
 )
 
 var (
@@ -23,18 +24,26 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 	}
 
 	var matcherFuncStartPos int = -1
-	var method string
+	var methods []string
 	var path string
 	var executor HandlerExecutionFunc
 
 	switch options[0].(type) {
-	case string:
+	case string, []string:
 
 		switch options[1].(type) {
 		case nil:
 			panic("goweb: Cannot call Map with 2nd argument nil.")
-		case string: // (method, path, executor, ...)
-			method = options[0].(string)
+		case string: // (method|methods, path, executor, ...)
+
+			// get the methods from the arguments
+			switch options[0].(type) {
+			case []string:
+				methods = options[0].([]string)
+			case string:
+				methods = []string{options[0].(string)}
+			}
+
 			path = options[1].(string)
 			executor = options[2].(func(context.Context) error)
 			matcherFuncStartPos = 3
@@ -70,8 +79,8 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 	handler := NewPathMatchHandler(pathPattern, executor)
 
 	// did they specify a method?
-	if len(method) > 0 {
-		handler.HttpMethods = []string{method}
+	if len(methods) > 0 {
+		handler.HttpMethods = methods
 	}
 
 	// do we have any MatcherFuncs?
@@ -166,8 +175,28 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		controller = options[1]
 	}
 
+	// get the specialised paths that we might need
 	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}")         // e.g.  people/123
 	pathWithOptionalID := stewstrings.MergeStrings(path, "/[", RestfulIDParameterName, "]") // e.g.  people/[123]
+
+	// get the HTTP methods that we will end up mapping
+	collectiveMethods := controllers.OptionsListForResourceCollection(controller)
+	singularMethods := controllers.OptionsListForSingleResource(controller)
+
+	// BeforeHandler
+	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
+
+		// map the collective before handler
+		h.Map(collectiveMethods, path, func(ctx context.Context) error {
+			return beforeController.Before(ctx)
+		})
+
+		// map the singular before handler
+		h.Map(singularMethods, pathWithID, func(ctx context.Context) error {
+			return beforeController.Before(ctx)
+		})
+
+	}
 
 	// POST /resource  -  Create
 	if restfulController, ok := controller.(controllers.RestfulCreator); ok {
@@ -240,13 +269,13 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		// use the default options implementation
 
 		h.Map(http.MethodOptions, path, func(ctx context.Context) error {
-			ctx.HttpResponseWriter().Header().Set("Allow", controllers.OptionsListForResourceCollection(controller))
+			ctx.HttpResponseWriter().Header().Set("Allow", strings.Join(collectiveMethods, ","))
 			ctx.HttpResponseWriter().WriteHeader(200)
 			return nil
 		})
 
 		h.Map(http.MethodOptions, pathWithID, func(ctx context.Context) error {
-			ctx.HttpResponseWriter().Header().Set("Allow", controllers.OptionsListForSingleResource(controller))
+			ctx.HttpResponseWriter().Header().Set("Allow", strings.Join(singularMethods, ","))
 			ctx.HttpResponseWriter().WriteHeader(200)
 			return nil
 		})
