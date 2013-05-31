@@ -11,6 +11,10 @@ import (
 
 // RegexPath returns a MatcherFunc that mathces the path based on the specified
 // Regex pattern.
+//
+// To match a path that contains only numbers, you could do:
+//
+//     goweb.Map(executionFunc, goweb.RegexPath(`^[0-9]+$`))
 func RegexPath(regexpPattern string) handlers.MatcherFunc {
 	return handlers.RegexPath(regexpPattern)
 }
