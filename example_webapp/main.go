@@ -45,7 +45,9 @@ func main() {
 		return goweb.Respond.WithRedirect(c, fmt.Sprintf("/people/%s", hostname))
 	})
 
-	// /people (with optional ID)
+	/*
+		/people (with optional ID)
+	*/
 	goweb.Map("people/[id]", func(c context.Context) error {
 
 		if c.PathParams().Has("id") {
@@ -71,11 +73,20 @@ func main() {
 	goweb.MapController(thingsController)
 
 	/*
+		Map a handler for if they hit just numbers using the goweb.RegexPath
+		function.
+
+		e.g. GET /2468
+	*/
+	goweb.Map(func(c context.Context) error {
+		return goweb.API.RespondWithData(c, "Just a number!")
+	}, goweb.RegexPath(`^[0-9]+$`))
+
+	/*
 		Catch-all handler for everything that we don't understand
 	*/
 	goweb.Map(func(c context.Context) error {
-		goweb.API.Respond(c, 404, nil, []string{"File not found"})
-		return nil
+		return goweb.API.Respond(c, 404, nil, []string{"File not found"})
 	})
 
 	/*
