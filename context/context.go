@@ -7,9 +7,7 @@ import (
 	"net/http"
 )
 
-/*
-  Context represents an object that represents a single HTTP request.
-*/
+// Context represents an object that represents a single HTTP request.
 type Context interface {
 
 	/*
