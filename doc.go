@@ -40,7 +40,7 @@
 //
 // To map this in Goweb, we use the MapController function like this:
 //
-//     mapErr := goweb.MapController(PeopleController{})
+//     mapErr := goweb.MapController(&PeopleController{})
 //
 // This will map the two functions (since they follow the standards defined in the controllers package)
 // to the appropriate RESTful URLs:
