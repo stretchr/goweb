@@ -162,10 +162,22 @@ func MapController(options ...interface{}) error {
 // MapStatic maps static files from the specified systemPath to the
 // specified publicPath.
 //
-//     goweb.MapStatic("/static", "/location/on/system/to/files")
+//     goweb.MapStatic("/static", "location/on/system/to/files")
 //
 // Goweb will automatically expand the above public path pattern from `/static` to
 // `/static/***` to ensure subfolders are automatcially mapped.
+//
+// Paths
+//
+// The systemPath is relative to where you will actually run your app from, for
+// example if I an doing `go run main.go` inside the `example_webapp` folder, then
+// `./` would refer to the `example_webapp` folder itself.  Therefore, to map to the
+// `static-files` subfolder, you just need to specify the name of the directory:
+//
+//     goweb.MapStatic("/static", "static-files")
+//
+// In some cases, your systemPath might be different for development and production
+// and this is something to watch out for.
 func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapStatic(publicPath, systemPath)
 }
