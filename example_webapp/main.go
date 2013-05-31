@@ -60,8 +60,6 @@ func main() {
 			return goweb.API.Respond(c, 200, "Yes, this worked but you didn't specify an ID", nil)
 		}
 
-		return nil
-
 	})
 
 	// /errortest should throw a system error and be handled by the 

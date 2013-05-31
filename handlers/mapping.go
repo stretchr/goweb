@@ -165,7 +165,6 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	case 0: // ()
 		// no arguments is an error
 		panic("goweb: Cannot call MapController with no arguments")
-		break
 	case 1: // (controller)
 		if restfulController, ok := options[0].(controllers.RestfulController); ok {
 			controller = restfulController
