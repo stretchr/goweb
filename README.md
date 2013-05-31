@@ -3,7 +3,7 @@
   * BETA is ready to use
 
 ![Alt text](GowebLogoBig.jpg "Goweb 2 - Logo")
-  
+
 ## Features
 
   * Drastically improved path matching
@@ -22,7 +22,8 @@
 
 ## Get started
 
-  * Clone the goweb `v2` branch into `$GOPATH/src/github.com/stretchrcom`.
+  * To install, run `go get github.com/stretchrcom/goweb`
   * Import the package as usual with `import "github.com/stretchrcom/goweb"` in your code.
-  * Open the docs locally by navigating to your `$GOPATH` folder and doing `godoc -http=:6060` in Terminal, then visit `http://localhost:6060/pkg/github.com/stretchrcom/goweb/`.
   * Look at the [example_webapp](https://github.com/stretchrcom/goweb/blob/v2/example_webapp/main.go) project for some ideas of how to get going.
+  * Read the [goweb documentation](http://godoc.org/github.com/stretchrcom/goweb).
+  * To update to the latest version of goweb, just run `go get -u github.com/stretchrcom/goweb`
