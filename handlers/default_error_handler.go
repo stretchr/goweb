@@ -16,7 +16,7 @@ func (h *DefaultErrorHandler) WillHandle(context.Context) (bool, error) {
 }
 
 // Handle writes the error from the context into the HttpResponseWriter with a
-// 500 http.StatusInternalServerError status code. 
+// 500 http.StatusInternalServerError status code.
 func (h *DefaultErrorHandler) Handle(ctx context.Context) (stop bool, err error) {
 
 	var handlerError HandlerError = ctx.Data().Get("error").(HandlerError)

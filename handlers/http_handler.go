@@ -40,7 +40,7 @@ func (handler *HttpHandler) CodecService() codecservices.CodecService {
 	return handler.codecService
 }
 
-// ServeHTTP servers the 
+// ServeHTTP servers the
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 
 	// make the context
@@ -83,7 +83,7 @@ func (h *HttpHandler) ErrorHandler() Handler {
 
 // SetErrorHandler sets the Handler that will be used to handle errors.
 //
-// The error handler is like a normal Handler, except with a few oddities. 
+// The error handler is like a normal Handler, except with a few oddities.
 // The WillHandle method never gets called on the ErrorHandler, and any errors
 // returned from the Handle method are ignored (as is the stop argument).
 // If you want to log errors, you should do so from within the ErrorHandler.

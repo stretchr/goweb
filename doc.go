@@ -24,24 +24,24 @@
 //
 //     // Read reads one person.
 //     func (c *PeopleController) Read(id string, ctx context.Context) error {
-// 
+//
 //       // TODO: show one person
 //
 //     }
 //
 //     // Create creates a new person.
 //     func (c *PeopleController) Create(ctx context.Context) error {
-//       
+//
 //       // TODO: create a person, and redirect to the Read method
 //
 //     }
 //
-// In the above controller code, we are providing three RESTful methods, Read, ReadMany and Create. 
+// In the above controller code, we are providing three RESTful methods, Read, ReadMany and Create.
 //
 // To map this in Goweb, we use the MapController function like this:
 //
 //     mapErr := goweb.MapController(PeopleController{})
-//   
+//
 // This will map the two functions (since they follow the standards defined in the controllers package)
 // to the appropriate RESTful URLs:
 //
@@ -59,7 +59,7 @@
 // If you want to map specific paths with Goweb, you can use the `goweb.Map` function with
 // the following kinds of paths:
 //
-// 
+//
 //     /literals - Normal text will be considered literal, meaning the path would
 //                 have to match it exactly.
 //

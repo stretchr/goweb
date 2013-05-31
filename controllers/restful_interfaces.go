@@ -4,7 +4,7 @@ import (
 	"github.com/stretchrcom/goweb/context"
 )
 
-// RestfulController represents an object that satisfies key aspects of a 
+// RestfulController represents an object that satisfies key aspects of a
 // RESTful controller.
 type RestfulController interface {
 	// Path gets the path prefix for this controller.

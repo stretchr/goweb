@@ -62,7 +62,7 @@ func main() {
 
 	})
 
-	// /errortest should throw a system error and be handled by the 
+	// /errortest should throw a system error and be handled by the
 	// DefaultHttpHandler().ErrorHandler() Handler.
 	goweb.Map("/errortest", func(c context.Context) error {
 		return errors.New("This is a test error!")

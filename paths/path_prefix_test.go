@@ -1,8 +1,8 @@
 package paths
 
 import (
-  "github.com/stretchrcom/testify/assert"
-  "testing"
+	"github.com/stretchrcom/testify/assert"
+	"testing"
 )
 
 type ChildController struct{}
@@ -10,10 +10,10 @@ type ChildWithMultipleWordsController struct{}
 
 func TestPathPrefixForClass(t *testing.T) {
 
-  c := new(ChildController)
-  assert.Equal(t, PathPrefixForClass(c), "child")
+	c := new(ChildController)
+	assert.Equal(t, PathPrefixForClass(c), "child")
 
-  c2 := new(ChildWithMultipleWordsController)
-  assert.Equal(t, PathPrefixForClass(c2), "child-with-multiple-words")
+	c2 := new(ChildWithMultipleWordsController)
+	assert.Equal(t, PathPrefixForClass(c2), "child-with-multiple-words")
 
 }

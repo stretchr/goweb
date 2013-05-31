@@ -1,7 +1,7 @@
 package goweb
 
 // Map adds a new mapping to the DefaultHttpHandler.
-// 
+//
 // The Map function has many flavours.
 //
 // 1. Implementing and passing in your own handlers.Handler object will just map the handler
@@ -48,7 +48,7 @@ package goweb
 //
 //     // POST|PUT|DELETE|GET /articles/2013/05/01
 //     handler.Map("/articles/{year}/{month}/{day}", func(c context.Context) error {
-//  
+//
 //       day := c.PathParams().Get("day")
 //       month := c.PathParams().Get("month")
 //       year := c.PathParams().Get("year")
@@ -62,10 +62,10 @@ package goweb
 //
 //     // All requests
 //     handler.Map(func(c context.Context) error {
-//     
+//
 //       // everything else is a 404
 //       goweb.Respond.WithStatus(c, http.StatusNotFound)
-//  
+//
 //       // no errors
 //       return nil
 //
@@ -81,7 +81,7 @@ func Map(options ...interface{}) error {
 //
 // The usage is the same as the goweb.Map function.
 //
-// Before handlers are called before any of the normal handlers, 
+// Before handlers are called before any of the normal handlers,
 // and before any processing has begun.  Setting headers is appropriate
 // for before handlers, but be careful not to actually write anything or
 // Goweb will likely end up trying to write the headers twice and headers set

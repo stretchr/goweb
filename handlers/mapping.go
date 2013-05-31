@@ -115,7 +115,7 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 
 }
 
-// Map maps a handler function to a specified path and optional HTTP method 
+// Map maps a handler function to a specified path and optional HTTP method
 // to be executed before any other handlers.
 //
 // For usage information, see goweb.Map.
@@ -134,7 +134,7 @@ func (h *HttpHandler) MapBefore(options ...interface{}) error {
 
 }
 
-// Map maps a handler function to a specified path and optional HTTP method 
+// Map maps a handler function to a specified path and optional HTTP method
 // to be executed after any other handlers.
 //
 // For usage information, see goweb.Map.
