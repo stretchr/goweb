@@ -37,6 +37,10 @@ func main() {
 		return nil
 	})
 
+	goweb.Map("/", func(c context.Context) error {
+		return goweb.Respond.With(c, 200, []byte("Welcome to the Goweb example app - see the terminal for instructions."))
+	})
+
 	/*
 		Map some routes
 	*/
@@ -121,11 +125,14 @@ func main() {
 
 	log.Println("")
 	log.Print("Some things to try in your browser:")
+	log.Printf("\t  http://localhost%s", Address)
 	log.Printf("\t  http://localhost%s/people", Address)
 	log.Printf("\t  http://localhost%s/people/123", Address)
 	log.Printf("\t  http://localhost%s/people/anything", Address)
 	log.Printf("\t  http://localhost%s/people/me (will redirect)", Address)
 	log.Printf("\t  http://localhost%s/errortest", Address)
+	log.Printf("\t  http://localhost%s/things (try RESTful actions)", Address)
+	log.Printf("\t  http://localhost%s/123", Address)
 
 	log.Println("")
 	log.Println("Also try some of these routes:")
