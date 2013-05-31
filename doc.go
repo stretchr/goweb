@@ -1,4 +1,4 @@
-// Goweb v2 BETA - A simple, powerful web framework for Go.
+// Goweb v2 - A simple, powerful web framework for Go.
 //
 // Overview
 //
