@@ -8,6 +8,9 @@
 //
 // If you are not following RESTful patterns, you can do custom routing using the goweb.Map function.
 //
+// See some real world examples of how to use Goweb by checking out the
+// example web app code: https://github.com/stretchrcom/goweb/blob/master/example_webapp/main.go
+//
 // Example
 //
 // Your controllers, following a RESTful pattern, might look like this:
@@ -88,4 +91,19 @@
 // For details on how to make normal HTTP responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#HTTPResponder
 //
 // For details on how to make API responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#APIResponder
+//
+// Changes from Goweb 1
+//
+// Goweb 2 changes two key things about Goweb; mapping and responding.
+//
+// Instead of `MapFunc`, the `Map` method is now very flexible accepting all sorts of input.
+// See goweb.Map below for more details.
+//
+// Instead of responding via the context.Context object, we have abstracted it out to
+// responders, that allow you to easily respond in various ways.  See Responding above for
+// more information.
+//
+// We have tried to include relevant panics when you try to use old Goweb style coding
+// to help you update any old code, but if you get stuck please ask us for help on
+// our group: https://groups.google.com/forum/?fromgroups#!forum/golang-goweb
 package goweb
