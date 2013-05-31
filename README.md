@@ -6,6 +6,14 @@ A lightweight RESTful web framework for Go.
 
 For examples and usage, please read the [goweb documentation](http://godoc.org/github.com/stretchrcom/goweb).
 
+## Get started
+
+  * To install, run `go get github.com/stretchrcom/goweb`
+  * Import the package as usual with `import "github.com/stretchrcom/goweb"` in your code.
+  * Look at the [example_webapp](https://github.com/stretchrcom/goweb/blob/v2/example_webapp/main.go) project for some ideas of how to get going.
+  * Read the [goweb documentation](http://godoc.org/github.com/stretchrcom/goweb).
+  * To update to the latest version of goweb, just run `go get -u github.com/stretchrcom/goweb`
+
 ## New Features
 
   * Drastically improved path matching
@@ -21,15 +29,6 @@ For examples and usage, please read the [goweb documentation](http://godoc.org/g
   * Easily match paths using Regex instead
   * Better error management
   * Performance improvements
-
-## Get started
-
-  * To install, run `go get github.com/stretchrcom/goweb`
-  * Import the package as usual with `import "github.com/stretchrcom/goweb"` in your code.
-  * Look at the [example_webapp](https://github.com/stretchrcom/goweb/blob/v2/example_webapp/main.go) project for some ideas of how to get going.
-  * Read the [goweb documentation](http://godoc.org/github.com/stretchrcom/goweb).
-  * To update to the latest version of goweb, just run `go get -u github.com/stretchrcom/goweb`
-
 
 ------
 
