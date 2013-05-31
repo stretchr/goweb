@@ -86,5 +86,6 @@
 // need to respond in a normal HTTP manner, you can use the `goweb.Respond` object.
 //
 // For details on how to make normal HTTP responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#HTTPResponder
+//
 // For details on how to make API responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#APIResponder
 package goweb
