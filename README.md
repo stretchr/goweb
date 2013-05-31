@@ -16,6 +16,7 @@
   * Modular design, making adding new stuff easy
   * Handler mechanism to easily add pre and post handlers to certain requests
   * Uses [stretchrcom/codecs](https://github.com/stretchrcom/codecs) package allowing better support for multiple formats
+  * Easily match paths using Regex instead
   * Better error management
   * Performance improvements
 
