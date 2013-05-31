@@ -54,3 +54,15 @@ func TestPath_Segments(t *testing.T) {
 	assert.Equal(t, "books", s[2])
 
 }
+
+func TestPath_RealFilePath(t *testing.T) {
+
+	var publicPath string = "/static"
+	var systemPath string = "/static-files"
+	var urlPath string = "/static/hello-world"
+
+	p := NewPath(publicPath)
+
+	assert.Equal(t, "/static-files/hello-world", p.RealFilePath(systemPath, urlPath))
+
+}

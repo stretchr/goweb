@@ -6,6 +6,7 @@ import (
 	"github.com/stretchrcom/goweb/context"
 	controllers_test "github.com/stretchrcom/goweb/controllers/test"
 	handlers_test "github.com/stretchrcom/goweb/handlers/test"
+	goweb_http "github.com/stretchrcom/goweb/http"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
 	http_test "github.com/stretchrcom/testify/http"
@@ -403,6 +404,46 @@ func TestBeforeHandler(t *testing.T) {
 		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "POST", "after POST /test/123")
 		assertPathMatchHandler(t, h.PostHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "after options /test")
 		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "after options /test/123")
+	}
+
+}
+
+func TestMapStatic(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
+
+	h.MapStatic("/static", "/location/of/static")
+
+	assert.Equal(t, 1, len(h.HandlersPipe()))
+
+	staticHandler := h.HandlersPipe()[0].(*PathMatchHandler)
+
+	if assert.Equal(t, 1, len(staticHandler.HttpMethods)) {
+		assert.Equal(t, goweb_http.MethodGet, staticHandler.HttpMethods[0])
+	}
+
+	var ctx context.Context
+	var willHandle bool
+
+	ctx = context_test.MakeTestContextWithPath("/static/some/deep/file.dat")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("/static")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("/static/")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("/static/doc.go")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	_, staticHandleErr := staticHandler.Handle(ctx)
+
+	if assert.NoError(t, staticHandleErr) {
+
 	}
 
 }

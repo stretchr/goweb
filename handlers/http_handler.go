@@ -22,6 +22,13 @@ type HttpHandler struct {
 	errorHandler Handler
 }
 
+// NewHttpHandler creates a new HttpHandler obejct with the specified CodecService.
+//
+// New HttpHandlers will be initialised with three handler Pipes:
+//
+//     0 - Pre handlers
+//     1 - Main handlers
+//     2 - Post handlers
 func NewHttpHandler(codecService codecservices.CodecService) *HttpHandler {
 	h := new(HttpHandler)
 
@@ -36,11 +43,14 @@ func NewHttpHandler(codecService codecservices.CodecService) *HttpHandler {
 	return h
 }
 
+// CodecService gets the codec service that this HttpHandler will use to
+// marshal and unmarshal objects to and from data.
 func (handler *HttpHandler) CodecService() codecservices.CodecService {
 	return handler.codecService
 }
 
-// ServeHTTP servers the
+// ServeHTTP servers the actual HTTP request by buidling a context and running
+// it through all the handlers.
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
 
 	// make the context

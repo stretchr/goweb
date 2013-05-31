@@ -1,5 +1,9 @@
 package goweb
 
+import (
+	"github.com/stretchrcom/goweb/handlers"
+)
+
 // Map adds a new mapping to the DefaultHttpHandler.
 //
 // The Map function has many flavours.
@@ -72,7 +76,7 @@ package goweb
 //     })
 //
 // For a full overview of valid paths, see the "Mapping paths" section above.
-func Map(options ...interface{}) error {
+func Map(options ...interface{}) (handlers.Handler, error) {
 	return DefaultHttpHandler().Map(options...)
 }
 
@@ -86,7 +90,7 @@ func Map(options ...interface{}) error {
 // for before handlers, but be careful not to actually write anything or
 // Goweb will likely end up trying to write the headers twice and headers set
 // in the processing handlers will have no effect.
-func MapBefore(options ...interface{}) error {
+func MapBefore(options ...interface{}) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapBefore(options...)
 }
 
@@ -98,7 +102,7 @@ func MapBefore(options ...interface{}) error {
 // After handlers are called after the normal processing handlers are
 // finished, and usually after the response has been written.  Setting headers
 // or writing additional bytes will have no effect in after handlers.
-func MapAfter(options ...interface{}) error {
+func MapAfter(options ...interface{}) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapAfter(options...)
 }
 
@@ -153,6 +157,17 @@ func MapAfter(options ...interface{}) error {
 //     MapController(path, controller)
 func MapController(options ...interface{}) error {
 	return DefaultHttpHandler().MapController(options...)
+}
+
+// MapStatic maps static files from the specified systemPath to the
+// specified publicPath.
+//
+//     goweb.MapStatic("/static", "/location/on/system/to/files")
+//
+// Goweb will automatically expand the above public path pattern from `/static` to
+// `/static/***` to ensure subfolders are automatcially mapped.
+func MapStatic(publicPath, systemPath string) (handler.Handler, error) {
+	return DefaultHttpHandler().MapStatic(publicPath, systemPath)
 }
 
 /*

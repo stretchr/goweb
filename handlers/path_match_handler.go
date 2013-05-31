@@ -26,6 +26,10 @@ type PathMatchHandler struct {
 	// methods match.
 	HttpMethods []string
 
+	// Description is an optional string that describes the mapping.  If present, it will
+	// be returned instead of the default when String() is called.
+	Description string
+
 	// BreakCurrentPipeline indicates whether the rest of the handlers in the Pipe
 	// should be skipped once this handler has done its work.
 	//
@@ -137,10 +141,24 @@ func (p *PathMatchHandler) Handle(c context.Context) (bool, error) {
 // String gets a human readable string describing this PathMatchHandler.
 func (p *PathMatchHandler) String() string {
 
+	var desc string
+
+	if len(p.Description) > 0 {
+		desc = p.Description
+	} else {
+		desc = fmt.Sprintf("%v", p.ExecutionFunc)
+	}
+
 	var methods string
 	if len(p.HttpMethods) > 0 {
 		methods = fmt.Sprintf("%s ", strings.Join(p.HttpMethods, "|"))
 	}
 
-	return fmt.Sprintf("%s%v - %v - %d matcher func(s).\n", methods, p.PathPattern.RawPath, p.ExecutionFunc, len(p.MatcherFuncs))
+	var matcherFuncsDesc string
+
+	if len(p.MatcherFuncs) > 0 {
+		matcherFuncsDesc = fmt.Sprintf(" - %d matcher func(s)", len(p.MatcherFuncs))
+	}
+
+	return fmt.Sprintf("%s%v - %v %s\n", methods, p.PathPattern.RawPath, desc, matcherFuncsDesc)
 }

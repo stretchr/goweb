@@ -7,10 +7,17 @@ import (
 	"github.com/stretchrcom/goweb/http"
 	"github.com/stretchrcom/goweb/paths"
 	stewstrings "github.com/stretchrcom/stew/strings"
+	nethttp "net/http"
 	"strings"
 )
 
 var (
+	// RestfulIDParameterName is the name Goweb will use when mapping the ID
+	// parameter in RESTful mappings.
+	//
+	//     ctx.PathParam(RestfulIDParameterName)
+	//
+	// By default, "id" is used.
 	RestfulIDParameterName string = "id"
 )
 
@@ -94,7 +101,7 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 // Map maps a handler function to a specified path and optional HTTP method.
 //
 // For usage information, see goweb.Map.
-func (h *HttpHandler) Map(options ...interface{}) error {
+func (h *HttpHandler) Map(options ...interface{}) (Handler, error) {
 
 	handler, err := h.handlerForOptions(options...)
 
@@ -105,13 +112,13 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 	}
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// append the handler
 	h.AppendHandler(handler)
 
-	return nil
+	return handler, nil
 
 }
 
@@ -119,18 +126,18 @@ func (h *HttpHandler) Map(options ...interface{}) error {
 // to be executed before any other handlers.
 //
 // For usage information, see goweb.Map.
-func (h *HttpHandler) MapBefore(options ...interface{}) error {
+func (h *HttpHandler) MapBefore(options ...interface{}) (Handler, error) {
 
 	handler, err := h.handlerForOptions(options...)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// append the handler
 	h.AppendPreHandler(handler)
 
-	return nil
+	return handler, nil
 
 }
 
@@ -138,18 +145,18 @@ func (h *HttpHandler) MapBefore(options ...interface{}) error {
 // to be executed after any other handlers.
 //
 // For usage information, see goweb.Map.
-func (h *HttpHandler) MapAfter(options ...interface{}) error {
+func (h *HttpHandler) MapAfter(options ...interface{}) (Handler, error) {
 
 	handler, err := h.handlerForOptions(options...)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// append the handler
 	h.AppendPostHandler(handler)
 
-	return nil
+	return handler, nil
 
 }
 
@@ -304,5 +311,42 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// everything ok
 	return nil
+
+}
+
+// MapStatic maps static files from the specified systemPath to the
+// specified publicPath.
+//
+//     goweb.MapStatic("/static", "/location/on/system/to/files")
+func (h *HttpHandler) MapStatic(publicPath, systemPath string) (Handler, error) {
+
+	path := paths.NewPath(publicPath)
+	var dynamicPath string = path.RawPath
+
+	// ensure the path ends in "***"
+	segments := path.Segments()
+	if segments[len(segments)-1] != "***" {
+		dynamicPath = fmt.Sprintf("%s/***", path.RawPath)
+	}
+
+	handler, mapErr := h.Map(http.MethodGet, dynamicPath, func(ctx context.Context) error {
+
+		// get the non-system part of the path
+		thePath := path.RealFilePath(systemPath, ctx.Path().RawPath)
+
+		nethttp.ServeFile(ctx.HttpResponseWriter(), ctx.HttpRequest(), thePath)
+
+		return nil
+
+	})
+
+	if mapErr != nil {
+		return handler, mapErr
+	}
+
+	// set the handler description
+	handler.(*PathMatchHandler).Description = fmt.Sprintf("Static files from: %s", systemPath)
+
+	return handler, nil
 
 }

@@ -64,3 +64,18 @@ func (p *Path) Segments() []string {
 
 	return p.segments
 }
+
+// RealFilePath gets the real file path by assuming the current path is
+// the public prefix, the urlPath is the actual request and the systemPath
+// is the physical location where those files live.
+func (p *Path) RealFilePath(systemPath, urlPath string) string {
+
+	urlPath = cleanPath(urlPath)
+	if strings.HasPrefix(urlPath, p.RawPath) {
+		urlPath = strings.TrimPrefix(urlPath, p.RawPath)
+	} else {
+		panic(fmt.Sprintf("goweb.paths.Path: Cannot use RealFilePath when the urlPath doesn't start with the path in the first place. \"%s\" doesn't start with \"%s\".", urlPath, p.RawPath))
+	}
+
+	return fmt.Sprintf("%s%s", systemPath, urlPath)
+}

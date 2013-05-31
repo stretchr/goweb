@@ -85,6 +85,11 @@ func main() {
 	}, goweb.RegexPath(`^[0-9]+$`))
 
 	/*
+		Map the static-files directory so it's exposed as /static
+	*/
+	goweb.DefaultHttpHandler().MapStatic("/static", "static-files")
+
+	/*
 		Catch-all handler for everything that we don't understand
 	*/
 	goweb.Map(func(c context.Context) error {
@@ -98,7 +103,7 @@ func main() {
 	*/
 
 	log.Print("Goweb 2")
-	log.Print("by Mat Ryer")
+	log.Print("by Mat Ryer and Tyler Bunnell")
 	log.Print(" ")
 	log.Print("Starting Goweb powered server...")
 
@@ -131,6 +136,7 @@ func main() {
 	log.Printf("\t  http://localhost%s/errortest", Address)
 	log.Printf("\t  http://localhost%s/things (try RESTful actions)", Address)
 	log.Printf("\t  http://localhost%s/123", Address)
+	log.Printf("\t  http://localhost%s/static/simple.html", Address)
 
 	log.Println("")
 	log.Println("Also try some of these routes:")
