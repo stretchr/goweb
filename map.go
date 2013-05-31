@@ -166,7 +166,7 @@ func MapController(options ...interface{}) error {
 //
 // Goweb will automatically expand the above public path pattern from `/static` to
 // `/static/***` to ensure subfolders are automatcially mapped.
-func MapStatic(publicPath, systemPath string) (handler.Handler, error) {
+func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapStatic(publicPath, systemPath)
 }
 
