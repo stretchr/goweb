@@ -77,4 +77,14 @@
 //
 // For some real examples of mapping paths, see the goweb.Map function, or check out the
 // example_webapp in the code.
+//
+// Responding
+//
+// Goweb makes it easy to respond to requests using an extensible Responder pattern.
+//
+// If you're building an API, you can respond using the `goweb.API` object, if you just
+// need to respond in a normal HTTP manner, you can use the `goweb.Respond` object.
+//
+// For details on how to make normal HTTP responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#HTTPResponder
+// For details on how to make API responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#APIResponder
 package goweb
