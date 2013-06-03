@@ -182,6 +182,17 @@ func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapStatic(publicPath, systemPath)
 }
 
+// MapStaticFile maps a static file from the specified staticFilePath to the
+// specified publicPath.
+//
+//     goweb.MapStaticFile("favicon.ico", "/location/on/system/to/icons/favicon.ico")
+//
+// Only paths matching exactly publicPath will cause the single file specified in
+// staticFilePath to be delivered to clients.
+func MapStaticFile(publicPath, staticFilePath string) (handlers.Handler, error) {
+	return DefaultHttpHandler().MapStaticFile(publicPath, staticFilePath)
+}
+
 /*
   DEVNOTE: These functions are not tested because it simply passes the call on to the
   DefaultHttpHandler.

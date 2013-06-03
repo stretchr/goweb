@@ -447,3 +447,39 @@ func TestMapStatic(t *testing.T) {
 	}
 
 }
+
+func TestMapStaticFile(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
+
+	h.MapStaticFile("/static-file", "/location/of/static-file")
+
+	assert.Equal(t, 1, len(h.HandlersPipe()))
+
+	staticHandler := h.HandlersPipe()[0].(*PathMatchHandler)
+
+	if assert.Equal(t, 1, len(staticHandler.HttpMethods)) {
+		assert.Equal(t, goweb_http.MethodGet, staticHandler.HttpMethods[0])
+	}
+
+	var ctx context.Context
+	var willHandle bool
+
+	ctx = context_test.MakeTestContextWithPath("/static-file")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("static-file")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("static-file/")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("static-file/something-else")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.False(t, willHandle, "Static handler NOT should handle")
+
+}

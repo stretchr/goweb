@@ -314,6 +314,31 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 }
 
+// MapStaticFile maps a static file from the specified staticFilePath to the
+// specified publicPath.
+//
+//     goweb.MapStaticFile("favicon.ico", "/location/on/system/to/icons/favicon.ico")
+func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string) (Handler, error) {
+
+	handler, mapErr := h.Map(http.MethodGet, publicPath, func(ctx context.Context) error {
+
+		nethttp.ServeFile(ctx.HttpResponseWriter(), ctx.HttpRequest(), staticFilePath)
+
+		return nil
+
+	})
+
+	if mapErr != nil {
+		return handler, mapErr
+	}
+
+	// set the handler description
+	handler.(*PathMatchHandler).Description = fmt.Sprintf("Static file from: %s", staticFilePath)
+
+	return nil, nil
+
+}
+
 // MapStatic maps static files from the specified systemPath to the
 // specified publicPath.
 //
