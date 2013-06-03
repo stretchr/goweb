@@ -31,18 +31,22 @@ func main() {
 	})
 
 	/*
-		Add a post-handler to write a repsonse header
+		Add a post-handler to log something
 	*/
 	goweb.MapAfter(func(c context.Context) error {
+		// TODO: log this 
 		return nil
 	})
 
+	/*
+		Map the homepage...
+	*/
 	goweb.Map("/", func(c context.Context) error {
 		return goweb.Respond.With(c, 200, []byte("Welcome to the Goweb example app - see the terminal for instructions."))
 	})
 
 	/*
-		Map some routes
+		Map a specific route that will redirect
 	*/
 	goweb.Map("people/me", func(c context.Context) error {
 		hostname, _ := os.Hostname()
@@ -69,7 +73,9 @@ func main() {
 	})
 
 	/*
-		RESTful controller
+		Map a RESTful controller
+		(see the ThingsController for all the methods that will get
+		 mapped)
 	*/
 	thingsController := new(ThingsController)
 	goweb.MapController(thingsController)
@@ -79,6 +85,9 @@ func main() {
 		function.
 
 		e.g. GET /2468
+
+		NOTE: The goweb.RegexPath is a MatcherFunc, and so comes _after_ the
+		      handler.
 	*/
 	goweb.Map(func(c context.Context) error {
 		return goweb.API.RespondWithData(c, "Just a number!")
@@ -90,10 +99,18 @@ func main() {
 	goweb.DefaultHttpHandler().MapStatic("/static", "static-files")
 
 	/*
+		Map the a favicon
+	*/
+	goweb.DefaultHttpHandler().MapStatic("/favicon.ico", "static-files/favicon.ico")
+
+	/*
 		Catch-all handler for everything that we don't understand
 	*/
 	goweb.Map(func(c context.Context) error {
+
+		// just return a 404 message
 		return goweb.API.Respond(c, 404, nil, []string{"File not found"})
+
 	})
 
 	/*
