@@ -21,6 +21,7 @@ For examples and usage, please read the [goweb documentation](http://godoc.org/g
   * More control over standard response object for API responses
   * Cleaner RESTful interface design
     * Default OPTIONS implementation that informs clients what methods the controller exposes
+  * Easily publish static files as well as code driven output
   * Much easier to write testable code
   * Better package structure
   * Modular design, making adding new stuff easy
