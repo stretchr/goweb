@@ -14,7 +14,7 @@ For examples and usage, please read the [goweb documentation](http://godoc.org/g
   * Read the [Goweb API Documentation](http://godoc.org/github.com/stretchrcom/goweb).
   * To update to the latest version of goweb, just run `go get -u github.com/stretchrcom/goweb`
 
-## New Features
+## Features
 
   * Drastically improved path matching
   * Cleaner interface for responding (e.g. `goweb.API.RespondWithData`, and `goweb.Respond.WithRedirect`)
