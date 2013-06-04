@@ -7,6 +7,7 @@ import (
 	"github.com/stretchrcom/stew/objects"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -20,6 +21,9 @@ type WebContext struct {
 	httpResponseWriter http.ResponseWriter
 	requestBody        []byte
 	codecService       codecservices.CodecService
+	queryParams        objects.Map
+	formParams         objects.Map
+	postParams         objects.Map
 }
 
 // NewWebContext creates a new WebContext with the given request and response objects.
@@ -154,11 +158,160 @@ func (c *WebContext) PathParams() objects.Map {
 	return c.data.GetMap(context.DataKeyPathParameters)
 }
 
-// PathParam the parameter from PathParams() with the specified key.
-func (c *WebContext) PathParam(key string) string {
-	val := c.PathParams().Get(key)
+// DEPRECATED: Use PathValue instead.
+//
+// PathParam gets the parameter from PathParams() with the specified keypath.
+func (c *WebContext) PathParam(keypath string) string {
+	panic("goweb: DEPRECATED - Use PathValue instead of PathParam.")
+	return ""
+}
+
+// PathValue gets the parameter from PathParams() with the specified key.
+func (c *WebContext) PathValue(keypath string) string {
+	val := c.PathParams().Get(keypath)
 	if valString, ok := val.(string); ok {
 		return valString
 	}
 	return ""
+}
+
+// urlValuesToObjectsMap turns a url.Values into an objects.Map object.
+//
+// Will always return a real objects.Map, even if there are no values.
+func (c *WebContext) urlValuesToObjectsMap(values url.Values) objects.Map {
+	m := make(objects.Map)
+	for k, vs := range values {
+		m.Set(k, vs)
+	}
+	return m
+}
+
+// FormParams gets the parameters that were posted in the request body and were present
+// in the URL query.
+func (c *WebContext) FormParams() objects.Map {
+
+	if c.formParams == nil {
+
+		req := c.HttpRequest()
+
+		if req.Form == nil {
+			req.ParseForm()
+		}
+
+		c.formParams = c.urlValuesToObjectsMap(req.Form)
+
+	}
+
+	return c.formParams
+}
+
+// FormValues gets an array of the values for the specified keypath from the
+// form body in the request and the URL query.
+func (c *WebContext) FormValues(keypath string) []string {
+
+	values := c.FormParams().Get(keypath)
+
+	if values == nil {
+		return nil
+	}
+
+	return values.([]string)
+}
+
+// FormValue gets a single value for the specified keypath from the form body and
+// URL query.  If there are multiple values the first value is returned.
+func (c *WebContext) FormValue(keypath string) string {
+
+	values := c.FormValues(keypath)
+
+	if values == nil || len(values) == 0 {
+		return ""
+	}
+
+	return values[0]
+}
+
+// QueryParams gets the query parameters that are present after the ? in the URL.
+func (c *WebContext) QueryParams() objects.Map {
+
+	if c.queryParams == nil {
+		c.queryParams = c.urlValuesToObjectsMap(c.HttpRequest().URL.Query())
+	}
+
+	return c.queryParams
+}
+
+// QueryValues gets an array of the values for the specified key from the QueryParams.
+//
+// Returns []string because in URLs it's possible to have multiple values for the same key,
+// for example; ?name=Mat&name=Laurie&name=Tyler.
+func (c *WebContext) QueryValues(keypath string) []string {
+
+	values := c.QueryParams().Get(keypath)
+
+	if values == nil {
+		return nil
+	}
+
+	return values.([]string)
+}
+
+// QueryValue gets a single value for the specified key from the QueryParams.  If there
+// are multiple values (i.e. `?name=Mat&name=Laurie`), the first value is returned.
+func (c *WebContext) QueryValue(keypath string) string {
+
+	values := c.QueryValues(keypath)
+
+	if values == nil || len(values) == 0 {
+		return ""
+	}
+
+	return values[0]
+}
+
+// PostParams gets the parameters that were posted in the request body.
+func (c *WebContext) PostParams() objects.Map {
+
+	if c.postParams == nil {
+
+		req := c.HttpRequest()
+
+		if req.Form == nil {
+			req.ParseForm()
+		}
+
+		c.postParams = c.urlValuesToObjectsMap(req.PostForm)
+
+	}
+
+	return c.postParams
+
+}
+
+// FormValues gets an array of the values for the specified keypath from the
+// form body in the request.
+func (c *WebContext) PostValues(keypath string) []string {
+
+	values := c.PostParams().Get(keypath)
+
+	if values == nil {
+		return nil
+	}
+
+	return values.([]string)
+
+}
+
+// PostValue gets a single value for the specified keypath from the form body.
+// If there are multiple values the first value is returned.
+func (c *WebContext) PostValue(keypath string) string {
+
+	values := c.PostValues(keypath)
+
+	if values == nil || len(values) == 0 {
+		return ""
+	}
+
+	return values[0]
+
 }

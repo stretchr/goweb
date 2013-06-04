@@ -73,9 +73,75 @@ type Context interface {
 	// RequestBody gets the byte data out of the body of the request.
 	RequestBody() ([]byte, error)
 
-	// PathParams gets any parameters that were pulled from the URL path.
+	// PathParams gets the parameters that were pulled from the URL path.
+	//
+	// Goweb gives you access to different types of parameters:
+	//
+	//    QueryParams - Parameters only from the URL query string
+	//    PostParams  - Parameters only from the body
+	//    FormParams  - Parameters from both the body AND the URL query string
+	//    PathParams  - Parameters from the path itself (i.e. /people/123)
 	PathParams() objects.Map
 
-	// PathParam the parameter from PathParams() with the specified key.
-	PathParam(key string) string
+	// DEPRECATED: Use PathValue instead.
+	//
+	// PathParam gets the parameter from PathParams() with the specified keypath.
+	PathParam(keypath string) string
+
+	// PathValue gets the parameter from PathParams() with the specified keypath.
+	PathValue(keypath string) string
+
+	// AllQueryParams gets the parameters that were present after the ? in the URL.
+	//
+	// Goweb gives you access to different types of parameters:
+	//
+	//    QueryParams - Parameters only from the URL query string
+	//    PostParams  - Parameters only from the body
+	//    FormParams  - Parameters from both the body AND the URL query string
+	//    PathParams  - Parameters from the path itself (i.e. /people/123)
+	QueryParams() objects.Map
+
+	// QueryValues gets an array of the values for the specified keypath from the QueryParams.
+	QueryValues(keypath string) []string
+
+	// QueryValue gets a single value for the specified keypath from the QueryParams.  If there
+	// are multiple values (i.e. `?name=Mat&name=Laurie`), the first value is returned.
+	QueryValue(keypath string) string
+
+	// PostParams gets the parameters that were posted in the request body.
+	//
+	// Goweb gives you access to different types of parameters:
+	//
+	//    QueryParams - Parameters only from the URL query string
+	//    PostParams  - Parameters only from the body
+	//    FormParams  - Parameters from both the body AND the URL query string
+	//    PathParams  - Parameters from the path itself (i.e. /people/123)
+	PostParams() objects.Map
+
+	// FormValues gets an array of the values for the specified keypath from the
+	// form body in the request.
+	PostValues(keypath string) []string
+
+	// PostValue gets a single value for the specified keypath from the form body.
+	// If there are multiple values the first value is returned.
+	PostValue(keypath string) string
+
+	// FormParams gets the parameters that were posted in the request body and were present
+	// in the URL query.
+	//
+	// Goweb gives you access to different types of parameters:
+	//
+	//    QueryParams - Parameters only from the URL query string
+	//    PostParams  - Parameters only from the body
+	//    FormParams  - Parameters from both the body AND the URL query string
+	//    PathParams  - Parameters from the path itself (i.e. /people/123)
+	FormParams() objects.Map
+
+	// FormValues gets an array of the values for the specified keypath from the
+	// form body in the request and the URL query.
+	FormValues(keypath string) []string
+
+	// FormValue gets a single value for the specified keypath from the form body and
+	// URL query.  If there are multiple values the first value is returned.
+	FormValue(keypath string) string
 }

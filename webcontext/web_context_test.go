@@ -110,8 +110,8 @@ func TestPathParams(t *testing.T) {
 	c.Data().Set(context.DataKeyPathParameters, objects.Map{"animal": "monkey"})
 
 	assert.Equal(t, "monkey", c.PathParams().Get("animal"))
-	assert.Equal(t, "monkey", c.PathParam("animal"))
-	assert.Equal(t, "", c.PathParam("doesn't exist"))
+	assert.Equal(t, "monkey", c.PathValue("animal"))
+	assert.Equal(t, "", c.PathValue("doesn't exist"))
 
 }
 
@@ -152,5 +152,199 @@ func TestRequestData_ArrayOfData(t *testing.T) {
 		responseDataArray, _ := c.RequestDataArray()
 		assert.Equal(t, dat.([]interface{}), responseDataArray)
 	}
+
+}
+
+/*
+	Post parameters
+*/
+func TestPostParams(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
+	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	params := c.PostParams()
+
+	if assert.NotNil(t, params) {
+
+		assert.Equal(t, "Mat", params.Get("name").([]string)[0])
+		assert.Equal(t, "Laurie", params.Get("name").([]string)[1])
+		assert.Equal(t, "30", params.Get("age").([]string)[0])
+		assert.Equal(t, "true", params.Get("something").([]string)[0])
+		assert.Nil(t, params.Get("query"))
+
+	}
+
+}
+
+func TestPostValues(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
+	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	names := c.PostValues("name")
+
+	if assert.Equal(t, 2, len(names)) {
+		assert.Equal(t, "Mat", names[0])
+		assert.Equal(t, "Laurie", names[1])
+	}
+
+	assert.Nil(t, c.PostValues("no-such-value"))
+	assert.Nil(t, c.PostValues("query"))
+
+}
+
+func TestPostValue(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
+	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	assert.Equal(t, "Mat", c.PostValue("name"), "QueryValue should get first value")
+	assert.Equal(t, "30", c.PostValue("age"))
+	assert.Equal(t, "", c.PostValue("no-such-value"))
+	assert.Equal(t, "", c.PostValue("query"))
+
+}
+
+/*
+	Form parameters
+*/
+
+func TestFormParams(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
+	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	params := c.FormParams()
+
+	if assert.NotNil(t, params) {
+
+		assert.Equal(t, "Mat", params.Get("name").([]string)[0])
+		assert.Equal(t, "Laurie", params.Get("name").([]string)[1])
+		assert.Equal(t, "30", params.Get("age").([]string)[0])
+		assert.Equal(t, "true", params.Get("something").([]string)[0])
+		assert.Equal(t, "yes", params.Get("query").([]string)[0])
+
+	}
+
+}
+
+func TestFormValues(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
+	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	names := c.FormValues("name")
+
+	if assert.Equal(t, 2, len(names)) {
+		assert.Equal(t, "Mat", names[0])
+		assert.Equal(t, "Laurie", names[1])
+	}
+
+	assert.Nil(t, c.FormValues("no-such-value"))
+	assert.Equal(t, "yes", c.FormValues("query")[0])
+
+}
+
+func TestFormValue(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
+	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	assert.Equal(t, "Mat", c.FormValue("name"), "QueryValue should get first value")
+	assert.Equal(t, "30", c.FormValue("age"))
+	assert.Equal(t, "", c.FormValue("no-such-value"))
+	assert.Equal(t, "yes", c.FormValue("query"))
+
+}
+
+/*
+	Query parameters
+*/
+
+func TestQueryParams(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123?name=Mat&name=Laurie&age=30&something=true", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	params := c.QueryParams()
+
+	if assert.NotNil(t, params) {
+
+		assert.Equal(t, "Mat", params.Get("name").([]string)[0])
+		assert.Equal(t, "Laurie", params.Get("name").([]string)[1])
+		assert.Equal(t, "30", params.Get("age").([]string)[0])
+		assert.Equal(t, "true", params.Get("something").([]string)[0])
+
+	}
+
+}
+
+func TestQueryValues(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123?name=Mat&name=Laurie&age=30&something=true", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	names := c.QueryValues("name")
+
+	if assert.Equal(t, 2, len(names)) {
+		assert.Equal(t, "Mat", names[0])
+		assert.Equal(t, "Laurie", names[1])
+	}
+
+	assert.Nil(t, c.QueryValues("no-such-value"))
+
+}
+
+func TestQueryValue(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123?name=Mat&name=Laurie&age=30&something=true", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
+
+	codecService := new(codecservices.WebCodecService)
+
+	c := NewWebContext(responseWriter, testRequest, codecService)
+
+	assert.Equal(t, "Mat", c.QueryValue("name"), "QueryValue should get first value")
+	assert.Equal(t, "30", c.QueryValue("age"))
+	assert.Equal(t, "", c.QueryValue("no-such-value"))
 
 }
