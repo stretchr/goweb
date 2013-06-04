@@ -11,9 +11,7 @@ import (
 	"strings"
 )
 
-/*
-  WebContext is a real context.Context that represents a single request.
-*/
+// WebContext is a real context.Context that represents a single request.
 type WebContext struct {
 	path               *paths.Path
 	data               objects.Map
