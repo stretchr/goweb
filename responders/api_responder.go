@@ -25,11 +25,14 @@ type APIResponder interface {
 	*/
 
 	// TransformStandardResponseObject transforms the standard response object before it is written to the response if a
-	// transformer func has been set via SetStandardResponseObjectTransformer.
+	// transformer func has been set via SetStandardResponseObjectTransformer.  Otherwise, it just returns the same
+	// object that is passed in.
 	TransformStandardResponseObject(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)
 
-	// SetStandardResponseObjectTransformer sets the function to use to transform the standard response object beore it is
+	// SetStandardResponseObjectTransformer sets the function to use to transform the standard response object before it is
 	// written to the response.
+	//
+	// You should use this function to control what kind of response your API makes.
 	SetStandardResponseObjectTransformer(transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error))
 
 	/*
