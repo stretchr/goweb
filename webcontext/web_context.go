@@ -153,7 +153,13 @@ func (c *WebContext) SetHttpRequest(httpRequest *http.Request) {
 	c.httpRequest = httpRequest
 }
 
-// PathParams gets any parameters that were pulled from the URL path.
+// PathParams gets any parameters that were pulled from the URL path.	//
+// Goweb gives you access to different types of parameters:
+//
+//    QueryParams - Parameters only from the URL query string
+//    PostParams  - Parameters only from the body
+//    FormParams  - Parameters from both the body AND the URL query string
+//    PathParams  - Parameters from the path itself (i.e. /people/123)
 func (c *WebContext) PathParams() objects.Map {
 	return c.data.GetMap(context.DataKeyPathParameters)
 }
@@ -188,6 +194,13 @@ func (c *WebContext) urlValuesToObjectsMap(values url.Values) objects.Map {
 
 // FormParams gets the parameters that were posted in the request body and were present
 // in the URL query.
+//
+// Goweb gives you access to different types of parameters:
+//
+//    QueryParams - Parameters only from the URL query string
+//    PostParams  - Parameters only from the body
+//    FormParams  - Parameters from both the body AND the URL query string
+//    PathParams  - Parameters from the path itself (i.e. /people/123)
 func (c *WebContext) FormParams() objects.Map {
 
 	if c.formParams == nil {
@@ -232,6 +245,13 @@ func (c *WebContext) FormValue(keypath string) string {
 }
 
 // QueryParams gets the query parameters that are present after the ? in the URL.
+//
+// Goweb gives you access to different types of parameters:
+//
+//    QueryParams - Parameters only from the URL query string
+//    PostParams  - Parameters only from the body
+//    FormParams  - Parameters from both the body AND the URL query string
+//    PathParams  - Parameters from the path itself (i.e. /people/123)
 func (c *WebContext) QueryParams() objects.Map {
 
 	if c.queryParams == nil {
@@ -270,6 +290,13 @@ func (c *WebContext) QueryValue(keypath string) string {
 }
 
 // PostParams gets the parameters that were posted in the request body.
+//
+// Goweb gives you access to different types of parameters:
+//
+//    QueryParams - Parameters only from the URL query string
+//    PostParams  - Parameters only from the body
+//    FormParams  - Parameters from both the body AND the URL query string
+//    PathParams  - Parameters from the path itself (i.e. /people/123)
 func (c *WebContext) PostParams() objects.Map {
 
 	if c.postParams == nil {
