@@ -8,6 +8,13 @@ import (
 	"strings"
 )
 
+const (
+	// DataKeyForError is the data key (that goes into the context.Data map) for
+	// an error that has occurred.  Then, the error Handler can Get(DataKeyForError)
+	// to do work on the error.
+	DataKeyForError string = "error"
+)
+
 type HttpHandler struct {
 
 	// codecServices is the codec service object to use to go from bytes to objects
@@ -63,7 +70,7 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 	if err != nil {
 
 		// set the error
-		ctx.Data().Set("error", err)
+		ctx.Data().Set(DataKeyForError, err)
 
 		// tell the handler to handle it
 		handler.ErrorHandler().Handle(ctx)
@@ -98,7 +105,8 @@ func (h *HttpHandler) ErrorHandler() Handler {
 // returned from the Handle method are ignored (as is the stop argument).
 // If you want to log errors, you should do so from within the ErrorHandler.
 //
-// Goweb will place the error object into the context.Data().Get("error") map.
+// Goweb will place the error object into the context.Data() map with the
+// DataKeyForError key.
 func (h *HttpHandler) SetErrorHandler(errorHandler Handler) {
 	h.errorHandler = errorHandler
 }

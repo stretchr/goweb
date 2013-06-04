@@ -8,6 +8,10 @@ import (
 	"reflect"
 )
 
+// DefaultErrorHandler is a Handler that writes an error message out
+// to the client.
+//
+// The error will be stored in the context.Data with the DataKeyForError key.
 type DefaultErrorHandler struct{}
 
 // WillHandle is ignored on ErrorHandlers.
@@ -19,7 +23,7 @@ func (h *DefaultErrorHandler) WillHandle(context.Context) (bool, error) {
 // 500 http.StatusInternalServerError status code.
 func (h *DefaultErrorHandler) Handle(ctx context.Context) (stop bool, err error) {
 
-	var handlerError HandlerError = ctx.Data().Get("error").(HandlerError)
+	var handlerError HandlerError = ctx.Data().Get(DataKeyForError).(HandlerError)
 	hostname, _ := os.Hostname()
 
 	w := ctx.HttpResponseWriter()
