@@ -430,6 +430,18 @@ func TestMapStatic(t *testing.T) {
 	willHandle, _ = staticHandler.WillHandle(ctx)
 	assert.True(t, willHandle, "Static handler should handle")
 
+	ctx = context_test.MakeTestContextWithPath("/static/../static/some/deep/file.dat")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("/static/some/../file.dat")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.True(t, willHandle, "Static handler should handle")
+
+	ctx = context_test.MakeTestContextWithPath("/static/../file.dat")
+	willHandle, _ = staticHandler.WillHandle(ctx)
+	assert.False(t, willHandle, "Static handler should not handle")
+
 	ctx = context_test.MakeTestContextWithPath("/static")
 	willHandle, _ = staticHandler.WillHandle(ctx)
 	assert.True(t, willHandle, "Static handler should handle")
