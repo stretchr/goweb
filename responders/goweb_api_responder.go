@@ -1,6 +1,7 @@
 package responders
 
 import (
+	"github.com/stretchrcom/codecs/constants"
 	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
 	"net/http"
@@ -84,13 +85,25 @@ func (a *GowebAPIResponder) SetStandardResponseObjectTransformer(transformer fun
 func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int, responseObject interface{}) error {
 
 	service := a.GetCodecService()
-	codec, codecError := service.GetCodec("application/json")
+
+	acceptHeader := ctx.HttpRequest().Header.Get("Accept")
+	extension := ctx.FileExtension()
+	hasCallback := len(ctx.QueryValue("callback")) > 0
+
+	codec, codecError := service.GetCodecForResponding(acceptHeader, extension, hasCallback)
 
 	if codecError != nil {
 		return codecError
 	}
 
-	output, marshalErr := codec.Marshal(responseObject, nil)
+	var options map[string]interface{}
+
+	// do we need to add some options?
+	if hasCallback {
+		options = map[string]interface{}{constants.OptionKeyClientCallback: ctx.QueryValue("callback")}
+	}
+
+	output, marshalErr := codec.Marshal(responseObject, options)
 
 	if marshalErr != nil {
 		return marshalErr

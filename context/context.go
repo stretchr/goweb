@@ -49,6 +49,9 @@ type Context interface {
 	// MethodString gets the HTTP Method of the request as an uppercase string.
 	MethodString() string
 
+	// FileExtension gets the extension of the file from the HttpRequest().
+	FileExtension() string
+
 	/*
 		Data
 		----------------------------------------

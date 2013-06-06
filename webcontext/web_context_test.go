@@ -54,6 +54,29 @@ func TestSetHttpResponseWriter(t *testing.T) {
 
 }
 
+func TestFileExtension(t *testing.T) {
+
+	responseWriter := new(http_test.TestResponseWriter)
+	codecService := new(codecservices.WebCodecService)
+
+	testRequest, _ := http.NewRequest("get", "http://goweb.org/people/123.json", nil)
+	c := NewWebContext(responseWriter, testRequest, codecService)
+	assert.Equal(t, ".json", c.FileExtension())
+
+	testRequest, _ = http.NewRequest("get", "http://goweb.org/people/123.bson", nil)
+	c = NewWebContext(responseWriter, testRequest, codecService)
+	assert.Equal(t, ".bson", c.FileExtension())
+
+	testRequest, _ = http.NewRequest("get", "http://goweb.org/people/123.xml", nil)
+	c = NewWebContext(responseWriter, testRequest, codecService)
+	assert.Equal(t, ".xml", c.FileExtension())
+
+	testRequest, _ = http.NewRequest("get", "http://goweb.org/people.with.dots/123.xml", nil)
+	c = NewWebContext(responseWriter, testRequest, codecService)
+	assert.Equal(t, ".xml", c.FileExtension())
+
+}
+
 func TestMethodString(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)

@@ -5,6 +5,8 @@ import (
 	"github.com/stretchrcom/goweb/context"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
+	"log"
+	"net/url"
 	"testing"
 )
 
@@ -71,6 +73,82 @@ func TestWriteResponseObject(t *testing.T) {
 	API.WriteResponseObject(ctx, 200, data)
 
 	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"name\":\"Mat\"}")
+
+}
+
+// https://github.com/stretchrcom/goweb/issues/20
+func TestWriteResponseObject_ContentNegotiation_AcceptHeader(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	ctx.HttpRequest().Header.Set("Accept", "application/x-msgpack")
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.WriteResponseObject(ctx, 200, data)
+
+	// get the expected output
+	codec, codecErr := codecService.GetCodec("application/x-msgpack")
+	if assert.NoError(t, codecErr) {
+
+		expectedOutput, marshalErr := codec.Marshal(data, nil)
+		if assert.NoError(t, marshalErr) {
+			assert.Equal(t, []byte(context_test.TestResponseWriter.Output), expectedOutput)
+		}
+
+	}
+
+}
+
+// https://github.com/stretchrcom/goweb/issues/20
+func TestWriteResponseObject_ContentNegotiation_HasCallback(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	ctx.HttpRequest().URL, _ = url.Parse("http://stretchr.org/something?callback=doSomething")
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.WriteResponseObject(ctx, 200, data)
+
+	// get the expected output
+	codec, codecErr := codecService.GetCodec("text/javascript")
+	if assert.NoError(t, codecErr) {
+
+		expectedOutput, marshalErr := codec.Marshal(data, map[string]interface{}{"options.client.callback": "doSomething"})
+		if assert.NoError(t, marshalErr) {
+			log.Printf("OUTPUT: %s\nEXPECTED: %s", context_test.TestResponseWriter.Output, string(expectedOutput))
+			assert.Equal(t, []byte(context_test.TestResponseWriter.Output), expectedOutput)
+		}
+
+	}
+
+}
+
+// https://github.com/stretchrcom/goweb/issues/20
+func TestWriteResponseObject_ContentNegotiation_FileExtension(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	ctx.HttpRequest().URL, _ = url.Parse("http://stretchr.org/something.msgpack")
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.WriteResponseObject(ctx, 200, data)
+
+	// get the expected output
+	codec, codecErr := codecService.GetCodec("application/x-msgpack")
+	if assert.NoError(t, codecErr) {
+
+		expectedOutput, marshalErr := codec.Marshal(data, nil)
+		if assert.NoError(t, marshalErr) {
+			assert.Equal(t, []byte(context_test.TestResponseWriter.Output), expectedOutput)
+		}
+
+	}
 
 }
 

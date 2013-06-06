@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path"
 	"strings"
 )
 
@@ -56,6 +57,11 @@ func (c *WebContext) Data() objects.Map {
 		c.data = make(objects.Map)
 	}
 	return c.data
+}
+
+// FileExtension gets the extension of the file from the HttpRequest().
+func (c *WebContext) FileExtension() string {
+	return strings.ToLower(path.Ext(c.HttpRequest().URL.RequestURI()))
 }
 
 // RequestData gets the data out of the body of the request as a usable object.
