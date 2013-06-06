@@ -96,12 +96,12 @@ func main() {
 	/*
 		Map the static-files directory so it's exposed as /static
 	*/
-	goweb.DefaultHttpHandler().MapStatic("/static", "static-files")
+	goweb.MapStatic("/static", "static-files")
 
 	/*
 		Map the a favicon
 	*/
-	goweb.DefaultHttpHandler().MapStatic("/favicon.ico", "static-files/favicon.ico")
+	goweb.MapStaticFile("/favicon.ico", "static-files/favicon.ico")
 
 	/*
 		Catch-all handler for everything that we don't understand
