@@ -4,6 +4,8 @@ A lightweight RESTful web framework for Go.
 
 ![Alt text](GowebLogoBig.jpg "Goweb 2 - Logo")
 
+If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)!
+
 For examples and usage, please read the [goweb documentation](http://godoc.org/github.com/stretchrcom/goweb).
 
 ## Get started
