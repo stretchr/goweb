@@ -27,6 +27,31 @@ func TestHandlerForOptions_PlainHandler(t *testing.T) {
 
 }
 
+// https://github.com/stretchrcom/goweb/issues/19
+func TestMappedHandlersBreakExecution(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	handlerCalled := false
+	catchAllCalled := false
+	handler.Map("/people/{id}", func(c context.Context) error {
+		handlerCalled = true
+		return nil
+	})
+	handler.Map(func(c context.Context) error {
+		catchAllCalled = true
+		return nil
+	})
+
+	ctx := context_test.MakeTestContextWithPath("people/123")
+	handler.Handlers.Handle(ctx)
+
+	assert.True(t, handlerCalled)
+	assert.False(t, catchAllCalled, "Catch-all should NOT get called, becuase something else specifically handled this context.")
+
+}
+
 func TestMap(t *testing.T) {
 
 	codecService := new(codecservices.WebCodecService)
