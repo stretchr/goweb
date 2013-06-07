@@ -199,14 +199,10 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
 
 		// map the collective before handler
-		h.MapBefore(collectiveMethods, path, func(ctx context.Context) error {
-			return beforeController.Before(ctx)
-		})
+		h.MapBefore(collectiveMethods, path, beforeController.Before)
 
 		// map the singular before handler
-		h.MapBefore(singularMethods, pathWithID, func(ctx context.Context) error {
-			return beforeController.Before(ctx)
-		})
+		h.MapBefore(singularMethods, pathWithID, beforeController.Before)
 
 	}
 
@@ -214,20 +210,16 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if afterController, ok := controller.(controllers.AfterHandler); ok {
 
 		// map the collective after handler
-		h.MapAfter(collectiveMethods, path, func(ctx context.Context) error {
-			return afterController.After(ctx)
-		})
+		h.MapAfter(collectiveMethods, path, afterController.After)
 
 		// map the singular after handler
-		h.MapAfter(singularMethods, pathWithID, func(ctx context.Context) error {
-			return afterController.After(ctx)
-		})
+		h.MapAfter(singularMethods, pathWithID, afterController.After)
 
 	}
 
 	// POST /resource  -  Create
 	if restfulController, ok := controller.(controllers.RestfulCreator); ok {
-		h.Map(http.MethodPost, path, func(ctx context.Context) error { return restfulController.Create(ctx) })
+		h.Map(http.MethodPost, path, restfulController.Create)
 	}
 
 	// GET /resource/{id}  -  Read
@@ -239,7 +231,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// GET /resource  -  ReadMany
 	if restfulController, ok := controller.(controllers.RestfulManyReader); ok {
-		h.Map(http.MethodGet, path, func(ctx context.Context) error { return restfulController.ReadMany(ctx) })
+		h.Map(http.MethodGet, path, restfulController.ReadMany)
 	}
 
 	// DELETE /resource/{id}  -  Delete
@@ -251,9 +243,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// DELETE /resource  -  DeleteMany
 	if restfulController, ok := controller.(controllers.RestfulManyDeleter); ok {
-		h.Map(http.MethodDelete, path, func(ctx context.Context) error {
-			return restfulController.DeleteMany(ctx)
-		})
+		h.Map(http.MethodDelete, path, restfulController.DeleteMany)
 	}
 
 	// PUT /resource/{id}  -  Update
@@ -265,9 +255,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// PUT /resource  -  UpdateMany
 	if restfulController, ok := controller.(controllers.RestfulManyUpdater); ok {
-		h.Map(http.MethodPut, path, func(ctx context.Context) error {
-			return restfulController.UpdateMany(ctx)
-		})
+		h.Map(http.MethodPut, path, restfulController.UpdateMany)
 	}
 
 	// POST /resource/{id}  -  Replace
@@ -279,17 +267,13 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// HEAD /resource/[id]  -  Head
 	if restfulController, ok := controller.(controllers.RestfulHead); ok {
-		h.Map(http.MethodHead, pathWithOptionalID, func(ctx context.Context) error {
-			return restfulController.Head(ctx)
-		})
+		h.Map(http.MethodHead, pathWithOptionalID, restfulController.Head)
 	}
 
 	// OPTIONS /resource/[id]  -  Options
 	if restfulController, ok := controller.(controllers.RestfulOptions); ok {
 
-		h.Map(http.MethodOptions, pathWithOptionalID, func(ctx context.Context) error {
-			return restfulController.Options(ctx)
-		})
+		h.Map(http.MethodOptions, pathWithOptionalID, restfulController.Options)
 
 	} else {
 
