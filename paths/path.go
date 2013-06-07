@@ -3,6 +3,7 @@ package paths
 import (
 	"fmt"
 	"strings"
+	"path"
 )
 
 // Path represents the path segment of a URL.
@@ -28,8 +29,8 @@ func NewPath(rawPath string) *Path {
 }
 
 // cleanPath cleans returns the cleaned version of the specified path.
-func cleanPath(path string) string {
-	return strings.TrimRight(strings.TrimLeft(path, PathSeperator), PathSeperator)
+func cleanPath(rawPath string) string {
+	return strings.TrimRight(strings.TrimLeft(path.Clean(rawPath), PathSeperator), PathSeperator)
 }
 
 // PathFromSegments turns the arguments into a path string.
