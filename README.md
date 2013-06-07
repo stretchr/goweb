@@ -32,6 +32,10 @@ A lightweight RESTful web framework for Go.
   * Better error management
   * Performance improvements
 
+## Requirements
+
+  * Goweb runs on Go 1.1
+
 ------
 
 Contributing
