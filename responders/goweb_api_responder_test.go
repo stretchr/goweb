@@ -44,6 +44,30 @@ func TestRespond(t *testing.T) {
 
 }
 
+/*
+	testing codecs.Facade pattern
+*/
+
+type dataObject struct{}
+
+func (d *dataObject) PublicData(options map[string]interface{}) (interface{}, error) {
+	return map[string]interface{}{"used-public-data": true}, nil
+}
+
+func TestRespondWithPublicDataFacade(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	data := new(dataObject)
+
+	API.Respond(ctx, 200, data, nil)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"d\":{\"used-public-data\":true},\"s\":200}")
+
+}
+
 func TestRespondWithCustomFieldnames(t *testing.T) {
 
 	http := new(GowebHTTPResponder)

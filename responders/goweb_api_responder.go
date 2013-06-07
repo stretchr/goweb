@@ -1,6 +1,7 @@
 package responders
 
 import (
+	"github.com/stretchrcom/codecs"
 	"github.com/stretchrcom/codecs/constants"
 	codecservices "github.com/stretchrcom/codecs/services"
 	"github.com/stretchrcom/goweb/context"
@@ -103,7 +104,7 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 		options = map[string]interface{}{constants.OptionKeyClientCallback: ctx.QueryValue("callback")}
 	}
 
-	output, marshalErr := codec.Marshal(responseObject, options)
+	output, marshalErr := service.MarshalWithCodec(codec, responseObject, options)
 
 	if marshalErr != nil {
 		return marshalErr
@@ -124,7 +125,14 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 	sro := map[string]interface{}{a.StandardFieldStatusKey: status}
 
 	if data != nil {
-		sro[a.StandardFieldDataKey] = data
+
+		var dataErr error
+		sro[a.StandardFieldDataKey], dataErr = codecs.PublicData(data, nil)
+
+		if dataErr != nil {
+			return dataErr
+		}
+
 	}
 	if len(errors) > 0 {
 		sro[a.StandardFieldErrorsKey] = errors

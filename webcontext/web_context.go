@@ -83,7 +83,7 @@ func (c *WebContext) RequestData() (interface{}, error) {
 
 	// create the object
 	var obj interface{}
-	unmarhsalErr := codec.Unmarshal(bodyBytes, &obj)
+	unmarhsalErr := c.CodecService().UnmarshalWithCodec(codec, bodyBytes, &obj)
 
 	return obj, unmarhsalErr
 }
