@@ -5,7 +5,6 @@ import (
 	"github.com/stretchrcom/goweb/context"
 	context_test "github.com/stretchrcom/goweb/webcontext/test"
 	"github.com/stretchrcom/testify/assert"
-	"log"
 	"net/url"
 	"testing"
 )
@@ -119,7 +118,6 @@ func TestWriteResponseObject_ContentNegotiation_HasCallback(t *testing.T) {
 
 		expectedOutput, marshalErr := codec.Marshal(data, map[string]interface{}{"options.client.callback": "doSomething"})
 		if assert.NoError(t, marshalErr) {
-			log.Printf("OUTPUT: %s\nEXPECTED: %s", context_test.TestResponseWriter.Output, string(expectedOutput))
 			assert.Equal(t, []byte(context_test.TestResponseWriter.Output), expectedOutput)
 		}
 
