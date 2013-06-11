@@ -17,7 +17,10 @@ const (
 	Address string = ":9090"
 )
 
-func main() {
+// mapRoutes contains lots of examples of how to map things in
+// Goweb.  It is in its own function so that test code can call it
+// without having to run main().
+func mapRoutes() {
 
 	/*
 		Add a pre-handler to save the referrer
@@ -34,7 +37,7 @@ func main() {
 		Add a post-handler to log something
 	*/
 	goweb.MapAfter(func(c context.Context) error {
-		// TODO: log this 
+		// TODO: log this
 		return nil
 	})
 
@@ -112,6 +115,13 @@ func main() {
 		return goweb.API.Respond(c, 404, nil, []string{"File not found"})
 
 	})
+
+}
+
+func main() {
+
+	// map the routes
+	mapRoutes()
 
 	/*
 
