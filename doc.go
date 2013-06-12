@@ -92,7 +92,7 @@
 //
 // For details on how to make API responses, see http://godoc.org/github.com/stretchr/goweb/responders#APIResponder
 //
-// Writing TDD (Test-driven code) in Goweb
+// Writing tests
 //
 // Writing unit tests for your Goweb code is made possible via the `goweb.Test` and `goweb.TestOn` functions,
 // and with a little help from the Testify HTTP package, see http://godoc.org/github.com/stretchr/testify/http
