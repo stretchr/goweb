@@ -68,6 +68,24 @@ func TestRespondWithPublicDataFacade(t *testing.T) {
 
 }
 
+func TestRespondWithArray(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	codecService := new(codecservices.WebCodecService)
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	data := []map[string]interface{}{
+		map[string]interface{}{"name": "Mat"},
+		map[string]interface{}{"name": "Tyler"},
+		map[string]interface{}{"name": "Oleksandr"},
+	}
+
+	API.Respond(ctx, 200, data, nil)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"d\":[{\"name\":\"Mat\"},{\"name\":\"Tyler\"},{\"name\":\"Oleksandr\"}],\"s\":200}")
+
+}
+
 func TestRespondWithCustomFieldnames(t *testing.T) {
 
 	http := new(GowebHTTPResponder)
