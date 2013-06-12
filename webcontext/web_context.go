@@ -173,7 +173,6 @@ func (c *WebContext) PathParams() objects.Map {
 // PathParam gets the parameter from PathParams() with the specified keypath.
 func (c *WebContext) PathParam(keypath string) string {
 	panic("goweb: DEPRECATED - Use PathValue instead of PathParam.")
-	return ""
 }
 
 // PathValue gets the parameter from PathParams() with the specified key.
