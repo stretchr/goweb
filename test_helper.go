@@ -11,7 +11,6 @@ import (
 )
 
 var (
-
 	// TestHttpRequest represents the current http.Request object
 	// that is being tested.
 	TestHttpRequest *http.Request
