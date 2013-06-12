@@ -17,7 +17,10 @@ const (
 	Address string = ":9090"
 )
 
-func main() {
+// mapRoutes contains lots of examples of how to map things in
+// Goweb.  It is in its own function so that test code can call it
+// without having to run main().
+func mapRoutes() {
 
 	/*
 		Add a pre-handler to save the referrer
@@ -34,7 +37,7 @@ func main() {
 		Add a post-handler to log something
 	*/
 	goweb.MapAfter(func(c context.Context) error {
-		// TODO: log this 
+		// TODO: log this
 		return nil
 	})
 
@@ -48,7 +51,7 @@ func main() {
 	/*
 		Map a specific route that will redirect
 	*/
-	goweb.Map("people/me", func(c context.Context) error {
+	goweb.Map("GET", "people/me", func(c context.Context) error {
 		hostname, _ := os.Hostname()
 		return goweb.Respond.WithRedirect(c, fmt.Sprintf("/people/%s", hostname))
 	})
@@ -56,7 +59,7 @@ func main() {
 	/*
 		/people (with optional ID)
 	*/
-	goweb.Map("people/[id]", func(c context.Context) error {
+	goweb.Map("GET", "people/[id]", func(c context.Context) error {
 
 		if c.PathParams().Has("id") {
 			return goweb.API.Respond(c, 200, fmt.Sprintf("Yes, this worked and your ID is %s", c.PathParams().Get("id")), nil)
@@ -112,6 +115,13 @@ func main() {
 		return goweb.API.Respond(c, 404, nil, []string{"File not found"})
 
 	})
+
+}
+
+func main() {
+
+	// map the routes
+	mapRoutes()
 
 	/*
 
