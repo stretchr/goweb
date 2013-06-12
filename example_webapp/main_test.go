@@ -25,7 +25,7 @@ func TestRoutes(t *testing.T) {
 	   we want to be able to do things like this:
 
 	     handlers := handler.GetHandlersFor("GET", "people/123")
-	     h := handler.HandlerForRequest(request)
+	     hs := handler.HandlersForRequest(request)
 
 	*/
 
