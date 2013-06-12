@@ -41,6 +41,11 @@ type RequestBuilderFunc func() *http.Request
 //
 // For example:
 //
+//    import (
+//      // import testify
+//      testifyhttp "github.com/stretchr/testify/http"
+//    )
+//
 //     // Test(t, string, func(*testing.T, *testifyhttp.TestResponseWriter))
 //     // Makes a request with the specified method and path, and calls
 //     // the function to make the appropriate assertions.
