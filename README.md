@@ -1,8 +1,10 @@
 # Goweb 2
 
+NOTE: We have changed our repo name from `stretchrcom` to just `stretchr`... please update all your paths (find and replace on `github.com/stretchrcom` should work great).  We apologise for any inconvenience caused.
+
 A lightweight RESTful web framework for Go.
 
-![Alt text](GowebLogoBig.jpg "Goweb 2 - Logo")
+![Goweb A lightweight RESTful web framework for Go.](GowebLogoBig.jpg "Goweb 2 - Logo")
 
   * If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)
   * For examples and usage, please read the [goweb documentation](http://godoc.org/github.com/stretchr/goweb)
