@@ -97,6 +97,8 @@
 // Writing unit tests for your Goweb code is made possible via the `goweb.Test` and `goweb.TestOn` functions,
 // and with a little help from the Testify HTTP package, see http://godoc.org/github.com/stretchr/testify/http
 //
+// For a real example of what tests look like, see the tests in the example web app: https://github.com/stretchr/goweb/blob/master/example_webapp/main_test.go
+//
 // Changes from Goweb 1
 //
 // Goweb 2 changes two key things about Goweb; mapping and responding.
