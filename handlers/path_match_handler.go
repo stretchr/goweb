@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/stretchrcom/goweb/context"
-	"github.com/stretchrcom/goweb/paths"
+	"github.com/stretchr/goweb/context"
+	"github.com/stretchr/goweb/paths"
 	"strings"
 )
 

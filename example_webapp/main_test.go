@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/stretchrcom/codecs/services"
-	"github.com/stretchrcom/goweb"
-	"github.com/stretchrcom/goweb/handlers"
-	//"github.com/stretchrcom/testify/assert"
+	"github.com/stretchr/codecs/services"
+	"github.com/stretchr/goweb"
+	"github.com/stretchr/goweb/handlers"
+	//"github.com/stretchr/testify/assert"
 	"testing"
 )
 

@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/stretchrcom/goweb/context"
-	//"github.com/stretchrcom/goweb/webcontext"
-	"github.com/stretchrcom/goweb/paths"
-	context_test "github.com/stretchrcom/goweb/webcontext/test"
-	"github.com/stretchrcom/stew/objects"
-	"github.com/stretchrcom/testify/assert"
+	"github.com/stretchr/goweb/context"
+	//"github.com/stretchr/goweb/webcontext"
+	"github.com/stretchr/goweb/paths"
+	context_test "github.com/stretchr/goweb/webcontext/test"
+	"github.com/stretchr/stew/objects"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 

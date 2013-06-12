@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchr/goweb/context"
 	"net/http"
 	"os"
 	"reflect"
@@ -42,7 +42,7 @@ func (h *DefaultErrorHandler) Handle(ctx context.Context) (stop bool, err error)
 	w.Write([]byte(fmt.Sprintf("<h1>Error in <code>%s</code></h1><h2>%s</h2>", handlerError.Handler, handlerError)))
 	w.Write([]byte(fmt.Sprintf("<h3><code>%s</code> error in Handler <code>%v</code></h3> <code><pre>%s</pre></code>", reflect.TypeOf(handlerError.OriginalError), &handlerError.Handler, handlerError.Handler)))
 	w.Write([]byte(fmt.Sprintf("on %s", hostname)))
-	w.Write([]byte("<footer>Learn more about <a href='http://github.com/stretchrcom/goweb' target='_blank'>Goweb</a></footer>"))
+	w.Write([]byte("<footer>Learn more about <a href='http://github.com/stretchr/goweb' target='_blank'>Goweb</a></footer>"))
 	w.Write([]byte("</body></html>"))
 
 	// responses are actually ignored

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchr/goweb/context"
 )
 
 // RestfulController represents an object that satisfies key aspects of a

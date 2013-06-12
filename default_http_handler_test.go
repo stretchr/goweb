@@ -1,8 +1,8 @@
 package goweb
 
 import (
-	"github.com/stretchrcom/goweb/handlers"
-	"github.com/stretchrcom/testify/assert"
+	"github.com/stretchr/goweb/handlers"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 

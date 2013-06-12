@@ -3,8 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/stretchrcom/goweb"
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchr/goweb"
+	"github.com/stretchr/goweb/context"
 	"log"
 	"net"
 	"net/http"
@@ -51,7 +51,7 @@ func mapRoutes() {
 	/*
 		Map a specific route that will redirect
 	*/
-	goweb.Map("people/me", func(c context.Context) error {
+	goweb.Map("GET", "people/me", func(c context.Context) error {
 		hostname, _ := os.Hostname()
 		return goweb.Respond.WithRedirect(c, fmt.Sprintf("/people/%s", hostname))
 	})
@@ -59,7 +59,7 @@ func mapRoutes() {
 	/*
 		/people (with optional ID)
 	*/
-	goweb.Map("people/[id]", func(c context.Context) error {
+	goweb.Map("GET", "people/[id]", func(c context.Context) error {
 
 		if c.PathParams().Has("id") {
 			return goweb.API.Respond(c, 200, fmt.Sprintf("Yes, this worked and your ID is %s", c.PathParams().Get("id")), nil)

@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"errors"
-	codecservices "github.com/stretchrcom/codecs/services"
-	"github.com/stretchrcom/goweb/context"
-	handlers_test "github.com/stretchrcom/goweb/handlers/test"
-	"github.com/stretchrcom/testify/assert"
-	http_test "github.com/stretchrcom/testify/http"
-	"github.com/stretchrcom/testify/mock"
+	codecservices "github.com/stretchr/codecs/services"
+	"github.com/stretchr/goweb/context"
+	handlers_test "github.com/stretchr/goweb/handlers/test"
+	"github.com/stretchr/testify/assert"
+	http_test "github.com/stretchr/testify/http"
+	"github.com/stretchr/testify/mock"
 	"net/http"
 	"testing"
 )

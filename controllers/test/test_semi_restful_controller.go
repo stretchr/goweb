@@ -1,8 +1,8 @@
 package test
 
 import (
-	"github.com/stretchrcom/goweb/context"
-	"github.com/stretchrcom/testify/mock"
+	"github.com/stretchr/goweb/context"
+	"github.com/stretchr/testify/mock"
 )
 
 type TestSemiRestfulController struct {

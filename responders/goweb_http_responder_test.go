@@ -1,8 +1,8 @@
 package responders
 
 import (
-	context_test "github.com/stretchrcom/goweb/webcontext/test"
-	"github.com/stretchrcom/testify/assert"
+	context_test "github.com/stretchr/goweb/webcontext/test"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 )

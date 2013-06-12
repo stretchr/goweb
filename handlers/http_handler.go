@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"fmt"
-	codecservices "github.com/stretchrcom/codecs/services"
-	"github.com/stretchrcom/goweb/webcontext"
+	codecservices "github.com/stretchr/codecs/services"
+	"github.com/stretchr/goweb/webcontext"
 	"net/http"
 	"strings"
 )

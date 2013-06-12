@@ -2,10 +2,11 @@ package webcontext_test
 
 import (
 	"fmt"
-	codecservices "github.com/stretchrcom/codecs/services"
-	"github.com/stretchrcom/goweb/webcontext"
-	http_test "github.com/stretchrcom/testify/http"
+	codecservices "github.com/stretchr/codecs/services"
+	"github.com/stretchr/goweb/webcontext"
+	http_test "github.com/stretchr/testify/http"
 	"net/http"
+	"strings"
 )
 
 var TestRequest *http.Request
@@ -21,10 +22,19 @@ func MakeTestContextWithPath(path string) *webcontext.WebContext {
 }
 
 func MakeTestContextWithDetails(path, method string) *webcontext.WebContext {
+	return MakeTestContextWithFullDetails(fmt.Sprintf("http://stretchr.org/%s", path), method, "")
+}
 
+func MakeTestContextWithFullDetails(path, method, body string) *webcontext.WebContext {
 	TestCodecService = new(codecservices.WebCodecService)
 	TestResponseWriter = new(http_test.TestResponseWriter)
-	TestRequest, _ = http.NewRequest(method, fmt.Sprintf("http://stretchr.org/%s", path), nil)
+
+	if len(body) == 0 {
+		TestRequest, _ = http.NewRequest(method, path, nil)
+	} else {
+		TestRequest, _ = http.NewRequest(method, path, strings.NewReader(body))
+	}
 
 	return webcontext.NewWebContext(TestResponseWriter, TestRequest, TestCodecService)
+
 }

@@ -1,8 +1,8 @@
 package handlers_test
 
 import (
-	"github.com/stretchrcom/goweb/context"
-	"github.com/stretchrcom/testify/mock"
+	"github.com/stretchr/goweb/context"
+	"github.com/stretchr/testify/mock"
 )
 
 type TestHandler struct {

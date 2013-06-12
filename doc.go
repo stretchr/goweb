@@ -9,7 +9,7 @@
 // If you are not following RESTful patterns, you can do custom routing using the goweb.Map function.
 //
 // See some real world examples of how to use Goweb by checking out the
-// example web app code: https://github.com/stretchrcom/goweb/blob/master/example_webapp/main.go
+// example web app code: https://github.com/stretchr/goweb/blob/master/example_webapp/main.go
 //
 // Example
 //
@@ -88,9 +88,9 @@
 // If you're building an API, you can respond using the `goweb.API` object, if you just
 // need to respond in a normal HTTP manner, you can use the `goweb.Respond` object.
 //
-// For details on how to make normal HTTP responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#HTTPResponder
+// For details on how to make normal HTTP responses, see http://godoc.org/github.com/stretchr/goweb/responders#HTTPResponder
 //
-// For details on how to make API responses, see http://godoc.org/github.com/stretchrcom/goweb/responders#APIResponder
+// For details on how to make API responses, see http://godoc.org/github.com/stretchr/goweb/responders#APIResponder
 //
 // Changes from Goweb 1
 //

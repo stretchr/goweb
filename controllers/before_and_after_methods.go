@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchr/goweb/context"
 )
 
 // BeforeHandler represents a controller that has a before handler.

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/stretchrcom/goweb/http"
+	"github.com/stretchr/goweb/http"
 )
 
 func OptionsListForResourceCollection(controller interface{}) []string {
