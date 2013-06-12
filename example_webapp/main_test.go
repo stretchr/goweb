@@ -4,7 +4,8 @@ import (
 	"github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb"
 	"github.com/stretchr/goweb/handlers"
-	//"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
+	testifyhttp "github.com/stretchr/testify/http"
 	"testing"
 )
 
@@ -18,15 +19,11 @@ func TestRoutes(t *testing.T) {
 	// call the target code
 	mapRoutes()
 
-	// TODO: make assertions
+	goweb.Test(t, "GET people/me", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 
-	/*
+		// should be a redirect
+		assert.Equal(t, 307, response.WrittenHeaderInt, "Status code should be correct")
 
-	   we want to be able to do things like this:
-
-	     handlers := handler.GetHandlersFor("GET", "people/123")
-	     hs := handler.HandlersForRequest(request)
-
-	*/
+	})
 
 }
