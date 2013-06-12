@@ -3,7 +3,7 @@ package goweb
 import (
 	"github.com/stretchr/goweb/handlers"
 	"github.com/stretchr/testify/assert"
-	testify_http "github.com/stretchr/testify/http"
+	testifyhttp "github.com/stretchr/testify/http"
 	"net/http"
 	"reflect"
 	"strings"
@@ -18,12 +18,8 @@ var (
 
 	// TestResponseWriter is the ResponseWriter that goweb.Test will
 	// write to, in order to allow for testing.
-	TestResponseWriter *testify_http.TestResponseWriter
+	TestResponseWriter *testifyhttp.TestResponseWriter
 )
-
-// TestAssertionFunc is the function that is asked to make assertions
-// about a Goweb TestResponse.
-type TestAssertionFunc func(t *testing.T, response *testify_http.TestResponseWriter)
 
 // RequestBuilderFunc is a function that builds a TestRequest.
 type RequestBuilderFunc func() *http.Request
@@ -40,11 +36,11 @@ type RequestBuilderFunc func() *http.Request
 //       build the TestRequest (a RequestBuilderFunc).
 //     * If the second argument is a string, an optional third argument would
 //       be either another string or []byte array representing the body.
-//     * The final argument must always be a func of type TestAssertionFunc
+//     * The final argument must always be a func of type func(*testing.T, *testifyhttp.TestResponseWriter)
 //
 // For example:
 //
-//     // Test(t, string, TestAssertionFunc)
+//     // Test(t, string, func(*testing.T, *testifyhttp.TestResponseWriter))
 //     // Makes a request with the specified method and path, and calls
 //     // the function to make the appropriate assertions.
 //     goweb.Test(t, "METHOD path", func(t *testing.T, response *TestResponse) {
@@ -53,7 +49,7 @@ type RequestBuilderFunc func() *http.Request
 //
 //     })
 //
-//     // Test(t, RequestBuilderFunc, TestAssertionFunc)
+//     // Test(t, RequestBuilderFunc, func(*testing.T, *testifyhttp.TestResponseWriter))
 //     // Makes a request by calling the RequestBuilderFunc, and calls
 //     // the function to make the appropriate assertions.
 //     goweb.Test(t, func() *http.Request {
@@ -130,15 +126,15 @@ func TestOn(t *testing.T, handler *handlers.HttpHandler, options ...interface{})
 	/*
 	   Get the response assertion function
 	*/
-	var testAssertionFunc TestAssertionFunc
+	var testAssertionFunc func(*testing.T, *testifyhttp.TestResponseWriter)
 
 	switch options[len(options)-1].(type) {
-	case TestAssertionFunc:
+	case func(*testing.T, *testifyhttp.TestResponseWriter):
 
-		testAssertionFunc = options[len(options)-1].(TestAssertionFunc)
+		testAssertionFunc = options[len(options)-1].(func(*testing.T, *testifyhttp.TestResponseWriter))
 
 	default:
-		t.Errorf("goweb: Last options argument of goweb.Test must be a TestAssertionFunc, not %v.", reflect.TypeOf(options[len(options)-1]))
+		t.Errorf("goweb: Last options argument of goweb.Test must be a func(*testing.T, *testifyhttp.TestResponseWriter), not %v.", reflect.TypeOf(options[len(options)-1]))
 		return
 	}
 
@@ -155,7 +151,7 @@ func TestOn(t *testing.T, handler *handlers.HttpHandler, options ...interface{})
 	/*
 	   Build a context to use
 	*/
-	TestResponseWriter = new(testify_http.TestResponseWriter)
+	TestResponseWriter = new(testifyhttp.TestResponseWriter)
 
 	/*
 	   Ask Goweb to handle the context
@@ -163,7 +159,7 @@ func TestOn(t *testing.T, handler *handlers.HttpHandler, options ...interface{})
 	handler.ServeHTTP(TestResponseWriter, TestHttpRequest)
 
 	/*
-	   Over to the TestAssertionFunc to do its magic
+	   Over to the func(*testing.T, *testifyhttp.TestResponseWriter) to do its magic
 	*/
 	testAssertionFunc(t, TestResponseWriter)
 
