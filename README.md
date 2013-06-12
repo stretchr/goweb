@@ -5,15 +5,15 @@ A lightweight RESTful web framework for Go.
 ![Alt text](GowebLogoBig.jpg "Goweb 2 - Logo")
 
   * If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)
-  * For examples and usage, please read the [goweb documentation](http://godoc.org/github.com/stretchrcom/goweb)
+  * For examples and usage, please read the [goweb documentation](http://godoc.org/github.com/stretchr/goweb)
 
 ## Get started
 
-  * To install, run `go get github.com/stretchrcom/goweb`
-  * Import the package as usual with `import "github.com/stretchrcom/goweb"` in your code.
-  * Look at the [example_webapp](https://github.com/stretchrcom/goweb/blob/master/example_webapp/main.go) project for some ideas of how to get going
-  * Read the [Goweb API Documentation](http://godoc.org/github.com/stretchrcom/goweb)
-  * To update to the latest version of goweb, just run `go get -u github.com/stretchrcom/goweb`
+  * To install, run `go get github.com/stretchr/goweb`
+  * Import the package as usual with `import "github.com/stretchr/goweb"` in your code.
+  * Look at the [example_webapp](https://github.com/stretchr/goweb/blob/master/example_webapp/main.go) project for some ideas of how to get going
+  * Read the [Goweb API Documentation](http://godoc.org/github.com/stretchr/goweb)
+  * To update to the latest version of goweb, just run `go get -u github.com/stretchr/goweb`
 
 ## Features
 
@@ -27,7 +27,7 @@ A lightweight RESTful web framework for Go.
   * Better package structure
   * Modular design, making adding new stuff easy
   * Handler mechanism to easily add pre and post handlers to certain requests
-  * Uses [stretchrcom/codecs](https://github.com/stretchrcom/codecs) package allowing better support for multiple formats
+  * Uses [stretchrcom/codecs](https://github.com/stretchr/codecs) package allowing better support for multiple formats
   * Easily match paths using Regex instead
   * Better error management
   * Performance improvements

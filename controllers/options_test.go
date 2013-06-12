@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"github.com/stretchrcom/goweb/controllers/test"
-	"github.com/stretchrcom/testify/assert"
+	"github.com/stretchr/goweb/controllers/test"
+	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 )

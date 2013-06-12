@@ -1,10 +1,10 @@
 package webcontext
 
 import (
-	codecservices "github.com/stretchrcom/codecs/services"
-	"github.com/stretchrcom/goweb/context"
-	"github.com/stretchrcom/goweb/paths"
-	"github.com/stretchrcom/stew/objects"
+	codecservices "github.com/stretchr/codecs/services"
+	"github.com/stretchr/goweb/context"
+	"github.com/stretchr/goweb/paths"
+	"github.com/stretchr/stew/objects"
 	"io/ioutil"
 	"net/http"
 	"net/url"

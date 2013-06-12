@@ -1,10 +1,10 @@
 package responders
 
 import (
-	"github.com/stretchrcom/codecs"
-	"github.com/stretchrcom/codecs/constants"
-	codecservices "github.com/stretchrcom/codecs/services"
-	"github.com/stretchrcom/goweb/context"
+	"github.com/stretchr/codecs"
+	"github.com/stretchr/codecs/constants"
+	codecservices "github.com/stretchr/codecs/services"
+	"github.com/stretchr/goweb/context"
 	"net/http"
 )
 
@@ -79,7 +79,7 @@ func (a *GowebAPIResponder) SetStandardResponseObjectTransformer(transformer fun
 // the specified context, in the format best suited based on the request.
 //
 // Goweb uses the WebCodecService to decide which codec to use when responding
-// see http://godoc.org/github.com/stretchrcom/codecs/services#WebCodecService for more information.
+// see http://godoc.org/github.com/stretchr/codecs/services#WebCodecService for more information.
 //
 // This method should be used when the Goweb Standard Response Object does not satisfy the needs of
 // the API, but other Respond* methods are recommended.

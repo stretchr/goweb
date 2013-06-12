@@ -1,7 +1,7 @@
 package goweb
 
 import (
-	"github.com/stretchrcom/goweb/handlers"
+	"github.com/stretchr/goweb/handlers"
 )
 
 // Map adds a new mapping to the DefaultHttpHandler.

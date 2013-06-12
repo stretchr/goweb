@@ -1,8 +1,8 @@
 package paths
 
 import (
-	"github.com/stretchrcom/stew/objects"
-	stewstrings "github.com/stretchrcom/stew/strings"
+	"github.com/stretchr/stew/objects"
+	stewstrings "github.com/stretchr/stew/strings"
 	"strings"
 )
 

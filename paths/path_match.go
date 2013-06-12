@@ -1,7 +1,7 @@
 package paths
 
 import (
-	"github.com/stretchrcom/stew/objects"
+	"github.com/stretchr/stew/objects"
 )
 
 /*

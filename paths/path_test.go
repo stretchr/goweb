@@ -1,7 +1,7 @@
 package paths
 
 import (
-	"github.com/stretchrcom/testify/assert"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
