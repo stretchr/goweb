@@ -23,7 +23,9 @@ var (
 // RequestBuilderFunc is a function that builds a TestRequest.
 type RequestBuilderFunc func() *http.Request
 
-// goweb.Test tests some functionality.
+// goweb.Test tests some functionality.  You will need to include the
+// github.com/stretchr/testify/http package in order to make use of the
+// test functionality.
 //
 // Argument signatures
 //
@@ -42,7 +44,7 @@ type RequestBuilderFunc func() *http.Request
 //     // Test(t, string, func(*testing.T, *testifyhttp.TestResponseWriter))
 //     // Makes a request with the specified method and path, and calls
 //     // the function to make the appropriate assertions.
-//     goweb.Test(t, "METHOD path", func(t *testing.T, response *TestResponse) {
+//     goweb.Test(t, "METHOD path", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 //
 //       /* assertions on the response go here */
 //
@@ -55,7 +57,7 @@ type RequestBuilderFunc func() *http.Request
 //
 //       /* build and return the http.Request */
 //
-//     }, func(t *testing.T, response *TestResponse) {
+//     }, func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 //
 //       /* assertions on the response go here */
 //
