@@ -6,6 +6,19 @@ import (
 	"net/http"
 )
 
+const (
+	// DefaultAlways200ParamName is the default parameter name that tells the GowebHTTPResponder to always
+	// return with a 200 status code.  By default, this will be "always200".
+	DefaultAlways200ParamName string = "always200"
+)
+
+var (
+	// Always200ParamName is the parameter name that tells the GowebHTTPResponder to always
+	// return with a 200 status code.  By default, this will be "always200" or DefaultAlways200ParamName.
+	Always200ParamName string = DefaultAlways200ParamName
+)
+
+// GowebHTTPResponder is the default HTTPResponder used to make responses.
 type GowebHTTPResponder struct {
 }
 
@@ -20,7 +33,17 @@ func (r *GowebHTTPResponder) With(ctx context.Context, httpStatus int, body []by
 }
 
 // WithStatus writes the specified HTTP Status Code to the Context's ResponseWriter.
+//
+// If the Always200ParamName parameter is present, it will ignore the httpStatus argument,
+// and always write net/http.StatusOK (200).
 func (r *GowebHTTPResponder) WithStatus(ctx context.Context, httpStatus int) error {
+
+	// check for always200
+	if len(ctx.FormValue(Always200ParamName)) > 0 {
+		// always return OK
+		httpStatus = http.StatusOK
+	}
+
 	ctx.HttpResponseWriter().WriteHeader(httpStatus)
 	return nil
 }

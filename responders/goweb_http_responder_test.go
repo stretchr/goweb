@@ -1,6 +1,7 @@
 package responders
 
 import (
+	"github.com/stretchr/goweb/context"
 	context_test "github.com/stretchr/goweb/webcontext/test"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -33,6 +34,22 @@ func TestHTTP_WithStatus(t *testing.T) {
 	httpResponder.WithStatus(ctx, 500)
 
 	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 500)
+
+}
+
+// https://github.com/stretchr/goweb/issues/30
+func TestHTTP_WithStatus_WithAlways200(t *testing.T) {
+
+	httpResponder := new(GowebHTTPResponder)
+	var ctx context.Context
+
+	ctx = context_test.MakeTestContextWithPath("people/123?always200=true")
+	httpResponder.WithStatus(ctx, 500)
+	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 200)
+
+	ctx = context_test.MakeTestContextWithPath("people/123?always200=1")
+	httpResponder.WithStatus(ctx, 500)
+	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 200)
 
 }
 
