@@ -1,10 +1,16 @@
 package http
 
 const (
-	MethodGet     string = "GET"
-	MethodPut     string = "PUT"
-	MethodPost    string = "POST"
-	MethodDelete  string = "DELETE"
-	MethodHead    string = "HEAD"
+	// MethodGet is a string containing the GET method, in uppercase.
+	MethodGet string = "GET"
+	// MethodPut is a string containing the PUT method, in uppercase.
+	MethodPut string = "PUT"
+	// MethodPost is a string containing the POST method, in uppercase.
+	MethodPost string = "POST"
+	// MethodDelete is a string containing the DELETE method, in uppercase.
+	MethodDelete string = "DELETE"
+	// MethodHead is a string containing the HEAD method, in uppercase.
+	MethodHead string = "HEAD"
+	// MethodOptions is a string containing the OPTIONS method, in uppercase.
 	MethodOptions string = "OPTIONS"
 )
