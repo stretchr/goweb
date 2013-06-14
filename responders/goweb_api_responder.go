@@ -96,7 +96,7 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 
 	acceptHeader := ctx.HttpRequest().Header.Get("Accept")
 	extension := ctx.FileExtension()
-	hasCallback := len(ctx.QueryValue("callback")) > 0
+	hasCallback := len(ctx.QueryValue(CallbackParameter)) > 0
 
 	codec, codecError := service.GetCodecForResponding(acceptHeader, extension, hasCallback)
 
@@ -108,7 +108,7 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 
 	// do we need to add some options?
 	if hasCallback {
-		options = map[string]interface{}{constants.OptionKeyClientCallback: ctx.QueryValue("callback")}
+		options = map[string]interface{}{constants.OptionKeyClientCallback: ctx.QueryValue(CallbackParameter)}
 	}
 
 	output, marshalErr := service.MarshalWithCodec(codec, responseObject, options)

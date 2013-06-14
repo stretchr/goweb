@@ -5,6 +5,14 @@ import (
 	"github.com/stretchr/goweb/context"
 )
 
+const (
+	DefaultCallbackParameter string = "callback"
+)
+
+var (
+	CallbackParameter string = DefaultCallbackParameter
+)
+
 /*
   APIResponder represents objects capable of provide API responses.
 */
