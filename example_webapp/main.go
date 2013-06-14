@@ -70,6 +70,10 @@ func mapRoutes() {
 
 	})
 
+	/*
+		/status-code/xxx
+		Where xxx is any HTTP status code.
+	*/
 	goweb.Map("/status-code/{code}", func(c context.Context) error {
 
 		// get the path value as an integer
@@ -79,7 +83,7 @@ func mapRoutes() {
 		}
 
 		// respond with the status
-		return goweb.Respond.WithStatus(c, statusCodeInt)
+		return goweb.Respond.WithStatusText(c, statusCodeInt)
 	})
 
 	// /errortest should throw a system error and be handled by the

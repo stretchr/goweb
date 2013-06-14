@@ -37,6 +37,18 @@ func TestHTTP_WithStatus(t *testing.T) {
 
 }
 
+func TestHTTP_WithStatusAndText(t *testing.T) {
+
+	httpResponder := new(GowebHTTPResponder)
+	ctx := context_test.MakeTestContext()
+
+	httpResponder.WithStatusText(ctx, 500)
+
+	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 500)
+	assert.Equal(t, context_test.TestResponseWriter.Output, http.StatusText(500))
+
+}
+
 // https://github.com/stretchr/goweb/issues/30
 func TestHTTP_WithStatus_WithAlways200(t *testing.T) {
 

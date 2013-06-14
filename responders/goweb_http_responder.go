@@ -48,6 +48,22 @@ func (r *GowebHTTPResponder) WithStatus(ctx context.Context, httpStatus int) err
 	return nil
 }
 
+// WithStatusText writes the specified HTTP Status Code to the Context's ResponseWriter and
+// includes a body with the default status text.
+func (r *GowebHTTPResponder) WithStatusText(ctx context.Context, httpStatus int) error {
+
+	writeStatusErr := r.WithStatus(ctx, httpStatus)
+
+	if writeStatusErr != nil {
+		return writeStatusErr
+	}
+
+	// write the body header
+	_, writeErr := ctx.HttpResponseWriter().Write([]byte(http.StatusText(httpStatus)))
+
+	return writeErr
+}
+
 // WithOK responds with a 200 OK status code, and no body.
 func (r *GowebHTTPResponder) WithOK(ctx context.Context) error {
 	return r.WithStatus(ctx, http.StatusOK)

@@ -9,6 +9,10 @@ type HTTPResponder interface {
 	// WithStatus writes the specified HTTP Status Code to the Context's ResponseWriter.
 	WithStatus(ctx context.Context, httpStatus int) error
 
+	// WithStatusText writes the specified HTTP Status Code to the Context's ResponseWriter and
+	// includes a body with the default status text.
+	WithStatusText(ctx context.Context, httpStatus int) error
+
 	// WithOK responds with a 200 OK status code, and no body.
 	WithOK(ctx context.Context) error
 
