@@ -18,9 +18,16 @@ const (
 )
 
 type GowebAPIResponder struct {
+	// httpResponder is the internal HTTPResponder that will be used to
+	// actually respond to the client.
 	httpResponder HTTPResponder
-	codecService  codecservices.CodecService
 
+	// codecService is the codecservices.CodecService that will be used to
+	// translate between bytes and objects.
+	codecService codecservices.CodecService
+
+	// transformer is the func that will be used to transform the standard
+	// response object before it is returned.
 	transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)
 
 	// field names
