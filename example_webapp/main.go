@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 )
 
@@ -67,6 +68,18 @@ func mapRoutes() {
 			return goweb.API.Respond(c, 200, "Yes, this worked but you didn't specify an ID", nil)
 		}
 
+	})
+
+	goweb.Map("/status-code/{code}", func(c context.Context) error {
+
+		// get the path value as an integer
+		statusCodeInt, statusCodeIntErr := strconv.Atoi(c.PathValue("code"))
+		if statusCodeIntErr != nil {
+			return goweb.Respond.With(c, http.StatusInternalServerError, []byte("Failed to convert 'code' into a real status code number."))
+		}
+
+		// respond with the status
+		return goweb.Respond.WithStatus(c, statusCodeInt)
 	})
 
 	// /errortest should throw a system error and be handled by the
@@ -156,6 +169,7 @@ func main() {
 	log.Println("")
 	log.Print("Some things to try in your browser:")
 	log.Printf("\t  http://localhost%s", Address)
+	log.Printf("\t  http://localhost%s/status-code/404", Address)
 	log.Printf("\t  http://localhost%s/people", Address)
 	log.Printf("\t  http://localhost%s/people/123", Address)
 	log.Printf("\t  http://localhost%s/people/anything", Address)
