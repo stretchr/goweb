@@ -355,10 +355,10 @@ func TestMapController_WithMatcherFuncs(t *testing.T) {
 
 	assert.Equal(t, 10, len(handler.HandlersPipe()))
 
-	var h Handler
+	var h *PathMatchHandler
 	for i := 0; i < 10; i++ {
 		h = handler.HandlersPipe()[i].(*PathMatchHandler)
-		assertEqual(t, 1, len(h.MatcherFuncs))
+		assert.Equal(t, 1, len(h.MatcherFuncs))
 		assert.Equal(t, matcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
 	}
 
