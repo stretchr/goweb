@@ -210,10 +210,10 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
 
 		// map the collective before handler
-		h.MapBefore(collectiveMethods, path, beforeController.Before, matcherFuncs...)
+		h.MapBefore(collectiveMethods, path, beforeController.Before, matcherFuncs)
 
 		// map the singular before handler
-		h.MapBefore(singularMethods, pathWithID, beforeController.Before, matcherFuncs...)
+		h.MapBefore(singularMethods, pathWithID, beforeController.Before, matcherFuncs)
 
 	}
 
@@ -221,70 +221,70 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if afterController, ok := controller.(controllers.AfterHandler); ok {
 
 		// map the collective after handler
-		h.MapAfter(collectiveMethods, path, afterController.After, matcherFuncs...)
+		h.MapAfter(collectiveMethods, path, afterController.After, matcherFuncs)
 
 		// map the singular after handler
-		h.MapAfter(singularMethods, pathWithID, afterController.After, matcherFuncs...)
+		h.MapAfter(singularMethods, pathWithID, afterController.After, matcherFuncs)
 
 	}
 
 	// POST /resource  -  Create
 	if restfulController, ok := controller.(controllers.RestfulCreator); ok {
-		h.Map(http.MethodPost, path, restfulController.Create, matcherFuncs...)
+		h.Map(http.MethodPost, path, restfulController.Create, matcherFuncs)
 	}
 
 	// GET /resource/{id}  -  Read
 	if restfulController, ok := controller.(controllers.RestfulReader); ok {
 		h.Map(http.MethodGet, pathWithID, func(ctx context.Context) error {
 			return restfulController.Read(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		}, matcherFuncs...)
+		}, matcherFuncs)
 	}
 
 	// GET /resource  -  ReadMany
 	if restfulController, ok := controller.(controllers.RestfulManyReader); ok {
-		h.Map(http.MethodGet, path, restfulController.ReadMany, matcherFuncs...)
+		h.Map(http.MethodGet, path, restfulController.ReadMany, matcherFuncs)
 	}
 
 	// DELETE /resource/{id}  -  Delete
 	if restfulController, ok := controller.(controllers.RestfulDeletor); ok {
 		h.Map(http.MethodDelete, pathWithID, func(ctx context.Context) error {
 			return restfulController.Delete(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		}, matcherFuncs...)
+		}, matcherFuncs)
 	}
 
 	// DELETE /resource  -  DeleteMany
 	if restfulController, ok := controller.(controllers.RestfulManyDeleter); ok {
-		h.Map(http.MethodDelete, path, restfulController.DeleteMany, matcherFuncs...)
+		h.Map(http.MethodDelete, path, restfulController.DeleteMany, matcherFuncs)
 	}
 
 	// PUT /resource/{id}  -  Update
 	if restfulController, ok := controller.(controllers.RestfulUpdater); ok {
 		h.Map(http.MethodPut, pathWithID, func(ctx context.Context) error {
 			return restfulController.Update(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		}, matcherFuncs...)
+		}, matcherFuncs)
 	}
 
 	// PUT /resource  -  UpdateMany
 	if restfulController, ok := controller.(controllers.RestfulManyUpdater); ok {
-		h.Map(http.MethodPut, path, restfulController.UpdateMany, matcherFuncs...)
+		h.Map(http.MethodPut, path, restfulController.UpdateMany, matcherFuncs)
 	}
 
 	// POST /resource/{id}  -  Replace
 	if restfulController, ok := controller.(controllers.RestfulReplacer); ok {
 		h.Map(http.MethodPost, pathWithID, func(ctx context.Context) error {
 			return restfulController.Replace(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		}, matcherFuncs...)
+		}, matcherFuncs)
 	}
 
 	// HEAD /resource/[id]  -  Head
 	if restfulController, ok := controller.(controllers.RestfulHead); ok {
-		h.Map(http.MethodHead, pathWithOptionalID, restfulController.Head, matcherFuncs...)
+		h.Map(http.MethodHead, pathWithOptionalID, restfulController.Head, matcherFuncs)
 	}
 
 	// OPTIONS /resource/[id]  -  Options
 	if restfulController, ok := controller.(controllers.RestfulOptions); ok {
 
-		h.Map(http.MethodOptions, pathWithOptionalID, restfulController.Options, matcherFuncs...)
+		h.Map(http.MethodOptions, pathWithOptionalID, restfulController.Options, matcherFuncs)
 
 	} else {
 
@@ -294,13 +294,13 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 			ctx.HttpResponseWriter().Header().Set("Allow", strings.Join(collectiveMethods, ","))
 			ctx.HttpResponseWriter().WriteHeader(200)
 			return nil
-		}, matcherFuncs...)
+		}, matcherFuncs)
 
 		h.Map(http.MethodOptions, pathWithID, func(ctx context.Context) error {
 			ctx.HttpResponseWriter().Header().Set("Allow", strings.Join(singularMethods, ","))
 			ctx.HttpResponseWriter().WriteHeader(200)
 			return nil
-		}, matcherFuncs...)
+		}, matcherFuncs)
 
 	}
 
@@ -321,7 +321,7 @@ func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string, matcherFu
 
 		return nil
 
-	}, matcherFuncs...)
+	}, matcherFuncs)
 
 	if mapErr != nil {
 		return handler, mapErr
@@ -358,7 +358,7 @@ func (h *HttpHandler) MapStatic(publicPath, systemPath string, matcherFuncs ...i
 
 		return nil
 
-	}, matcherFuncs...)
+	}, matcherFuncs)
 
 	if mapErr != nil {
 		return handler, mapErr
