@@ -21,6 +21,25 @@ var (
 	RestfulIDParameterName string = "id"
 )
 
+// Look for supported MatcherFunc option types and return a full list of
+// all MatcherFuncs found.
+func loadMatcherFuncs(options ...interface{}) []MatcherFunc {
+	var matcherFuncs []MatcherFunc
+	for i := 0; i < len(options); i++ {
+		switch options[i].(type) {
+		case MatcherFunc:
+			matcher := options[i].(MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matcher)
+		case []MatcherFunc:
+			matchers := options[i].([]MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matchers...)
+		default:
+			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to Map must be of type MatcherFunc or []MatcherFunc, but was %s.", i+1, i, options[i]))
+		}
+	}
+	return matcherFuncs
+}
+
 // handlerForOptions gets or creates a Handler object based on the specified
 // options.  See goweb.Map for details of valid options.
 func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error) {
@@ -68,19 +87,7 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 	}
 
 	// collect the matcher funcs
-	var matcherFuncs []MatcherFunc
-	for i := matcherFuncStartPos; i < len(options); i++ {
-		switch options[i].(type) {
-		case MatcherFunc:
-			matcher := options[i].(MatcherFunc)
-			matcherFuncs = append(matcherFuncs, matcher)
-		case []MatcherFunc:
-			matchers := options[i].([]MatcherFunc)
-			matcherFuncs = append(matcherFuncs, matchers...)
-		default:
-			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to Map must be of type MatcherFunc or []MatcherFunc, but was %s.", i+1, i, options[i]))
-		}
-	}
+	var matcherFuncs []MatcherFunc = loadMatcherFuncs(options[matcherFuncStartPos:]...)
 
 	pathPattern, pathErr := paths.NewPathPattern(path)
 
@@ -201,19 +208,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	}
 
 	// store the matcher function slice
-	var matcherFuncs []MatcherFunc
-	for i := matcherFuncStartPos; i < len(options); i++ {
-		switch options[i].(type) {
-		case MatcherFunc:
-			matcher := options[i].(MatcherFunc)
-			matcherFuncs = append(matcherFuncs, matcher)
-		case []MatcherFunc:
-			matchers := options[i].([]MatcherFunc)
-			matcherFuncs = append(matcherFuncs, matchers...)
-		default:
-			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to MapController must be of type MatcherFunc or []MatcherFunc, but was %s.", i+1, i, options[i]))
-		}
-	}
+	var matcherFuncs []MatcherFunc = loadMatcherFuncs(options[matcherFuncStartPos:]...)
 
 	// get the specialised paths that we might need
 	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}")         // e.g.  people/123
