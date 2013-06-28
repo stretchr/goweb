@@ -70,10 +70,15 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 	// collect the matcher funcs
 	var matcherFuncs []MatcherFunc
 	for i := matcherFuncStartPos; i < len(options); i++ {
-		if matcherFunc, ok := options[i].(MatcherFunc); ok {
-			matcherFuncs = append(matcherFuncs, matcherFunc)
-		} else {
-			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to Map must be of type MatcherFunc but was %s.", i+1, i, options[i]))
+		switch options[i].(type) {
+		case MatcherFunc:
+			matcher := options[i].(MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matcher)
+		case []MatcherFunc:
+			matchers := options[i].([]MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matchers...)
+		default:
+			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to Map must be of type MatcherFunc or []MatcherFunc, but was %s.", i+1, i, options[i]))
 		}
 	}
 
@@ -196,7 +201,19 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	}
 
 	// store the matcher function slice
-	matcherFuncs := options[matcherFuncStartPos:]
+	var matcherFuncs []MatcherFunc
+	for i := matcherFuncStartPos; i < len(options); i++ {
+		switch options[i].(type) {
+		case MatcherFunc:
+			matcher := options[i].(MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matcher)
+		case []MatcherFunc:
+			matchers := options[i].([]MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matchers...)
+		default:
+			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to MapController must be of type MatcherFunc or []MatcherFunc, but was %s.", i+1, i, options[i]))
+		}
+	}
 
 	// get the specialised paths that we might need
 	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}")         // e.g.  people/123
@@ -313,7 +330,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 // specified publicPath.
 //
 //     goweb.MapStaticFile("favicon.ico", "/location/on/system/to/icons/favicon.ico")
-func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...interface{}) (Handler, error) {
+func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...MatcherFunc) (Handler, error) {
 
 	handler, mapErr := h.Map(http.MethodGet, publicPath, func(ctx context.Context) error {
 
@@ -338,7 +355,7 @@ func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string, matcherFu
 // specified publicPath.
 //
 //     goweb.MapStatic("/static", "/location/on/system/to/files")
-func (h *HttpHandler) MapStatic(publicPath, systemPath string, matcherFuncs ...interface{}) (Handler, error) {
+func (h *HttpHandler) MapStatic(publicPath, systemPath string, matcherFuncs ...MatcherFunc) (Handler, error) {
 
 	path := paths.NewPath(publicPath)
 	var dynamicPath string = path.RawPath
