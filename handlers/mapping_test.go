@@ -15,6 +15,26 @@ import (
 	"testing"
 )
 
+func TestFindMatcherFuncs(t *testing.T) {
+
+	matcher := func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	}
+
+	castMatcher := MatcherFunc(func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	matchers := []MatcherFunc{func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	}}
+
+	allMatchers := append(matchers, castMatcher, MatcherFunc(matcher))
+
+	assert.Equal(t, allMatchers, findMatcherFuncs(matchers, castMatcher, matcher))
+
+}
+
 func TestHandlerForOptions_PlainHandler(t *testing.T) {
 
 	codecService := new(codecservices.WebCodecService)
@@ -341,6 +361,30 @@ func TestMapController(t *testing.T) {
 
 }
 
+func TestMapController_WithMatcherFuncs(t *testing.T) {
+	rest := new(controllers_test.TestController)
+
+	codecService := new(codecservices.WebCodecService)
+	handler := NewHttpHandler(codecService)
+
+	matcherFunc := func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	}
+
+	handler.MapController(rest, matcherFunc)
+
+	assert.Equal(t, 10, len(handler.HandlersPipe()))
+
+	castMatcherFunc := MatcherFunc(matcherFunc)
+	var h *PathMatchHandler
+	for i := 0; i < 10; i++ {
+		h = handler.HandlersPipe()[i].(*PathMatchHandler)
+		assert.Equal(t, 1, len(h.MatcherFuncs))
+		assert.Equal(t, castMatcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
+	}
+
+}
+
 func TestMapController_WithSpecificPath(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
@@ -485,6 +529,23 @@ func TestMapStatic(t *testing.T) {
 
 }
 
+func TestMapStatic_WithMatcherFuncs(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
+
+	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	h.MapStatic("/static", "/location/of/static", matcherFunc)
+
+	assert.Equal(t, 1, len(h.HandlersPipe()))
+	staticHandler := h.HandlersPipe()[0].(*PathMatchHandler)
+	assert.Equal(t, 1, len(staticHandler.MatcherFuncs))
+	assert.Equal(t, matcherFunc, staticHandler.MatcherFuncs[0], "Matcher func (first)")
+}
+
 func TestMapStaticFile(t *testing.T) {
 
 	codecService := new(codecservices.WebCodecService)
@@ -519,4 +580,21 @@ func TestMapStaticFile(t *testing.T) {
 	willHandle, _ = staticHandler.WillHandle(ctx)
 	assert.False(t, willHandle, "Static handler NOT should handle")
 
+}
+
+func TestMapStaticFile_WithMatcherFuncs(t *testing.T) {
+
+	codecService := new(codecservices.WebCodecService)
+	h := NewHttpHandler(codecService)
+
+	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	h.MapStaticFile("/static-file", "/location/of/static-file", matcherFunc)
+
+	assert.Equal(t, 1, len(h.HandlersPipe()))
+	staticHandler := h.HandlersPipe()[0].(*PathMatchHandler)
+	assert.Equal(t, 1, len(staticHandler.MatcherFuncs))
+	assert.Equal(t, matcherFunc, staticHandler.MatcherFuncs[0], "Matcher func (first)")
 }

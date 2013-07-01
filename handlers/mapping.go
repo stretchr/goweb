@@ -21,6 +21,28 @@ var (
 	RestfulIDParameterName string = "id"
 )
 
+// Look for supported MatcherFunc option types and return a full list of
+// all MatcherFuncs found.
+func findMatcherFuncs(options ...interface{}) []MatcherFunc {
+	var matcherFuncs []MatcherFunc
+	for i := 0; i < len(options); i++ {
+		switch options[i].(type) {
+		case func(context.Context) (MatcherFuncDecision, error):
+			matcher := options[i].(func(context.Context) (MatcherFuncDecision, error))
+			matcherFuncs = append(matcherFuncs, MatcherFunc(matcher))
+		case MatcherFunc:
+			matcher := options[i].(MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matcher)
+		case []MatcherFunc:
+			matchers := options[i].([]MatcherFunc)
+			matcherFuncs = append(matcherFuncs, matchers...)
+		default:
+			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to Map must be of type MatcherFunc or []MatcherFunc, but was %s.", i+1, i, options[i]))
+		}
+	}
+	return matcherFuncs
+}
+
 // handlerForOptions gets or creates a Handler object based on the specified
 // options.  See goweb.Map for details of valid options.
 func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error) {
@@ -68,14 +90,7 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 	}
 
 	// collect the matcher funcs
-	var matcherFuncs []MatcherFunc
-	for i := matcherFuncStartPos; i < len(options); i++ {
-		if matcherFunc, ok := options[i].(MatcherFunc); ok {
-			matcherFuncs = append(matcherFuncs, matcherFunc)
-		} else {
-			panic(fmt.Sprintf("goweb: Argument %d (index %d) passed to Map must be of type MatcherFunc but was %s.", i+1, i, options[i]))
-		}
-	}
+	var matcherFuncs []MatcherFunc = findMatcherFuncs(options[matcherFuncStartPos:]...)
 
 	pathPattern, pathErr := paths.NewPathPattern(path)
 
@@ -165,14 +180,25 @@ func (h *HttpHandler) MapAfter(options ...interface{}) (Handler, error) {
 // For more information, see goweb.MapController.
 func (h *HttpHandler) MapController(options ...interface{}) error {
 
+	var matcherFuncStartPos int = -1
 	var path string
 	var controller interface{}
 
-	switch len(options) {
-	case 0: // ()
+	if len(options) == 0 {
 		// no arguments is an error
 		panic("goweb: Cannot call MapController with no arguments")
-	case 1: // (controller)
+	}
+
+	switch options[0].(type) {
+	case string: // (path, controller)
+		if len(options) == 1 {
+			// we need more than just a string
+			panic("goweb: Cannot call MapController without a Controller")
+		}
+		path = options[0].(string)
+		controller = options[1]
+		matcherFuncStartPos = 2
+	default: // (controller)
 		if restfulController, ok := options[0].(controllers.RestfulController); ok {
 			controller = restfulController
 			path = restfulController.Path()
@@ -181,11 +207,11 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 			controller = options[0]
 			path = paths.PathPrefixForClass(options[0])
 		}
-		break
-	case 2: // (path, controller)
-		path = options[0].(string)
-		controller = options[1]
+		matcherFuncStartPos = 1
 	}
+
+	// store the matcher function slice
+	var matcherFuncs []MatcherFunc = findMatcherFuncs(options[matcherFuncStartPos:]...)
 
 	// get the specialised paths that we might need
 	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}")         // e.g.  people/123
@@ -199,10 +225,10 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
 
 		// map the collective before handler
-		h.MapBefore(collectiveMethods, path, beforeController.Before)
+		h.MapBefore(collectiveMethods, path, beforeController.Before, matcherFuncs)
 
 		// map the singular before handler
-		h.MapBefore(singularMethods, pathWithID, beforeController.Before)
+		h.MapBefore(singularMethods, pathWithID, beforeController.Before, matcherFuncs)
 
 	}
 
@@ -210,70 +236,70 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	if afterController, ok := controller.(controllers.AfterHandler); ok {
 
 		// map the collective after handler
-		h.MapAfter(collectiveMethods, path, afterController.After)
+		h.MapAfter(collectiveMethods, path, afterController.After, matcherFuncs)
 
 		// map the singular after handler
-		h.MapAfter(singularMethods, pathWithID, afterController.After)
+		h.MapAfter(singularMethods, pathWithID, afterController.After, matcherFuncs)
 
 	}
 
 	// POST /resource  -  Create
 	if restfulController, ok := controller.(controllers.RestfulCreator); ok {
-		h.Map(http.MethodPost, path, restfulController.Create)
+		h.Map(http.MethodPost, path, restfulController.Create, matcherFuncs)
 	}
 
 	// GET /resource/{id}  -  Read
 	if restfulController, ok := controller.(controllers.RestfulReader); ok {
 		h.Map(http.MethodGet, pathWithID, func(ctx context.Context) error {
 			return restfulController.Read(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		})
+		}, matcherFuncs)
 	}
 
 	// GET /resource  -  ReadMany
 	if restfulController, ok := controller.(controllers.RestfulManyReader); ok {
-		h.Map(http.MethodGet, path, restfulController.ReadMany)
+		h.Map(http.MethodGet, path, restfulController.ReadMany, matcherFuncs)
 	}
 
 	// DELETE /resource/{id}  -  Delete
 	if restfulController, ok := controller.(controllers.RestfulDeletor); ok {
 		h.Map(http.MethodDelete, pathWithID, func(ctx context.Context) error {
 			return restfulController.Delete(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		})
+		}, matcherFuncs)
 	}
 
 	// DELETE /resource  -  DeleteMany
 	if restfulController, ok := controller.(controllers.RestfulManyDeleter); ok {
-		h.Map(http.MethodDelete, path, restfulController.DeleteMany)
+		h.Map(http.MethodDelete, path, restfulController.DeleteMany, matcherFuncs)
 	}
 
 	// PUT /resource/{id}  -  Update
 	if restfulController, ok := controller.(controllers.RestfulUpdater); ok {
 		h.Map(http.MethodPut, pathWithID, func(ctx context.Context) error {
 			return restfulController.Update(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		})
+		}, matcherFuncs)
 	}
 
 	// PUT /resource  -  UpdateMany
 	if restfulController, ok := controller.(controllers.RestfulManyUpdater); ok {
-		h.Map(http.MethodPut, path, restfulController.UpdateMany)
+		h.Map(http.MethodPut, path, restfulController.UpdateMany, matcherFuncs)
 	}
 
 	// POST /resource/{id}  -  Replace
 	if restfulController, ok := controller.(controllers.RestfulReplacer); ok {
 		h.Map(http.MethodPost, pathWithID, func(ctx context.Context) error {
 			return restfulController.Replace(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
-		})
+		}, matcherFuncs)
 	}
 
 	// HEAD /resource/[id]  -  Head
 	if restfulController, ok := controller.(controllers.RestfulHead); ok {
-		h.Map(http.MethodHead, pathWithOptionalID, restfulController.Head)
+		h.Map(http.MethodHead, pathWithOptionalID, restfulController.Head, matcherFuncs)
 	}
 
 	// OPTIONS /resource/[id]  -  Options
 	if restfulController, ok := controller.(controllers.RestfulOptions); ok {
 
-		h.Map(http.MethodOptions, pathWithOptionalID, restfulController.Options)
+		h.Map(http.MethodOptions, pathWithOptionalID, restfulController.Options, matcherFuncs)
 
 	} else {
 
@@ -283,13 +309,13 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 			ctx.HttpResponseWriter().Header().Set("Allow", strings.Join(collectiveMethods, ","))
 			ctx.HttpResponseWriter().WriteHeader(200)
 			return nil
-		})
+		}, matcherFuncs)
 
 		h.Map(http.MethodOptions, pathWithID, func(ctx context.Context) error {
 			ctx.HttpResponseWriter().Header().Set("Allow", strings.Join(singularMethods, ","))
 			ctx.HttpResponseWriter().WriteHeader(200)
 			return nil
-		})
+		}, matcherFuncs)
 
 	}
 
@@ -302,7 +328,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 // specified publicPath.
 //
 //     goweb.MapStaticFile("favicon.ico", "/location/on/system/to/icons/favicon.ico")
-func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string) (Handler, error) {
+func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...MatcherFunc) (Handler, error) {
 
 	handler, mapErr := h.Map(http.MethodGet, publicPath, func(ctx context.Context) error {
 
@@ -310,7 +336,7 @@ func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string) (Handler,
 
 		return nil
 
-	})
+	}, matcherFuncs)
 
 	if mapErr != nil {
 		return handler, mapErr
@@ -327,7 +353,7 @@ func (h *HttpHandler) MapStaticFile(publicPath, staticFilePath string) (Handler,
 // specified publicPath.
 //
 //     goweb.MapStatic("/static", "/location/on/system/to/files")
-func (h *HttpHandler) MapStatic(publicPath, systemPath string) (Handler, error) {
+func (h *HttpHandler) MapStatic(publicPath, systemPath string, matcherFuncs ...MatcherFunc) (Handler, error) {
 
 	path := paths.NewPath(publicPath)
 	var dynamicPath string = path.RawPath
@@ -347,7 +373,7 @@ func (h *HttpHandler) MapStatic(publicPath, systemPath string) (Handler, error) 
 
 		return nil
 
-	})
+	}, matcherFuncs)
 
 	if mapErr != nil {
 		return handler, mapErr
