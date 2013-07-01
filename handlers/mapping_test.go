@@ -15,6 +15,26 @@ import (
 	"testing"
 )
 
+func TestFindMatcherFuncs(t *testing.T) {
+
+	matcher := func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	}
+
+	castMatcher := MatcherFunc(func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	})
+
+	matchers := []MatcherFunc{func(ctx context.Context) (MatcherFuncDecision, error) {
+		return Match, nil
+	}}
+
+	allMatchers := append(matchers, castMatcher, MatcherFunc(matcher))
+
+	assert.Equal(t, allMatchers, findMatcherFuncs(matchers, castMatcher, matcher))
+
+}
+
 func TestHandlerForOptions_PlainHandler(t *testing.T) {
 
 	codecService := new(codecservices.WebCodecService)
@@ -347,19 +367,20 @@ func TestMapController_WithMatcherFuncs(t *testing.T) {
 	codecService := new(codecservices.WebCodecService)
 	handler := NewHttpHandler(codecService)
 
-	matcherFunc := MatcherFunc(func(ctx context.Context) (MatcherFuncDecision, error) {
+	matcherFunc := func(ctx context.Context) (MatcherFuncDecision, error) {
 		return Match, nil
-	})
+	}
 
 	handler.MapController(rest, matcherFunc)
 
 	assert.Equal(t, 10, len(handler.HandlersPipe()))
 
+	castMatcherFunc := MatcherFunc(matcherFunc)
 	var h *PathMatchHandler
 	for i := 0; i < 10; i++ {
 		h = handler.HandlersPipe()[i].(*PathMatchHandler)
 		assert.Equal(t, 1, len(h.MatcherFuncs))
-		assert.Equal(t, matcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
+		assert.Equal(t, castMatcherFunc, h.MatcherFuncs[0], "Matcher func (first)")
 	}
 
 }

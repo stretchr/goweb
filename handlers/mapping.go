@@ -23,10 +23,13 @@ var (
 
 // Look for supported MatcherFunc option types and return a full list of
 // all MatcherFuncs found.
-func loadMatcherFuncs(options ...interface{}) []MatcherFunc {
+func findMatcherFuncs(options ...interface{}) []MatcherFunc {
 	var matcherFuncs []MatcherFunc
 	for i := 0; i < len(options); i++ {
 		switch options[i].(type) {
+		case func(context.Context) (MatcherFuncDecision, error):
+			matcher := options[i].(func(context.Context) (MatcherFuncDecision, error))
+			matcherFuncs = append(matcherFuncs, MatcherFunc(matcher))
 		case MatcherFunc:
 			matcher := options[i].(MatcherFunc)
 			matcherFuncs = append(matcherFuncs, matcher)
@@ -87,7 +90,7 @@ func (h *HttpHandler) handlerForOptions(options ...interface{}) (Handler, error)
 	}
 
 	// collect the matcher funcs
-	var matcherFuncs []MatcherFunc = loadMatcherFuncs(options[matcherFuncStartPos:]...)
+	var matcherFuncs []MatcherFunc = findMatcherFuncs(options[matcherFuncStartPos:]...)
 
 	pathPattern, pathErr := paths.NewPathPattern(path)
 
@@ -208,7 +211,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	}
 
 	// store the matcher function slice
-	var matcherFuncs []MatcherFunc = loadMatcherFuncs(options[matcherFuncStartPos:]...)
+	var matcherFuncs []MatcherFunc = findMatcherFuncs(options[matcherFuncStartPos:]...)
 
 	// get the specialised paths that we might need
 	pathWithID := stewstrings.MergeStrings(path, "/{", RestfulIDParameterName, "}")         // e.g.  people/123
