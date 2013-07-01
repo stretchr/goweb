@@ -3,7 +3,7 @@ package responders
 import (
 	"github.com/stretchr/codecs"
 	"github.com/stretchr/codecs/constants"
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 	"net/http"
 )
@@ -22,9 +22,9 @@ type GowebAPIResponder struct {
 	// actually respond to the client.
 	httpResponder HTTPResponder
 
-	// codecService is the codecservices.CodecService that will be used to
+	// codecService is the codecsservices.CodecService that will be used to
 	// translate between bytes and objects.
-	codecService codecservices.CodecService
+	codecService codecsservices.CodecService
 
 	// transformer is the func that will be used to transform the standard
 	// response object before it is returned.
@@ -42,7 +42,7 @@ type GowebAPIResponder struct {
 	StandardFieldErrorsKey string
 }
 
-func NewGowebAPIResponder(codecService codecservices.CodecService, httpResponder HTTPResponder) *GowebAPIResponder {
+func NewGowebAPIResponder(codecService codecsservices.CodecService, httpResponder HTTPResponder) *GowebAPIResponder {
 	api := new(GowebAPIResponder)
 	api.SetCodecService(codecService)
 	api.httpResponder = httpResponder
@@ -53,15 +53,15 @@ func NewGowebAPIResponder(codecService codecservices.CodecService, httpResponder
 }
 
 // SetCodecService sets the codec service to use.
-func (a *GowebAPIResponder) SetCodecService(service codecservices.CodecService) {
+func (a *GowebAPIResponder) SetCodecService(service codecsservices.CodecService) {
 	a.codecService = service
 }
 
 // GetCodecService gets the codec service that will be used by this object.
-func (a *GowebAPIResponder) GetCodecService() codecservices.CodecService {
+func (a *GowebAPIResponder) GetCodecService() codecsservices.CodecService {
 
 	if a.codecService == nil {
-		a.codecService = new(codecservices.WebCodecService)
+		a.codecService = codecsservices.NewWebCodecService()
 	}
 
 	return a.codecService

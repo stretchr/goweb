@@ -1,7 +1,7 @@
 package webcontext
 
 import (
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 	"github.com/stretchr/stew/objects"
 	"github.com/stretchr/testify/assert"
@@ -15,7 +15,7 @@ func TestNewContext(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -35,7 +35,7 @@ func TestSetHttpResponseWriter(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -57,7 +57,7 @@ func TestSetHttpResponseWriter(t *testing.T) {
 func TestFileExtension(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	testRequest, _ := http.NewRequest("get", "http://goweb.org/people/123.json", nil)
 	c := NewWebContext(responseWriter, testRequest, codecService)
@@ -82,7 +82,7 @@ func TestMethodString(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("get", "http://goweb.org/people/123", nil)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -127,7 +127,7 @@ func TestPathParams(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", nil)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 	c.Data().Set(context.DataKeyPathParameters, objects.Map{"animal": "monkey"})
@@ -143,7 +143,7 @@ func TestRequestData(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", strings.NewReader("{\"something\":true}"))
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -162,7 +162,7 @@ func TestRequestData_ArrayOfData(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -187,7 +187,7 @@ func TestPostParams(t *testing.T) {
 	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
 	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -211,7 +211,7 @@ func TestPostValues(t *testing.T) {
 	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
 	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -233,7 +233,7 @@ func TestPostValue(t *testing.T) {
 	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
 	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -254,7 +254,7 @@ func TestFormParams(t *testing.T) {
 	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
 	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -278,7 +278,7 @@ func TestFormValues(t *testing.T) {
 	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
 	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -300,7 +300,7 @@ func TestFormValue(t *testing.T) {
 	testRequest, _ := http.NewRequest("POST", "http://goweb.org/people/123?query=yes", strings.NewReader("name=Mat&name=Laurie&age=30&something=true"))
 	testRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -320,7 +320,7 @@ func TestQueryParams(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123?name=Mat&name=Laurie&age=30&something=true", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -342,7 +342,7 @@ func TestQueryValues(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123?name=Mat&name=Laurie&age=30&something=true", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 
@@ -362,7 +362,7 @@ func TestQueryValue(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://goweb.org/people/123?name=Mat&name=Laurie&age=30&something=true", strings.NewReader("[{\"something\":true},{\"something\":false}]"))
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
 

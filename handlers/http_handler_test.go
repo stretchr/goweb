@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"errors"
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 	handlers_test "github.com/stretchr/goweb/handlers/test"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +14,7 @@ import (
 
 func TestNewHttpHandler(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	assert.Equal(t, 3, len(h.Handlers))
@@ -24,7 +24,7 @@ func TestNewHttpHandler(t *testing.T) {
 
 func TestAppendHandler(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler1 := new(handlers_test.TestHandler)
 	h := NewHttpHandler(codecService)
 
@@ -42,7 +42,7 @@ func TestAppendHandler(t *testing.T) {
 func TestAppendPreHandler(t *testing.T) {
 
 	handler1 := new(handlers_test.TestHandler)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	handler1.On("WillHandle", mock.Anything).Return(true, nil)
@@ -59,7 +59,7 @@ func TestAppendPreHandler(t *testing.T) {
 func TestAppendPostHandler(t *testing.T) {
 
 	handler1 := new(handlers_test.TestHandler)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	handler1.On("WillHandle", mock.Anything).Return(true, nil)
@@ -77,7 +77,7 @@ func TestPrependPreHandler(t *testing.T) {
 
 	handler1 := new(handlers_test.TestHandler)
 	handler2 := new(handlers_test.TestHandler)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	handler1.TestData().Set("id", 1)
@@ -104,7 +104,7 @@ func TestPrependPostHandler(t *testing.T) {
 
 	handler1 := new(handlers_test.TestHandler)
 	handler2 := new(handlers_test.TestHandler)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	handler1.TestData().Set("id", 1)
@@ -131,7 +131,7 @@ func TestServeHTTP(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://stretchr.org/goweb", nil)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	// setup some test handlers
@@ -176,7 +176,7 @@ func TestServeHTTP(t *testing.T) {
 
 func TestGetAndSetErrorHandler(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	errorHandler := new(handlers_test.TestHandler)
@@ -197,7 +197,7 @@ func TestErrorHandlerGetsUsedOnError(t *testing.T) {
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://stretchr.org/goweb", nil)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	errorHandler := new(handlers_test.TestHandler)

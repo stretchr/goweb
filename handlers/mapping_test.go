@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 	controllers_test "github.com/stretchr/goweb/controllers/test"
 	handlers_test "github.com/stretchr/goweb/handlers/test"
@@ -37,7 +37,7 @@ func TestFindMatcherFuncs(t *testing.T) {
 
 func TestHandlerForOptions_PlainHandler(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	httpHandler := NewHttpHandler(codecService)
 	handler1 := new(handlers_test.TestHandler)
 
@@ -50,7 +50,7 @@ func TestHandlerForOptions_PlainHandler(t *testing.T) {
 // https://github.com/stretchr/goweb/issues/19
 func TestMappedHandlersBreakExecution(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	handlerCalled := false
@@ -74,7 +74,7 @@ func TestMappedHandlersBreakExecution(t *testing.T) {
 
 func TestMap(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	called := false
@@ -94,7 +94,7 @@ func TestMap(t *testing.T) {
 
 func TestMap_WithSpecificMethod(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	called := false
@@ -116,7 +116,7 @@ func TestMap_WithSpecificMethod(t *testing.T) {
 
 func TestMap_WithSpecificMethods(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	called := false
@@ -138,7 +138,7 @@ func TestMap_WithSpecificMethods(t *testing.T) {
 
 func TestMap_WithMatcherFuncs(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
@@ -158,7 +158,7 @@ func TestMap_WithMatcherFuncs(t *testing.T) {
 
 func TestMap_CatchAllAssumption(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	called := false
@@ -182,7 +182,7 @@ func TestMap_CatchAllAssumption(t *testing.T) {
 
 func TestMapBefore_WithMatcherFuncs(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
@@ -203,7 +203,7 @@ func TestMapBefore_WithMatcherFuncs(t *testing.T) {
 
 func TestMapAfter_WithMatcherFuncs(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
@@ -226,7 +226,7 @@ func TestBeforeAndAfterHandlers(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)
 	testRequest, _ := http.NewRequest("GET", "http://stretchr.org/goweb", nil)
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	// setup some test handlers
@@ -300,7 +300,7 @@ func TestMapRest_SemiInterface(t *testing.T) {
 
 	semi := new(controllers_test.TestSemiRestfulController)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 	h.MapController(semi)
 
@@ -321,7 +321,7 @@ func TestMapController(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 	h.MapController(rest)
 
@@ -364,7 +364,7 @@ func TestMapController(t *testing.T) {
 func TestMapController_WithMatcherFuncs(t *testing.T) {
 	rest := new(controllers_test.TestController)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	handler := NewHttpHandler(codecService)
 
 	matcherFunc := func(ctx context.Context) (MatcherFuncDecision, error) {
@@ -389,7 +389,7 @@ func TestMapController_WithSpecificPath(t *testing.T) {
 
 	rest := new(controllers_test.TestController)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 	h.MapController("something", rest)
 
@@ -433,7 +433,7 @@ func TestMapController_DefaultOptions(t *testing.T) {
 
 	semi := new(controllers_test.TestSemiRestfulController)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 	h.MapController(semi)
 
@@ -456,7 +456,7 @@ func TestBeforeHandler(t *testing.T) {
 
 	cont := new(controllers_test.TestHandlerWithBeforeAndAfters)
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	h.MapController(cont)
@@ -479,7 +479,7 @@ func TestBeforeHandler(t *testing.T) {
 
 func TestMapStatic(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	h.MapStatic("/static", "/location/of/static")
@@ -531,7 +531,7 @@ func TestMapStatic(t *testing.T) {
 
 func TestMapStatic_WithMatcherFuncs(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {
@@ -548,7 +548,7 @@ func TestMapStatic_WithMatcherFuncs(t *testing.T) {
 
 func TestMapStaticFile(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	h.MapStaticFile("/static-file", "/location/of/static-file")
@@ -584,7 +584,7 @@ func TestMapStaticFile(t *testing.T) {
 
 func TestMapStaticFile_WithMatcherFuncs(t *testing.T) {
 
-	codecService := new(codecservices.WebCodecService)
+	codecService := codecsservices.NewWebCodecService()
 	h := NewHttpHandler(codecService)
 
 	matcherFunc := MatcherFunc(func(c context.Context) (MatcherFuncDecision, error) {

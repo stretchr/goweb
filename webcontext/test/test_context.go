@@ -2,7 +2,7 @@ package webcontext_test
 
 import (
 	"fmt"
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/webcontext"
 	http_test "github.com/stretchr/testify/http"
 	"net/http"
@@ -11,7 +11,7 @@ import (
 
 var TestRequest *http.Request
 var TestResponseWriter *http_test.TestResponseWriter
-var TestCodecService codecservices.CodecService
+var TestCodecService codecsservices.CodecService
 
 func MakeTestContext() *webcontext.WebContext {
 	return MakeTestContextWithPath("/")
@@ -26,7 +26,7 @@ func MakeTestContextWithDetails(path, method string) *webcontext.WebContext {
 }
 
 func MakeTestContextWithFullDetails(path, method, body string) *webcontext.WebContext {
-	TestCodecService = new(codecservices.WebCodecService)
+	TestCodecService = codecsservices.NewWebCodecService()
 	TestResponseWriter = new(http_test.TestResponseWriter)
 
 	if len(body) == 0 {

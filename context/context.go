@@ -1,7 +1,7 @@
 package context
 
 import (
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/paths"
 	"github.com/stretchr/stew/objects"
 	"net/http"
@@ -63,9 +63,9 @@ type Context interface {
 	// Data gets a map of data about the context.
 	Data() objects.Map
 
-	// CodecService gets the codecservices.CodecService that this Context will use to marshal
+	// CodecService gets the codecsservices.CodecService that this Context will use to marshal
 	// and unmarshal data to and from objects.
-	CodecService() codecservices.CodecService
+	CodecService() codecsservices.CodecService
 
 	// RequestData gets the data out of the body of the request as a usable object.
 	RequestData() (interface{}, error)

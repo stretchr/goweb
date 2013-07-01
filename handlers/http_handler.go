@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/webcontext"
 	"net/http"
 	"strings"
@@ -19,7 +19,7 @@ type HttpHandler struct {
 
 	// codecServices is the codec service object to use to go from bytes to objects
 	// and vice versa.
-	codecService codecservices.CodecService
+	codecService codecsservices.CodecService
 
 	// Handlers represent a pipe of handlers that will be used
 	// to handle requests.
@@ -36,7 +36,7 @@ type HttpHandler struct {
 //     0 - Pre handlers
 //     1 - Main handlers
 //     2 - Post handlers
-func NewHttpHandler(codecService codecservices.CodecService) *HttpHandler {
+func NewHttpHandler(codecService codecsservices.CodecService) *HttpHandler {
 	h := new(HttpHandler)
 
 	// make pre, process and post pipes
@@ -52,7 +52,7 @@ func NewHttpHandler(codecService codecservices.CodecService) *HttpHandler {
 
 // CodecService gets the codec service that this HttpHandler will use to
 // marshal and unmarshal objects to and from data.
-func (handler *HttpHandler) CodecService() codecservices.CodecService {
+func (handler *HttpHandler) CodecService() codecsservices.CodecService {
 	return handler.codecService
 }
 

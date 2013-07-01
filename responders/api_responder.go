@@ -1,7 +1,7 @@
 package responders
 
 import (
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 )
 
@@ -23,10 +23,10 @@ type APIResponder interface {
 	*/
 
 	// SetCodecService sets the codec service to use.
-	SetCodecService(codecservices.CodecService)
+	SetCodecService(codecsservices.CodecService)
 
 	// GetCodecService gets the codec service that will be used by this object.
-	GetCodecService() codecservices.CodecService
+	GetCodecService() codecsservices.CodecService
 
 	/*
 		Transformers

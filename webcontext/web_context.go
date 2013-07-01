@@ -1,7 +1,7 @@
 package webcontext
 
 import (
-	codecservices "github.com/stretchr/codecs/services"
+	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 	"github.com/stretchr/goweb/paths"
 	"github.com/stretchr/stew/objects"
@@ -19,14 +19,14 @@ type WebContext struct {
 	httpRequest        *http.Request
 	httpResponseWriter http.ResponseWriter
 	requestBody        []byte
-	codecService       codecservices.CodecService
+	codecService       codecsservices.CodecService
 	queryParams        objects.Map
 	formParams         objects.Map
 	postParams         objects.Map
 }
 
 // NewWebContext creates a new WebContext with the given request and response objects.
-func NewWebContext(responseWriter http.ResponseWriter, request *http.Request, codecService codecservices.CodecService) *WebContext {
+func NewWebContext(responseWriter http.ResponseWriter, request *http.Request, codecService codecsservices.CodecService) *WebContext {
 
 	c := new(WebContext)
 
@@ -40,9 +40,9 @@ func NewWebContext(responseWriter http.ResponseWriter, request *http.Request, co
 
 }
 
-// CodecService gets the codecservices.CodecService that this Context will use to marshal
+// CodecService gets the codecsservices.CodecService that this Context will use to marshal
 // and unmarshal data to and from objects.
-func (c *WebContext) CodecService() codecservices.CodecService {
+func (c *WebContext) CodecService() codecsservices.CodecService {
 	return c.codecService
 }
 
