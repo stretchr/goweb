@@ -26,6 +26,11 @@ import (
 //
 //     (func [, matcherFuncs])
 //
+// Each matcherFunc argument can be one of three types:
+//     1) handlers.MatcherFunc
+//     2) []handlers.MatcherFunc
+//     3) func(context.Context) (MatcherFuncDecision, error)
+//
 // Examples
 //
 // The following code snippets are real examples of how to use the Map function:
@@ -155,6 +160,9 @@ func MapAfter(options ...interface{}) (handlers.Handler, error) {
 // of what the Path() methods returns:
 //
 //     MapController(path, controller)
+//
+// Optionally, you can pass matcherFuncs as optional additional arguments.  See
+// goweb.Map() for details on the types of arguments allowed.
 func MapController(options ...interface{}) error {
 	return DefaultHttpHandler().MapController(options...)
 }
@@ -178,8 +186,11 @@ func MapController(options ...interface{}) error {
 //
 // In some cases, your systemPath might be different for development and production
 // and this is something to watch out for.
-func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
-	return DefaultHttpHandler().MapStatic(publicPath, systemPath)
+//
+// Optionally, you can pass arguments of type MatcherFunc after the second
+// argument.  Unlike goweb.Map, these can only be of type MatcherFunc.
+func MapStatic(publicPath, systemPath string, matcherFuncs ...MatcherFunc) (handlers.Handler, error) {
+	return DefaultHttpHandler().MapStatic(publicPath, systemPath, matcherFuncs...)
 }
 
 // MapStaticFile maps a static file from the specified staticFilePath to the
@@ -189,8 +200,11 @@ func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
 //
 // Only paths matching exactly publicPath will cause the single file specified in
 // staticFilePath to be delivered to clients.
-func MapStaticFile(publicPath, staticFilePath string) (handlers.Handler, error) {
-	return DefaultHttpHandler().MapStaticFile(publicPath, staticFilePath)
+//
+// Optionally, you can pass arguments of type MatcherFunc after the second
+// argument.  Unlike goweb.Map, these can only be of type MatcherFunc.
+func MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...MatcherFuncs) (handlers.Handler, error) {
+	return DefaultHttpHandler().MapStaticFile(publicPath, staticFilePath, matcherFuncs...)
 }
 
 /*
