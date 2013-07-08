@@ -186,8 +186,11 @@ func MapController(options ...interface{}) error {
 //
 // In some cases, your systemPath might be different for development and production
 // and this is something to watch out for.
-func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
-	return DefaultHttpHandler().MapStatic(publicPath, systemPath)
+//
+// Optionally, you can pass arguments of type MatcherFunc after the second
+// argument.  Unlike goweb.Map, these can only be of type MatcherFunc.
+func MapStatic(publicPath, systemPath string, matcherFuncs ...MatcherFunc) (handlers.Handler, error) {
+	return DefaultHttpHandler().MapStatic(publicPath, systemPath, matcherFuncs...)
 }
 
 // MapStaticFile maps a static file from the specified staticFilePath to the
@@ -197,8 +200,11 @@ func MapStatic(publicPath, systemPath string) (handlers.Handler, error) {
 //
 // Only paths matching exactly publicPath will cause the single file specified in
 // staticFilePath to be delivered to clients.
-func MapStaticFile(publicPath, staticFilePath string) (handlers.Handler, error) {
-	return DefaultHttpHandler().MapStaticFile(publicPath, staticFilePath)
+//
+// Optionally, you can pass arguments of type MatcherFunc after the second
+// argument.  Unlike goweb.Map, these can only be of type MatcherFunc.
+func MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...MatcherFuncs) (handlers.Handler, error) {
+	return DefaultHttpHandler().MapStaticFile(publicPath, staticFilePath, matcherFuncs...)
 }
 
 /*
