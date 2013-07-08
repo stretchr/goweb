@@ -26,6 +26,11 @@ import (
 //
 //     (func [, matcherFuncs])
 //
+// Each matcherFunc argument can be one of three types:
+//     1) handlers.MatcherFunc
+//     2) []handlers.MatcherFunc
+//     3) func(context.Context) (MatcherFuncDecision, error)
+//
 // Examples
 //
 // The following code snippets are real examples of how to use the Map function:
@@ -155,6 +160,9 @@ func MapAfter(options ...interface{}) (handlers.Handler, error) {
 // of what the Path() methods returns:
 //
 //     MapController(path, controller)
+//
+// Optionally, you can pass matcherFuncs as optional additional arguments.  See
+// goweb.Map() for details on the types of arguments allowed.
 func MapController(options ...interface{}) error {
 	return DefaultHttpHandler().MapController(options...)
 }
