@@ -189,7 +189,7 @@ func MapController(options ...interface{}) error {
 //
 // Optionally, you can pass arguments of type MatcherFunc after the second
 // argument.  Unlike goweb.Map, these can only be of type MatcherFunc.
-func MapStatic(publicPath, systemPath string, matcherFuncs ...MatcherFunc) (handlers.Handler, error) {
+func MapStatic(publicPath, systemPath string, matcherFuncs ...handlers.MatcherFunc) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapStatic(publicPath, systemPath, matcherFuncs...)
 }
 
@@ -203,7 +203,7 @@ func MapStatic(publicPath, systemPath string, matcherFuncs ...MatcherFunc) (hand
 //
 // Optionally, you can pass arguments of type MatcherFunc after the second
 // argument.  Unlike goweb.Map, these can only be of type MatcherFunc.
-func MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...MatcherFuncs) (handlers.Handler, error) {
+func MapStaticFile(publicPath, staticFilePath string, matcherFuncs ...handlers.MatcherFunc) (handlers.Handler, error) {
 	return DefaultHttpHandler().MapStaticFile(publicPath, staticFilePath, matcherFuncs...)
 }
 
