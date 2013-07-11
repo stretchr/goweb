@@ -83,6 +83,18 @@ func TestHTTP_WithRedirect(t *testing.T) {
 
 	httpResponder.WithRedirect(ctx, "people/123")
 
+	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, http.StatusFound)
+	assert.Equal(t, context_test.TestResponseWriter.Header()["Location"][0], "people/123")
+
+}
+
+func TestHTTP_WithTemporaryRedirect(t *testing.T) {
+
+	httpResponder := new(GowebHTTPResponder)
+	ctx := context_test.MakeTestContext()
+
+	httpResponder.WithTemporaryRedirect(ctx, "people/123")
+
 	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, http.StatusTemporaryRedirect)
 	assert.Equal(t, context_test.TestResponseWriter.Header()["Location"][0], "people/123")
 

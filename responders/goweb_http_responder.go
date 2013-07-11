@@ -69,8 +69,16 @@ func (r *GowebHTTPResponder) WithOK(ctx context.Context) error {
 	return r.WithStatus(ctx, http.StatusOK)
 }
 
-// WithRedirect responds with a temporary redirection to the specific path or URL.
+// WithRedirect responds with a Found redirection to the specific path or URL.
 func (r *GowebHTTPResponder) WithRedirect(ctx context.Context, pathOrURLSegments ...interface{}) error {
+
+	ctx.HttpResponseWriter().Header().Set("Location", paths.PathFromSegments(pathOrURLSegments...))
+	return r.WithStatus(ctx, http.StatusFound)
+
+}
+
+// WithTemporaryRedirect responds with a TemporaryRedirect redirection to the specific path or URL.
+func (r *GowebHTTPResponder) WithTemporaryRedirect(ctx context.Context, pathOrURLSegments ...interface{}) error {
 
 	ctx.HttpResponseWriter().Header().Set("Location", paths.PathFromSegments(pathOrURLSegments...))
 	return r.WithStatus(ctx, http.StatusTemporaryRedirect)
