@@ -18,6 +18,12 @@ var (
 	//     ctx.PathParam(RestfulIDParameterName)
 	//
 	// By default, "id" is used.
+	//
+	// To specify you own, change this value before mapping your
+	// controllers.
+	//
+	//     handlers.RestfulIDParameterName = "resourceId"
+	//
 	RestfulIDParameterName string = "id"
 )
 
