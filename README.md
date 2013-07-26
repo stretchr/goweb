@@ -9,6 +9,10 @@ A lightweight RESTful web framework for Go.
   * If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)
   * For examples and usage, please read the [Goweb API Documentation](http://godoc.org/github.com/stretchr/goweb)
 
+## Are you using Goweb?
+
+We are looking to put together a list of companies / people that are using Goweb.  If you would like to help promote Goweb, and be included in the list, please [comment on our issue](https://github.com/stretchr/goweb/issues/40) and we'll get it going.  Thanks.
+
 ## Get started
 
   * To install, run `go get github.com/stretchr/goweb`
