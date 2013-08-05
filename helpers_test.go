@@ -1,4 +1,4 @@
-package http
+package goweb
 
 import (
 	"github.com/stretchr/testify/assert"
