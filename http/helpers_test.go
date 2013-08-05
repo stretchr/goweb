@@ -7,6 +7,15 @@ import (
 	"testing"
 )
 
+func TestRedirectTo(t *testing.T) {
+
+	r := new(testhttp.TestResponseWriter)
+	RedirectTo(r, "http://www.stretchr.com", "test")
+	assert.Equal(t, "http://www.stretchr.com/test", r.Header().Get("Location"))
+	assert.Equal(t, 0, r.WrittenHeaderInt)
+
+}
+
 func TestRedirect(t *testing.T) {
 
 	r := new(testhttp.TestResponseWriter)
