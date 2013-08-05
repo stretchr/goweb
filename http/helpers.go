@@ -5,6 +5,11 @@ import (
 	"net/http"
 )
 
+const (
+	// headerKeyLocation is the header key for Location.
+	headerKeyLocation string = "Location"
+)
+
 // Status writes the header with the specified status.
 func Status(response http.ResponseWriter, status int) {
 	response.WriteHeader(status)
@@ -12,7 +17,7 @@ func Status(response http.ResponseWriter, status int) {
 
 // RedirectTo writes the Location header.
 func RedirectTo(response http.ResponseWriter, pathOrURLSegments ...interface{}) {
-	response.Header().Set("Location", paths.PathFromSegments(pathOrURLSegments...))
+	response.Header().Set(headerKeyLocation, paths.PathFromSegments(pathOrURLSegments...))
 }
 
 // redirectWithStatus writes the Location header and sets the specified
