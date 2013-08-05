@@ -109,6 +109,13 @@ func TestMethodString(t *testing.T) {
 
 	assert.Equal(t, "ANYTHING", c.MethodString())
 
+	responseWriter = new(http_test.TestResponseWriter)
+	testRequest, _ = http.NewRequest("GET", "http://goweb.org/people/123?method=PATCH", nil)
+
+	c = NewWebContext(responseWriter, testRequest, codecService)
+
+	assert.Equal(t, "PATCH", c.MethodString())
+
 }
 
 func TestData(t *testing.T) {
@@ -150,6 +157,21 @@ func TestRequestData(t *testing.T) {
 	bod, _ := c.RequestBody()
 	assert.Equal(t, "{\"something\":true}", string(bod))
 	dat, datErr := c.RequestData()
+
+	if assert.NoError(t, datErr) {
+		assert.Equal(t, true, dat.(map[string]interface{})["something"])
+	}
+
+	responseWriter = new(http_test.TestResponseWriter)
+	testRequest, _ = http.NewRequest("GET", "http://goweb.org/people/123?body={\"something\":true}", nil)
+
+	codecService = codecsservices.NewWebCodecService()
+
+	c = NewWebContext(responseWriter, testRequest, codecService)
+
+	bod, _ = c.RequestBody()
+	assert.Equal(t, "{\"something\":true}", string(bod))
+	dat, datErr = c.RequestData()
 
 	if assert.NoError(t, datErr) {
 		assert.Equal(t, true, dat.(map[string]interface{})["something"])

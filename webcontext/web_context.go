@@ -107,20 +107,32 @@ func (c *WebContext) RequestBody() ([]byte, error) {
 		return c.requestBody, nil
 	}
 
-	body, bodyErr := ioutil.ReadAll(c.HttpRequest().Body)
+	var body []byte
+	bodyString := c.QueryValue("body")
+	if bodyString != "" {
+		body = []byte(bodyString)
+		c.requestBody = body
+	} else {
 
-	if bodyErr != nil {
-		return nil, bodyErr
+		body, bodyErr := ioutil.ReadAll(c.HttpRequest().Body)
+
+		if bodyErr != nil {
+			return nil, bodyErr
+		}
+
+		c.requestBody = body
 	}
-
-	c.requestBody = body
-
 	return c.requestBody, nil
 }
 
 // MethodString gets the HTTP method of this request as an uppercase string.
 func (c *WebContext) MethodString() string {
-	return strings.ToUpper(c.HttpRequest().Method)
+	method := c.QueryValue("method")
+	if method == "" {
+		method = strings.ToUpper(c.HttpRequest().Method)
+	}
+
+	return method
 }
 
 // HttpRequest gets the underlying http.Request that this Context represents.
@@ -165,7 +177,11 @@ func (c *WebContext) SetHttpRequest(httpRequest *http.Request) {
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
 func (c *WebContext) PathParams() objects.Map {
-	return c.data.GetMap(context.DataKeyPathParameters)
+	m := c.data.Get(context.DataKeyPathParameters)
+	if m != nil {
+		return m.(objects.Map)
+	}
+	return nil
 }
 
 // DEPRECATED: Use PathValue instead.
@@ -178,6 +194,9 @@ func (c *WebContext) PathParam(keypath string) string {
 // PathValue gets the parameter from PathParams() with the specified key.
 func (c *WebContext) PathValue(keypath string) string {
 	val := c.PathParams().Get(keypath)
+	if val == nil {
+		return ""
+	}
 	if valString, ok := val.(string); ok {
 		return valString
 	}
