@@ -126,6 +126,9 @@ func (c *WebContext) RequestBody() ([]byte, error) {
 }
 
 // MethodString gets the HTTP method of this request as an uppercase string.
+//
+// If a "method" parameter is specified in the URL, it will be used. Otherwise,
+// the method of the HTTP request itself will be used.
 func (c *WebContext) MethodString() string {
 	method := c.QueryValue("method")
 	if method == "" {

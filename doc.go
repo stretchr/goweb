@@ -99,6 +99,17 @@
 //
 // For a real example of what tests look like, see the tests in the example web app: https://github.com/stretchr/goweb/blob/master/example_webapp/main_test.go
 //
+//
+// Working with JSONP
+//
+// If you are working in an environment that always requires a 200 response, simply do:
+//
+//     uri?always200=true
+//
+// Additionally, if you need to override the HTTP Method used, simply pass it in a similar manner:
+//
+//     uri?method=GET
+//
 // Changes from Goweb 1
 //
 // Goweb 2 changes two key things about Goweb; mapping and responding.
