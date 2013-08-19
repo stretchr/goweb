@@ -7,7 +7,13 @@ A lightweight RESTful web framework for Go.
   * If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)
   * For examples and usage, please read the [Goweb API Documentation](http://godoc.org/github.com/stretchr/goweb)
 
-## Are you using Goweb?
+## Who uses Goweb?
+
+  * "Using Goweb has greatly simplified the creation, maintenance, and consistency of several of our internal services, allowing us to focus our effort on the underlying behavior of the services themselves." Derek Buitenhuis, [Vimeo](https://vimeo.com/)
+  * "We are actively developing with Goweb to implement the REST api in-front of a neural network application" Jon McMillan, [MCN Healthcare](http://www.mcnhealthcare.com/)
+  * "We're using Goweb as an API server for our tourist/guides application." Robert C. Mulley, [CB Insights](http://www.cbinsights.com/)
+
+### Are you using Goweb?
 
 We are looking to put together a list of companies / people that are using Goweb.  If you would like to help promote Goweb, and be included in the list, please [comment on our issue](https://github.com/stretchr/goweb/issues/40) and we'll get it going.  Thanks.
 
