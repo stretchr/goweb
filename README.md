@@ -13,7 +13,7 @@ A lightweight RESTful web framework for Go.
   * "We are actively developing with Goweb to implement the REST api in-front of a neural network application" Jon McMillan, [MCN Healthcare](http://www.mcnhealthcare.com/)
   * "We're using Goweb as an API server for our tourist/guides application." Robert C. Mulley, [CB Insights](http://www.cbinsights.com/)
 
-### Are you using Goweb?
+#### Are you using Goweb?
 
 We are looking to put together a list of companies / people that are using Goweb.  If you would like to help promote Goweb, and be included in the list, please [comment on our issue](https://github.com/stretchr/goweb/issues/40) and we'll get it going.  Thanks.
 
@@ -41,6 +41,10 @@ We are looking to put together a list of companies / people that are using Goweb
   * Easily match paths using Regex instead
   * Better error management
   * Performance improvements
+
+## People who use Goweb also use
+
+  * [Gomniauth](https://github.com/stretchr/gomniauth) - Authentication package (OAuth2 etc.)
 
 ## Requirements
 
