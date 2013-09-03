@@ -40,7 +40,7 @@ We are looking to put together a list of companies / people that are using Goweb
   * Uses [stretchr/codecs](https://github.com/stretchr/codecs) package allowing better support for multiple formats
   * Easily match paths using Regex instead
   * Better error management
-  * Performance improvements
+  * Performance improvements from Goweb 1
 
 ## People who use Goweb also use
 
