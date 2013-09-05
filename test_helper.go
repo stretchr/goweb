@@ -75,7 +75,7 @@ func Test(t *testing.T, options ...interface{}) {
 }
 
 // TestOn is the same as the goweb.Test function, except it allows you
-// to explitally specify the HttpHandler on which to run the tests.
+// to explicitly specify the HttpHandler on which to run the tests.
 func TestOn(t *testing.T, handler *handlers.HttpHandler, options ...interface{}) {
 
 	/*

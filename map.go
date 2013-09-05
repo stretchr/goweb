@@ -157,7 +157,7 @@ func MapAfter(options ...interface{}) (handlers.Handler, error) {
 //     MapController(controller)
 //
 // This code will map the controller to the specified path prefix regardless
-// of what the Path() methods returns:
+// of what the Path() method returns:
 //
 //     MapController(path, controller)
 //
@@ -178,7 +178,7 @@ func MapController(options ...interface{}) error {
 // Paths
 //
 // The systemPath is relative to where you will actually run your app from, for
-// example if I an doing `go run main.go` inside the `example_webapp` folder, then
+// example if I am doing `go run main.go` inside the `example_webapp` folder, then
 // `./` would refer to the `example_webapp` folder itself.  Therefore, to map to the
 // `static-files` subfolder, you just need to specify the name of the directory:
 //
