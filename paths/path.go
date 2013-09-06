@@ -2,8 +2,8 @@ package paths
 
 import (
 	"fmt"
-	"strings"
 	"path"
+	"strings"
 )
 
 // Path represents the path segment of a URL.
