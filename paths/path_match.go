@@ -1,7 +1,7 @@
 package paths
 
 import (
-	"github.com/stretchr/stew/objects"
+	"github.com/stretchr/objx"
 )
 
 /*
@@ -12,7 +12,7 @@ import (
 */
 type PathMatch struct {
 	Matches    bool
-	Parameters objects.Map
+	Parameters *objx.Obj
 }
 
 /*

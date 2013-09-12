@@ -29,9 +29,9 @@ func TestPathPattern_GetPathMatch_Parameters(t *testing.T) {
 	m := gp.GetPathMatch(NewPath("people/123/books/origin-of-species/chapters/2"))
 
 	assert.True(t, m.Matches)
-	assert.Equal(t, m.Parameters["id"], "123")
-	assert.Equal(t, m.Parameters["title"], "origin-of-species")
-	assert.Equal(t, m.Parameters["chapter"], "2")
+	assert.Equal(t, m.Parameters.Get("id").Str(), "123")
+	assert.Equal(t, m.Parameters.Get("title").Str(), "origin-of-species")
+	assert.Equal(t, m.Parameters.Get("chapter").Str(), "2")
 
 }
 
@@ -41,9 +41,9 @@ func TestPathPattern_GetPathMatch_Extensions(t *testing.T) {
 	m := gp.GetPathMatch(NewPath("people/123/books/origin.of.species/chapters/2.json"))
 
 	assert.True(t, m.Matches)
-	assert.Equal(t, m.Parameters["id"], "123")
-	assert.Equal(t, m.Parameters["title"], "origin.of.species")
-	assert.Equal(t, m.Parameters["chapter"], "2")
+	assert.Equal(t, m.Parameters.Get("id").Str(), "123")
+	assert.Equal(t, m.Parameters.Get("title").Str(), "origin.of.species")
+	assert.Equal(t, m.Parameters.Get("chapter").Str(), "2")
 
 }
 

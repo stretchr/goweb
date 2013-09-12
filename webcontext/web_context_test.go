@@ -3,7 +3,6 @@ package webcontext
 import (
 	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
-	"github.com/stretchr/stew/objects"
 	"github.com/stretchr/testify/assert"
 	http_test "github.com/stretchr/testify/http"
 	"net/http"
@@ -137,9 +136,11 @@ func TestPathParams(t *testing.T) {
 	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
-	c.Data().Set(context.DataKeyPathParameters, objects.Map{"animal": "monkey"})
+	c.Data().MSI()[context.DataKeyPathParameters] = map[string]interface{}{"animal": "monkey"}
 
-	assert.Equal(t, "monkey", c.PathParams().Get("animal"))
+	t.Logf("%s", c.PathParams())
+
+	assert.Equal(t, "monkey", c.PathParams().Get("animal").Str())
 	assert.Equal(t, "monkey", c.PathValue("animal"))
 	assert.Equal(t, "", c.PathValue("doesn't exist"))
 
@@ -217,11 +218,11 @@ func TestPostParams(t *testing.T) {
 
 	if assert.NotNil(t, params) {
 
-		assert.Equal(t, "Mat", params.Get("name").([]string)[0])
-		assert.Equal(t, "Laurie", params.Get("name").([]string)[1])
-		assert.Equal(t, "30", params.Get("age").([]string)[0])
-		assert.Equal(t, "true", params.Get("something").([]string)[0])
-		assert.Nil(t, params.Get("query"))
+		assert.Equal(t, "Mat", params.Get("name").StrSlice()[0])
+		assert.Equal(t, "Laurie", params.Get("name").StrSlice()[1])
+		assert.Equal(t, "30", params.Get("age").StrSlice()[0])
+		assert.Equal(t, "true", params.Get("something").StrSlice()[0])
+		assert.Nil(t, params.Get("query").Obj())
 
 	}
 
@@ -284,11 +285,11 @@ func TestFormParams(t *testing.T) {
 
 	if assert.NotNil(t, params) {
 
-		assert.Equal(t, "Mat", params.Get("name").([]string)[0])
-		assert.Equal(t, "Laurie", params.Get("name").([]string)[1])
-		assert.Equal(t, "30", params.Get("age").([]string)[0])
-		assert.Equal(t, "true", params.Get("something").([]string)[0])
-		assert.Equal(t, "yes", params.Get("query").([]string)[0])
+		assert.Equal(t, "Mat", params.Get("name").StrSlice()[0])
+		assert.Equal(t, "Laurie", params.Get("name").StrSlice()[1])
+		assert.Equal(t, "30", params.Get("age").StrSlice()[0])
+		assert.Equal(t, "true", params.Get("something").StrSlice()[0])
+		assert.Equal(t, "yes", params.Get("query").StrSlice()[0])
 
 	}
 
@@ -350,10 +351,10 @@ func TestQueryParams(t *testing.T) {
 
 	if assert.NotNil(t, params) {
 
-		assert.Equal(t, "Mat", params.Get("name").([]string)[0])
-		assert.Equal(t, "Laurie", params.Get("name").([]string)[1])
-		assert.Equal(t, "30", params.Get("age").([]string)[0])
-		assert.Equal(t, "true", params.Get("something").([]string)[0])
+		assert.Equal(t, "Mat", params.Get("name").StrSlice()[0])
+		assert.Equal(t, "Laurie", params.Get("name").StrSlice()[1])
+		assert.Equal(t, "30", params.Get("age").StrSlice()[0])
+		assert.Equal(t, "true", params.Get("something").StrSlice()[0])
 
 	}
 
