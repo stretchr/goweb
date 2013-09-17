@@ -1,7 +1,7 @@
 package paths
 
 import (
-	"github.com/stretchr/stew/objects"
+	"github.com/stretchr/objx"
 	stewstrings "github.com/stretchr/stew/strings"
 	"strings"
 )
@@ -54,7 +54,7 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 		return pathMatch
 	}
 
-	pathMatch.Parameters = make(objects.Map)
+	pathMatch.Parameters = objx.MSI()
 
 	checkSegments := p.path.Segments()
 	pathSegments := path.Segments()
@@ -101,7 +101,7 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 		case segmentTypeDynamic, segmentTypeDynamicOptional:
 
 			if segmentIndex < len(pathSegments) {
-				pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
+				pathMatch.Parameters.Set(cleanSegmentName(checkSegment),pathSegments[segmentIndex])
 			}
 		}
 

@@ -3,7 +3,7 @@ package context
 import (
 	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/paths"
-	"github.com/stretchr/stew/objects"
+	"github.com/stretchr/objx"
 	"net/http"
 )
 
@@ -61,7 +61,7 @@ type Context interface {
 	Path() *paths.Path
 
 	// Data gets a map of data about the context.
-	Data() objects.Map
+	Data() *objx.Map
 
 	// CodecService gets the codecsservices.CodecService that this Context will use to marshal
 	// and unmarshal data to and from objects.
@@ -84,7 +84,7 @@ type Context interface {
 	//    PostParams  - Parameters only from the body
 	//    FormParams  - Parameters from both the body AND the URL query string
 	//    PathParams  - Parameters from the path itself (i.e. /people/123)
-	PathParams() objects.Map
+	PathParams() *objx.Map
 
 	// DEPRECATED: Use PathValue instead.
 	//
@@ -102,7 +102,7 @@ type Context interface {
 	//    PostParams  - Parameters only from the body
 	//    FormParams  - Parameters from both the body AND the URL query string
 	//    PathParams  - Parameters from the path itself (i.e. /people/123)
-	QueryParams() objects.Map
+	QueryParams() *objx.Map
 
 	// QueryValues gets an array of the values for the specified keypath from the QueryParams.
 	QueryValues(keypath string) []string
@@ -119,7 +119,7 @@ type Context interface {
 	//    PostParams  - Parameters only from the body
 	//    FormParams  - Parameters from both the body AND the URL query string
 	//    PathParams  - Parameters from the path itself (i.e. /people/123)
-	PostParams() objects.Map
+	PostParams() *objx.Map
 
 	// FormValues gets an array of the values for the specified keypath from the
 	// form body in the request.
@@ -138,7 +138,7 @@ type Context interface {
 	//    PostParams  - Parameters only from the body
 	//    FormParams  - Parameters from both the body AND the URL query string
 	//    PathParams  - Parameters from the path itself (i.e. /people/123)
-	FormParams() objects.Map
+	FormParams() *objx.Map
 
 	// FormValues gets an array of the values for the specified keypath from the
 	// form body in the request and the URL query.
