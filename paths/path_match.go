@@ -12,7 +12,7 @@ import (
 */
 type PathMatch struct {
 	Matches    bool
-	Parameters *objx.Obj
+	Parameters *objx.Map
 }
 
 /*

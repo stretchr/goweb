@@ -93,8 +93,8 @@ func TestPrependPreHandler(t *testing.T) {
 	h.Handlers.Handle(nil)
 	assert.Equal(t, 2, len(h.PreHandlersPipe()))
 
-	assert.Equal(t, 2, h.PreHandlersPipe()[0].(*handlers_test.TestHandler).TestData().Get("id"))
-	assert.Equal(t, 1, h.PreHandlersPipe()[1].(*handlers_test.TestHandler).TestData().Get("id"))
+	assert.Equal(t, 2, h.PreHandlersPipe()[0].(*handlers_test.TestHandler).TestData().Get("id").Int())
+	assert.Equal(t, 1, h.PreHandlersPipe()[1].(*handlers_test.TestHandler).TestData().Get("id").Int())
 
 	mock.AssertExpectationsForObjects(t, handler1.Mock)
 
@@ -120,8 +120,8 @@ func TestPrependPostHandler(t *testing.T) {
 	h.Handlers.Handle(nil)
 	assert.Equal(t, 2, len(h.PostHandlersPipe()))
 
-	assert.Equal(t, 2, h.PostHandlersPipe()[0].(*handlers_test.TestHandler).TestData().Get("id"))
-	assert.Equal(t, 1, h.PostHandlersPipe()[1].(*handlers_test.TestHandler).TestData().Get("id"))
+	assert.Equal(t, 2, h.PostHandlersPipe()[0].(*handlers_test.TestHandler).TestData().Get("id").Int())
+	assert.Equal(t, 1, h.PostHandlersPipe()[1].(*handlers_test.TestHandler).TestData().Get("id").Int())
 
 	mock.AssertExpectationsForObjects(t, handler1.Mock)
 
@@ -219,7 +219,7 @@ func TestErrorHandlerGetsUsedOnError(t *testing.T) {
 		ctx := errorHandler.Calls[0].Arguments[0].(context.Context)
 
 		// make sure the error data field was set
-		assert.Equal(t, theError.Error(), ctx.Data().Get("error").(HandlerError).Error(), "the error should be set in the data with the 'error' key")
+		assert.Equal(t, theError.Error(), ctx.Data().Get("error").Data().(HandlerError).Error(), "the error should be set in the data with the 'error' key")
 
 		assert.Equal(t, responseWriter, ctx.HttpResponseWriter())
 		assert.Equal(t, testRequest, ctx.HttpRequest())

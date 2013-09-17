@@ -101,7 +101,7 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 		case segmentTypeDynamic, segmentTypeDynamicOptional:
 
 			if segmentIndex < len(pathSegments) {
-				pathMatch.Parameters.MSI()[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
+				pathMatch.Parameters.Set(cleanSegmentName(checkSegment),pathSegments[segmentIndex])
 			}
 		}
 

@@ -136,7 +136,7 @@ func TestPathParams(t *testing.T) {
 	codecService := codecsservices.NewWebCodecService()
 
 	c := NewWebContext(responseWriter, testRequest, codecService)
-	c.Data().MSI()[context.DataKeyPathParameters] = map[string]interface{}{"animal": "monkey"}
+	c.Data().Set(context.DataKeyPathParameters, map[string]interface{}{"animal": "monkey"})
 
 	t.Logf("%s", c.PathParams())
 
@@ -222,7 +222,7 @@ func TestPostParams(t *testing.T) {
 		assert.Equal(t, "Laurie", params.Get("name").StrSlice()[1])
 		assert.Equal(t, "30", params.Get("age").StrSlice()[0])
 		assert.Equal(t, "true", params.Get("something").StrSlice()[0])
-		assert.Nil(t, params.Get("query").Obj())
+		assert.Nil(t, params.Get("query").Data())
 
 	}
 

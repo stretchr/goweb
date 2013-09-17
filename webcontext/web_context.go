@@ -15,14 +15,14 @@ import (
 // WebContext is a real context.Context that represents a single request.
 type WebContext struct {
 	path               *paths.Path
-	data               *objx.Obj
+	data               *objx.Map
 	httpRequest        *http.Request
 	httpResponseWriter http.ResponseWriter
 	requestBody        []byte
 	codecService       codecsservices.CodecService
-	queryParams        *objx.Obj
-	formParams         *objx.Obj
-	postParams         *objx.Obj
+	queryParams        *objx.Map
+	formParams         *objx.Map
+	postParams         *objx.Map
 }
 
 // NewWebContext creates a new WebContext with the given request and response objects.
@@ -52,7 +52,7 @@ func (c *WebContext) Path() *paths.Path {
 }
 
 // Data gets a map of data about the context.
-func (c *WebContext) Data() *objx.Obj {
+func (c *WebContext) Data() *objx.Map {
 	if c.data == nil {
 		c.data = objx.MSI()
 	}
@@ -179,8 +179,8 @@ func (c *WebContext) SetHttpRequest(httpRequest *http.Request) {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) PathParams() *objx.Obj {
-	return c.data.Get(context.DataKeyPathParameters)
+func (c *WebContext) PathParams() *objx.Map {
+	return objx.New(c.data.Get(context.DataKeyPathParameters).Data())
 }
 
 // DEPRECATED: Use PathValue instead.
@@ -195,10 +195,10 @@ func (c *WebContext) PathValue(keypath string) string {
 	return c.PathParams().Get(keypath).Str()
 }
 
-// urlValuesToObjectsMap turns a url.Values into an *objx.Obj object.
+// urlValuesToObjectsMap turns a url.Values into an *objx.Map object.
 //
-// Will always return a real *objx.Obj, even if there are no values.
-func (c *WebContext) urlValuesToObjectsMap(values url.Values) *objx.Obj {
+// Will always return a real *objx.Map, even if there are no values.
+func (c *WebContext) urlValuesToObjectsMap(values url.Values) *objx.Map {
 	m := make(map[string]interface{})
 	for k, vs := range values {
 		m[k] = vs
@@ -215,7 +215,7 @@ func (c *WebContext) urlValuesToObjectsMap(values url.Values) *objx.Obj {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) FormParams() *objx.Obj {
+func (c *WebContext) FormParams() *objx.Map {
 
 	if c.formParams == nil {
 
@@ -259,7 +259,7 @@ func (c *WebContext) FormValue(keypath string) string {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) QueryParams() *objx.Obj {
+func (c *WebContext) QueryParams() *objx.Map {
 
 	if c.queryParams == nil {
 		c.queryParams = c.urlValuesToObjectsMap(c.HttpRequest().URL.Query())
@@ -297,7 +297,7 @@ func (c *WebContext) QueryValue(keypath string) string {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) PostParams() *objx.Obj {
+func (c *WebContext) PostParams() *objx.Map {
 
 	if c.postParams == nil {
 
