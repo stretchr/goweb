@@ -4,7 +4,7 @@ import (
 	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/context"
 	"github.com/stretchr/goweb/paths"
-	"github.com/stretchr/stew/objects"
+	"github.com/stretchr/objx"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -15,14 +15,14 @@ import (
 // WebContext is a real context.Context that represents a single request.
 type WebContext struct {
 	path               *paths.Path
-	data               objects.Map
+	data               objx.Map
 	httpRequest        *http.Request
 	httpResponseWriter http.ResponseWriter
 	requestBody        []byte
 	codecService       codecsservices.CodecService
-	queryParams        objects.Map
-	formParams         objects.Map
-	postParams         objects.Map
+	queryParams        objx.Map
+	formParams         objx.Map
+	postParams         objx.Map
 }
 
 // NewWebContext creates a new WebContext with the given request and response objects.
@@ -52,9 +52,9 @@ func (c *WebContext) Path() *paths.Path {
 }
 
 // Data gets a map of data about the context.
-func (c *WebContext) Data() objects.Map {
+func (c *WebContext) Data() objx.Map {
 	if c.data == nil {
-		c.data = make(objects.Map)
+		c.data = make(objx.Map)
 	}
 	return c.data
 }
@@ -179,10 +179,10 @@ func (c *WebContext) SetHttpRequest(httpRequest *http.Request) {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) PathParams() objects.Map {
+func (c *WebContext) PathParams() objx.Map {
 	m := c.data.Get(context.DataKeyPathParameters)
 	if m != nil {
-		return m.(objects.Map)
+		return m.ObjxMap()
 	}
 	return nil
 }
@@ -196,21 +196,14 @@ func (c *WebContext) PathParam(keypath string) string {
 
 // PathValue gets the parameter from PathParams() with the specified key.
 func (c *WebContext) PathValue(keypath string) string {
-	val := c.PathParams().Get(keypath)
-	if val == nil {
-		return ""
-	}
-	if valString, ok := val.(string); ok {
-		return valString
-	}
-	return ""
+	return c.PathParams().Get(keypath).Str()
 }
 
-// urlValuesToObjectsMap turns a url.Values into an objects.Map object.
+// urlValuesToObjectsMap turns a url.Values into an objx.Map object.
 //
-// Will always return a real objects.Map, even if there are no values.
-func (c *WebContext) urlValuesToObjectsMap(values url.Values) objects.Map {
-	m := make(objects.Map)
+// Will always return a real objx.Map, even if there are no values.
+func (c *WebContext) urlValuesToObjectsMap(values url.Values) objx.Map {
+	m := make(objx.Map)
 	for k, vs := range values {
 		m.Set(k, vs)
 	}
@@ -226,7 +219,7 @@ func (c *WebContext) urlValuesToObjectsMap(values url.Values) objects.Map {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) FormParams() objects.Map {
+func (c *WebContext) FormParams() objx.Map {
 
 	if c.formParams == nil {
 
@@ -248,12 +241,11 @@ func (c *WebContext) FormParams() objects.Map {
 func (c *WebContext) FormValues(keypath string) []string {
 
 	values := c.FormParams().Get(keypath)
-
-	if values == nil {
+	if values.IsNil() {
 		return nil
 	}
+	return values.StrSlice()
 
-	return values.([]string)
 }
 
 // FormValue gets a single value for the specified keypath from the form body and
@@ -277,7 +269,7 @@ func (c *WebContext) FormValue(keypath string) string {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) QueryParams() objects.Map {
+func (c *WebContext) QueryParams() objx.Map {
 
 	if c.queryParams == nil {
 		c.queryParams = c.urlValuesToObjectsMap(c.HttpRequest().URL.Query())
@@ -294,11 +286,11 @@ func (c *WebContext) QueryValues(keypath string) []string {
 
 	values := c.QueryParams().Get(keypath)
 
-	if values == nil {
+	if values.IsNil() {
 		return nil
 	}
 
-	return values.([]string)
+	return values.StrSlice()
 }
 
 // QueryValue gets a single value for the specified key from the QueryParams.  If there
@@ -322,7 +314,7 @@ func (c *WebContext) QueryValue(keypath string) string {
 //    PostParams  - Parameters only from the body
 //    FormParams  - Parameters from both the body AND the URL query string
 //    PathParams  - Parameters from the path itself (i.e. /people/123)
-func (c *WebContext) PostParams() objects.Map {
+func (c *WebContext) PostParams() objx.Map {
 
 	if c.postParams == nil {
 
@@ -346,11 +338,11 @@ func (c *WebContext) PostValues(keypath string) []string {
 
 	values := c.PostParams().Get(keypath)
 
-	if values == nil {
+	if values.IsNil() {
 		return nil
 	}
 
-	return values.([]string)
+	return values.StrSlice()
 
 }
 

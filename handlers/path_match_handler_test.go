@@ -6,7 +6,6 @@ import (
 	//"github.com/stretchr/goweb/webcontext"
 	"github.com/stretchr/goweb/paths"
 	context_test "github.com/stretchr/goweb/webcontext/test"
-	"github.com/stretchr/stew/objects"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -25,7 +24,7 @@ func TestNewPathMatchHandler(t *testing.T) {
 	assert.True(t, will)
 	h.Handle(ctx1)
 	assert.True(t, called, "Method should be called")
-	assert.Equal(t, "123", ctx1.Data().Get(context.DataKeyPathParameters).(objects.Map).Get("id"))
+	assert.Equal(t, "123", ctx1.Data().Get(context.DataKeyPathParameters).ObjxMap().Get("id").Data())
 
 }
 
@@ -43,12 +42,12 @@ func TestPathMatchHandler(t *testing.T) {
 	assert.True(t, will)
 	h.Handle(ctx1)
 	assert.True(t, called, "Method should be called")
-	assert.Equal(t, "123", ctx1.Data().Get(context.DataKeyPathParameters).(objects.Map).Get("id"))
+	assert.Equal(t, "123", ctx1.Data().Get(context.DataKeyPathParameters).ObjxMap().Get("id").Data())
 
 	ctx2 := context_test.MakeTestContextWithPath("/collection")
 	will, _ = h.WillHandle(ctx2)
 	assert.False(t, will)
-	assert.Nil(t, ctx2.Data().Get(context.DataKeyPathParameters))
+	assert.Nil(t, ctx2.Data().Get(context.DataKeyPathParameters).Data())
 
 	h.BreakCurrentPipeline = true
 	shouldStop, handleErr := h.Handle(ctx2)

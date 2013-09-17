@@ -257,7 +257,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	// GET /resource/{id}  -  Read
 	if restfulController, ok := controller.(controllers.RestfulReader); ok {
 		h.Map(http.MethodGet, pathWithID, func(ctx context.Context) error {
-			return restfulController.Read(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
+			return restfulController.Read(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
@@ -269,7 +269,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	// DELETE /resource/{id}  -  Delete
 	if restfulController, ok := controller.(controllers.RestfulDeletor); ok {
 		h.Map(http.MethodDelete, pathWithID, func(ctx context.Context) error {
-			return restfulController.Delete(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
+			return restfulController.Delete(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
@@ -281,7 +281,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	// PUT /resource/{id}  -  Update
 	if restfulController, ok := controller.(controllers.RestfulUpdater); ok {
 		h.Map(http.MethodPut, pathWithID, func(ctx context.Context) error {
-			return restfulController.Update(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
+			return restfulController.Update(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
@@ -293,7 +293,7 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	// POST /resource/{id}  -  Replace
 	if restfulController, ok := controller.(controllers.RestfulReplacer); ok {
 		h.Map(http.MethodPost, pathWithID, func(ctx context.Context) error {
-			return restfulController.Replace(ctx.PathParams().Get(RestfulIDParameterName).(string), ctx)
+			return restfulController.Replace(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
