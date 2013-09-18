@@ -15,7 +15,8 @@ import (
 // WebContext is a real context.Context that represents a single request.
 //
 // You can use the goweb/webcontext/test package to easily and quickly generate
-// test versions of the WebContext.
+// test versions of the WebContext.  See http://godoc.org/github.com/stretchr/goweb/webcontext/test
+// for more information.
 type WebContext struct {
 	path               *paths.Path
 	data               objx.Map
