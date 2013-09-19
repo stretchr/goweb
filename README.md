@@ -11,7 +11,7 @@ A lightweight RESTful web framework for Go.
 
   * "Using Goweb has greatly simplified the creation, maintenance, and consistency of several of our internal services, allowing us to focus our effort on the underlying behavior of the services themselves." Derek Buitenhuis, [Vimeo](https://vimeo.com/)
   * "We are actively developing with Goweb to implement the REST api in-front of a neural network application" Jon McMillan, [MCN Healthcare](http://www.mcnhealthcare.com/)
-  * "We're using Goweb as an API server for our tourist/guides application." Robert C. Mulley, [CB Insights](http://www.cbinsights.com/)
+  * "We are developing an API on top of Goweb that will power our platform as well as allow customers to access our data via a REST API." Robert Mulley, [CB Insights](http://www.cbinsights.com/)
 
 #### Are you using Goweb?
 
