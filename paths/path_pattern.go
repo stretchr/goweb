@@ -1,6 +1,7 @@
 package paths
 
 import (
+	"fmt"
 	"github.com/stretchr/objx"
 	stewstrings "github.com/stretchr/stew/strings"
 	"strings"
@@ -12,6 +13,7 @@ import (
   Valid paths include:
 
     /*** - Matches everything
+  	/*** /literal/ *** - match anything before and after literal
     /literal
     /{placeholder}
     /[optional placeholder]
@@ -59,7 +61,19 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 	checkSegments := p.path.Segments()
 	pathSegments := path.Segments()
 
-	lastCheckSegmentType := getSegmentType(checkSegments[len(checkSegments)-1])
+	lastCheckSegment := checkSegments[len(checkSegments)-1]
+	lastCheckSegmentType := getSegmentType(lastCheckSegment)
+
+	fmt.Printf("checkseg: %v, pathSeg %v\n", checkSegments, pathSegments)
+
+	// determine if this is a wildcard with a literal at the end
+	if len(checkSegments) == 2 &&
+		getSegmentType(checkSegments[0]) == segmentTypeCatchall &&
+		lastCheckSegmentType == segmentTypeLiteral {
+		if strings.ToLower(lastCheckSegment) == strings.ToLower(pathSegments[len(pathSegments)-1]) {
+			return pathMatch
+		}
+	}
 
 	// make sure the segments match in length, or there is a catchall
 	// at the end of the check path
