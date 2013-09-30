@@ -109,3 +109,40 @@ func TestPathPattern_GetPathMatch_Matches(t *testing.T) {
 	assert.False(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
 
 }
+
+func TestPathPattern_GetPathMatchCatchallPrefixLiteral_Matches(t *testing.T) {
+	// ***/literal
+	gp, _ := NewPathPattern("/***/books")
+
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/PEOPLE/123/BOOKS")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/People/123/Books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("people/123/books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("people/123/books/")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/books")).Matches)
+
+	assert.False(t, gp.GetPathMatch(NewPath("people/123/[books]/")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("people/123/{books}/")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people/123/")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people/123/books/hello")).Matches)
+}
+
+func TestPathPattern_GetPathMatchCatchallPrefixSuffix_Matches(t *testing.T) {
+	// ***/literal/***
+	gp, _ := NewPathPattern("/***/books/***")
+
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/PEOPLE/123/BOOKS")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/People/123/Books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("people/123/books")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("people/123/books/")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/lotr/chapters/one")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123/books/hello")).Matches)
+	assert.True(t, gp.GetPathMatch(NewPath("/books")).Matches)
+
+	assert.False(t, gp.GetPathMatch(NewPath("people/123/[books]/")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("people/123/{books}/")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people/123/novels/lotr/chapters/one")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people/123/novels/hello")).Matches)
+
+}

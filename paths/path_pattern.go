@@ -3,6 +3,7 @@ package paths
 import (
 	"github.com/stretchr/objx"
 	stewstrings "github.com/stretchr/stew/strings"
+	"regexp"
 	"strings"
 )
 
@@ -12,6 +13,7 @@ import (
   Valid paths include:
 
     /*** - Matches everything
+  	/*** /literal/ *** - match anything before and after literal
     /literal
     /{placeholder}
     /[optional placeholder]
@@ -59,7 +61,33 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 	checkSegments := p.path.Segments()
 	pathSegments := path.Segments()
 
-	lastCheckSegmentType := getSegmentType(checkSegments[len(checkSegments)-1])
+	lastCheckSegment := checkSegments[len(checkSegments)-1]
+	lastCheckSegmentType := getSegmentType(lastCheckSegment)
+
+	// handle catchall prefix, prefix literal, etc
+	// https://github.com/stretchr/goweb/issues/53
+	if getSegmentType(checkSegments[0]) == segmentTypeCatchall {
+		//ensure we are working with only literals
+		for _, pathSegment := range pathSegments {
+			if getSegmentType(pathSegment) != segmentTypeLiteral {
+				return PathDoesntMatch
+			}
+		}
+
+		// build the regex to match against the raw path
+		regexString := strings.Join(checkSegments, "")
+		regexString = strings.Replace(regexString, segmentCatchAll, "(.*)?", -1)
+
+		regexString = "(?i)^" + regexString + "$"
+
+		pathRegex := regexp.MustCompile(regexString)
+
+		if pathRegex.MatchString(path.RawPath) {
+			return pathMatch
+		}
+
+		return PathDoesntMatch
+	}
 
 	// make sure the segments match in length, or there is a catchall
 	// at the end of the check path
