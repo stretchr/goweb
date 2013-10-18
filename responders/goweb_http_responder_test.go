@@ -22,7 +22,7 @@ func TestHTTP_With(t *testing.T) {
 	http.With(ctx, 200, []byte("Hello Goweb"))
 
 	assert.Equal(t, context_test.TestResponseWriter.Output, "Hello Goweb")
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 200)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, 200)
 
 }
 
@@ -33,7 +33,7 @@ func TestHTTP_WithStatus(t *testing.T) {
 
 	httpResponder.WithStatus(ctx, 500)
 
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 500)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, 500)
 
 }
 
@@ -44,7 +44,7 @@ func TestHTTP_WithStatusAndText(t *testing.T) {
 
 	httpResponder.WithStatusText(ctx, 500)
 
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 500)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, 500)
 	assert.Equal(t, context_test.TestResponseWriter.Output, http.StatusText(500))
 
 }
@@ -57,11 +57,11 @@ func TestHTTP_WithStatus_WithAlways200(t *testing.T) {
 
 	ctx = context_test.MakeTestContextWithPath("people/123?always200=true")
 	httpResponder.WithStatus(ctx, 500)
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 200)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, 200)
 
 	ctx = context_test.MakeTestContextWithPath("people/123?always200=1")
 	httpResponder.WithStatus(ctx, 500)
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, 200)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, 200)
 
 }
 
@@ -72,7 +72,7 @@ func TestHTTP_WithOK(t *testing.T) {
 
 	httpResponder.WithOK(ctx)
 
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, http.StatusOK)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, http.StatusOK)
 
 }
 
@@ -83,7 +83,7 @@ func TestHTTP_WithRedirect(t *testing.T) {
 
 	httpResponder.WithRedirect(ctx, "people/123")
 
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, http.StatusFound)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, http.StatusFound)
 	assert.Equal(t, context_test.TestResponseWriter.Header()["Location"][0], "people/123")
 
 }
@@ -95,7 +95,7 @@ func TestHTTP_WithTemporaryRedirect(t *testing.T) {
 
 	httpResponder.WithTemporaryRedirect(ctx, "people/123")
 
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, http.StatusTemporaryRedirect)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, http.StatusTemporaryRedirect)
 	assert.Equal(t, context_test.TestResponseWriter.Header()["Location"][0], "people/123")
 
 }
@@ -107,7 +107,7 @@ func TestHTTP_WithPermanentRedirect(t *testing.T) {
 
 	httpResponder.WithPermanentRedirect(ctx, "people/123")
 
-	assert.Equal(t, context_test.TestResponseWriter.WrittenHeaderInt, http.StatusMovedPermanently)
+	assert.Equal(t, context_test.TestResponseWriter.StatusCode, http.StatusMovedPermanently)
 	assert.Equal(t, context_test.TestResponseWriter.Header()["Location"][0], "people/123")
 
 }

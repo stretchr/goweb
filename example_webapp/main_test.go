@@ -23,7 +23,7 @@ func TestRoutes(t *testing.T) {
 	goweb.Test(t, "GET people/me", func(t *testing.T, response *testifyhttp.TestResponseWriter) {
 
 		// should be a redirect
-		assert.Equal(t, http.StatusFound, response.WrittenHeaderInt, "Status code should be correct")
+		assert.Equal(t, http.StatusFound, response.StatusCode, "Status code should be correct")
 
 	})
 
