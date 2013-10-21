@@ -39,6 +39,30 @@ func TestAppendHandler(t *testing.T) {
 
 }
 
+func TestDataGetsCopiedToEachContext(t *testing.T) {
+
+	codecService := codecsservices.NewWebCodecService()
+	handler1 := new(handlers_test.TestHandler)
+	h := NewHttpHandler(codecService)
+
+	h.Data.Set("name", "Mat")
+
+	handler1.On("WillHandle", mock.Anything).Return(true, nil)
+	handler1.On("Handle", mock.Anything).Return(false, nil)
+
+	h.AppendHandler(handler1)
+	req, _ := http.NewRequest("GET", "something", nil)
+	h.ServeHTTP(nil, req)
+
+	assert.Equal(t, 1, len(h.HandlersPipe()))
+
+	mock.AssertExpectationsForObjects(t, handler1.Mock)
+	ctx := handler1.Calls[0].Arguments[0].(context.Context)
+
+	assert.Equal(t, ctx.Data().Get("name").Str(), "Mat")
+
+}
+
 func TestAppendPreHandler(t *testing.T) {
 
 	handler1 := new(handlers_test.TestHandler)

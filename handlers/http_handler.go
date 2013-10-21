@@ -4,6 +4,7 @@ import (
 	"fmt"
 	codecsservices "github.com/stretchr/codecs/services"
 	"github.com/stretchr/goweb/webcontext"
+	"github.com/stretchr/objx"
 	"net/http"
 	"strings"
 )
@@ -27,6 +28,10 @@ type HttpHandler struct {
 
 	// errorHandler represents the Handler that will be used to handle errors.
 	errorHandler Handler
+
+	// Data contains the initial data object that gets copied to each
+	// context object.
+	Data objx.Map
 }
 
 // NewHttpHandler creates a new HttpHandler obejct with the specified CodecService.
@@ -38,6 +43,9 @@ type HttpHandler struct {
 //     2 - Post handlers
 func NewHttpHandler(codecService codecsservices.CodecService) *HttpHandler {
 	h := new(HttpHandler)
+
+	// make empty data
+	h.Data = make(objx.Map)
 
 	// make pre, process and post pipes
 	h.Handlers = make(Pipe, 3)
@@ -62,6 +70,11 @@ func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, reques
 
 	// make the context
 	ctx := webcontext.NewWebContext(responseWriter, request, handler.codecService)
+
+	// copy the data
+	for k, v := range handler.Data {
+		ctx.Data()[k] = v
+	}
 
 	// run it through the handlers
 	_, err := handler.Handlers.Handle(ctx)
