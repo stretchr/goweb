@@ -81,7 +81,7 @@ type RestfulReplacer interface {
 // RestfulManyUpdater represents a controller capable of updating many resources.
 //
 // This is usually mapped to the following kind of request:
-//     PUT /resources/{id}
+//     PUT /resources
 type RestfulManyUpdater interface {
 	// UpdateMany updates many resources at once.
 	UpdateMany(ctx context.Context) error
