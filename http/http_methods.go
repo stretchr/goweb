@@ -9,6 +9,8 @@ const (
 	MethodPost string = "POST"
 	// MethodDelete is a string containing the DELETE method, in uppercase.
 	MethodDelete string = "DELETE"
+	// MethodPatch is a string containing the PATCH method, in uppercase.
+	MethodPatch string = "PATCH"
 	// MethodHead is a string containing the HEAD method, in uppercase.
 	MethodHead string = "HEAD"
 	// MethodOptions is a string containing the OPTIONS method, in uppercase.

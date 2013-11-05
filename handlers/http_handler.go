@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	codecsservices "github.com/stretchr/codecs/services"
+	gowebhttp "github.com/stretchr/goweb/http"
 	"github.com/stretchr/goweb/webcontext"
 	"github.com/stretchr/objx"
 	"net/http"
@@ -32,6 +33,27 @@ type HttpHandler struct {
 	// Data contains the initial data object that gets copied to each
 	// context object.
 	Data objx.Map
+
+	// HttpMethodForCreate is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForCreate string
+	// HttpMethodForReadOne is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForReadOne string
+	// HttpMethodForReadMany is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForReadMany string
+	// HttpMethodForDeleteOne is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForDeleteOne string
+	// HttpMethodForDeleteMany is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForDeleteMany string
+	// HttpMethodForUpdateOne is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForUpdateOne string
+	// HttpMethodForUpdateMany is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForUpdateMany string
+	// HttpMethodForReplace is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForReplace string
+	// HttpMethodForHead is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForHead string
+	// HttpMethodForOptions is the HTTP method to use for this action when mapping controllers.
+	HttpMethodForOptions string
 }
 
 // NewHttpHandler creates a new HttpHandler obejct with the specified CodecService.
@@ -53,7 +75,20 @@ func NewHttpHandler(codecService codecsservices.CodecService) *HttpHandler {
 	h.Handlers[1] = make(Pipe, 0) // process
 	h.Handlers[2] = make(Pipe, 0) // post
 
+	// save the codec service
 	h.codecService = codecService
+
+	// assign default HTTP methods
+	h.HttpMethodForCreate = gowebhttp.MethodPost
+	h.HttpMethodForReadOne = gowebhttp.MethodGet
+	h.HttpMethodForReadMany = gowebhttp.MethodGet
+	h.HttpMethodForDeleteOne = gowebhttp.MethodDelete
+	h.HttpMethodForDeleteMany = gowebhttp.MethodDelete
+	h.HttpMethodForUpdateOne = gowebhttp.MethodPatch
+	h.HttpMethodForUpdateMany = gowebhttp.MethodPatch
+	h.HttpMethodForReplace = gowebhttp.MethodPut
+	h.HttpMethodForHead = gowebhttp.MethodHead
+	h.HttpMethodForOptions = gowebhttp.MethodOptions
 
 	return h
 }

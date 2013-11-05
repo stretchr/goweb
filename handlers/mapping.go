@@ -251,61 +251,61 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 
 	// POST /resource  -  Create
 	if restfulController, ok := controller.(controllers.RestfulCreator); ok {
-		h.Map(http.MethodPost, path, restfulController.Create, matcherFuncs)
+		h.Map(h.HttpMethodForCreate, path, restfulController.Create, matcherFuncs)
 	}
 
 	// GET /resource/{id}  -  Read
 	if restfulController, ok := controller.(controllers.RestfulReader); ok {
-		h.Map(http.MethodGet, pathWithID, func(ctx context.Context) error {
+		h.Map(h.HttpMethodForReadOne, pathWithID, func(ctx context.Context) error {
 			return restfulController.Read(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
 	// GET /resource  -  ReadMany
 	if restfulController, ok := controller.(controllers.RestfulManyReader); ok {
-		h.Map(http.MethodGet, path, restfulController.ReadMany, matcherFuncs)
+		h.Map(h.HttpMethodForReadMany, path, restfulController.ReadMany, matcherFuncs)
 	}
 
 	// DELETE /resource/{id}  -  Delete
 	if restfulController, ok := controller.(controllers.RestfulDeletor); ok {
-		h.Map(http.MethodDelete, pathWithID, func(ctx context.Context) error {
+		h.Map(h.HttpMethodForDeleteOne, pathWithID, func(ctx context.Context) error {
 			return restfulController.Delete(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
 	// DELETE /resource  -  DeleteMany
 	if restfulController, ok := controller.(controllers.RestfulManyDeleter); ok {
-		h.Map(http.MethodDelete, path, restfulController.DeleteMany, matcherFuncs)
+		h.Map(h.HttpMethodForDeleteMany, path, restfulController.DeleteMany, matcherFuncs)
 	}
 
 	// PUT /resource/{id}  -  Update
 	if restfulController, ok := controller.(controllers.RestfulUpdater); ok {
-		h.Map(http.MethodPut, pathWithID, func(ctx context.Context) error {
+		h.Map(h.HttpMethodForUpdateOne, pathWithID, func(ctx context.Context) error {
 			return restfulController.Update(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
 	// PUT /resource  -  UpdateMany
 	if restfulController, ok := controller.(controllers.RestfulManyUpdater); ok {
-		h.Map(http.MethodPut, path, restfulController.UpdateMany, matcherFuncs)
+		h.Map(h.HttpMethodForUpdateMany, path, restfulController.UpdateMany, matcherFuncs)
 	}
 
 	// POST /resource/{id}  -  Replace
 	if restfulController, ok := controller.(controllers.RestfulReplacer); ok {
-		h.Map(http.MethodPost, pathWithID, func(ctx context.Context) error {
+		h.Map(h.HttpMethodForReplace, pathWithID, func(ctx context.Context) error {
 			return restfulController.Replace(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
 	// HEAD /resource/[id]  -  Head
 	if restfulController, ok := controller.(controllers.RestfulHead); ok {
-		h.Map(http.MethodHead, pathWithOptionalID, restfulController.Head, matcherFuncs)
+		h.Map(h.HttpMethodForHead, pathWithOptionalID, restfulController.Head, matcherFuncs)
 	}
 
 	// OPTIONS /resource/[id]  -  Options
 	if restfulController, ok := controller.(controllers.RestfulOptions); ok {
 
-		h.Map(http.MethodOptions, pathWithOptionalID, restfulController.Options, matcherFuncs)
+		h.Map(h.HttpMethodForOptions, pathWithOptionalID, restfulController.Options, matcherFuncs)
 
 	} else {
 

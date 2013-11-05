@@ -42,6 +42,11 @@ We are looking to put together a list of companies / people that are using Goweb
   * Better error management
   * Performance improvements from Goweb 1
 
+## Interesting [articles](https://github.com/stretchr/goweb/wiki)
+
+  * [Mapping deep nested RESTful controllers](https://github.com/stretchr/goweb/wiki/Mapping-deep-nested-RESTful-controllers)
+  * [Using different HTTP Methods when mapping controllers](https://github.com/stretchr/goweb/wiki/Using-different-HTTP-Methods-when-mapping-controllers)
+
 ## People who use Goweb also use
 
   * [Gomniauth](https://github.com/stretchr/gomniauth) - Authentication package (OAuth2 etc.)
