@@ -44,6 +44,26 @@ func TestRespond(t *testing.T) {
 
 }
 
+func TestRespondEnvelopOptions(t *testing.T) {
+
+	http := new(GowebHTTPResponder)
+	codecService := codecsservices.NewWebCodecService()
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	data := map[string]interface{}{"name": "Mat"}
+
+	API.AlwaysEnvelopResponse = false
+
+	API.Respond(ctx, 200, data, nil)
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"name\":\"Mat\"}")
+
+	ctx = context_test.MakeTestContextWithPath("/?envelop=true")
+
+	API.Respond(ctx, 200, data, nil)
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"d\":{\"name\":\"Mat\"},\"s\":200}")
+
+}
+
 /*
 	testing codecs.Facade pattern
 */

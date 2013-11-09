@@ -40,6 +40,9 @@ type GowebAPIResponder struct {
 
 	// StandardFieldErrorsKey is the response object field name for the errors.
 	StandardFieldErrorsKey string
+
+	// AlwaysEnvelopeResponse tells Goweb whether to envelope the response or not
+	AlwaysEnvelopResponse bool
 }
 
 func NewGowebAPIResponder(codecService codecsservices.CodecService, httpResponder HTTPResponder) *GowebAPIResponder {
@@ -49,6 +52,7 @@ func NewGowebAPIResponder(codecService codecsservices.CodecService, httpResponde
 	api.StandardFieldDataKey = DefaultStandardFieldDataKey
 	api.StandardFieldStatusKey = DefaultStandardFieldStatusKey
 	api.StandardFieldErrorsKey = DefaultStandardFieldErrorsKey
+	api.AlwaysEnvelopResponse = true // True because of existing code, should be changed to false when breaking of backward compatibility is allowed
 	return api
 }
 
@@ -128,24 +132,38 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 // Responds to the Context with the specified status, data and errors.
 func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interface{}, errors []string) error {
 
-	// make the standard response object
-	sro := map[string]interface{}{a.StandardFieldStatusKey: status}
-
 	if data != nil {
 
 		var dataErr error
-		sro[a.StandardFieldDataKey], dataErr = codecs.PublicData(data, nil)
+		data, dataErr = codecs.PublicData(data, nil)
 
 		if dataErr != nil {
 			return dataErr
 		}
 
 	}
-	if len(errors) > 0 {
-		sro[a.StandardFieldErrorsKey] = errors
+
+	var sro map[string]interface{}
+	// make the standard response object
+	if a.AlwaysEnvelopResponse || ctx.QueryValue("envelop") == "true" {
+		sro = map[string]interface{}{
+			a.StandardFieldStatusKey: status,
+		}
+
+		if data != nil {
+			sro[a.StandardFieldDataKey] = data
+		}
+
+		if len(errors) > 0 {
+			sro[a.StandardFieldErrorsKey] = errors
+		}
+	} else {
+		if data != nil {
+			sro = data.(map[string]interface{})
+		}
 	}
 
-	// transofm the object
+	// transform the object
 	var transformErr error
 	sro, transformErr = a.TransformStandardResponseObject(ctx, sro)
 
