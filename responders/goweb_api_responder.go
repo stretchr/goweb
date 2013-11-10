@@ -145,7 +145,7 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 
 	var sro map[string]interface{}
 	// make the standard response object
-	if a.AlwaysEnvelopResponse || ctx.QueryValue("envelop") == "true" {
+	if (a.AlwaysEnvelopResponse && ctx.QueryValue("envelop") != "false") || ctx.QueryValue("envelop") == "true" {
 		sro = map[string]interface{}{
 			a.StandardFieldStatusKey: status,
 		}

@@ -49,14 +49,21 @@ func TestRespondEnvelopOptions(t *testing.T) {
 	http := new(GowebHTTPResponder)
 	codecService := codecsservices.NewWebCodecService()
 	API := NewGowebAPIResponder(codecService, http)
-	ctx := context_test.MakeTestContext()
+	ctx := context_test.MakeTestContextWithPath("/?envelop=false")
 	data := map[string]interface{}{"name": "Mat"}
 
+	// When AlwaysEvenlopResponse = true but ?envelop=false
+	API.Respond(ctx, 200, data, nil)
+	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"name\":\"Mat\"}")
+
+	// When AlwaysEvenlopResponse = false
+	ctx = context_test.MakeTestContext()
 	API.AlwaysEnvelopResponse = false
 
 	API.Respond(ctx, 200, data, nil)
 	assert.Equal(t, context_test.TestResponseWriter.Output, "{\"name\":\"Mat\"}")
 
+	// When AlwaysEvenlopResponse = false but ?envelop=true
 	ctx = context_test.MakeTestContextWithPath("/?envelop=true")
 
 	API.Respond(ctx, 200, data, nil)
