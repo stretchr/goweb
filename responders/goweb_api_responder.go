@@ -52,7 +52,8 @@ func NewGowebAPIResponder(codecService codecsservices.CodecService, httpResponde
 	api.StandardFieldDataKey = DefaultStandardFieldDataKey
 	api.StandardFieldStatusKey = DefaultStandardFieldStatusKey
 	api.StandardFieldErrorsKey = DefaultStandardFieldErrorsKey
-	api.AlwaysEnvelopResponse = false
+	api.AlwaysEnvelopResponse = true // True because of existing code, should be changed to false when breaking of backward compatibility is allowed
+
 	return api
 }
 
