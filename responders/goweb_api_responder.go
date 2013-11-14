@@ -28,7 +28,7 @@ type GowebAPIResponder struct {
 
 	// transformer is the func that will be used to transform the standard
 	// response object before it is returned.
-	transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)
+	transformer func(ctx context.Context, object interface{}) (interface{}, error)
 
 	// field names
 
@@ -52,7 +52,7 @@ func NewGowebAPIResponder(codecService codecsservices.CodecService, httpResponde
 	api.StandardFieldDataKey = DefaultStandardFieldDataKey
 	api.StandardFieldStatusKey = DefaultStandardFieldStatusKey
 	api.StandardFieldErrorsKey = DefaultStandardFieldErrorsKey
-	api.AlwaysEnvelopResponse = true // True because of existing code, should be changed to false when breaking of backward compatibility is allowed
+	api.AlwaysEnvelopResponse = false
 	return api
 }
 
@@ -73,7 +73,7 @@ func (a *GowebAPIResponder) GetCodecService() codecsservices.CodecService {
 
 // TransformStandardResponseObject transforms the standard response object before it is written to the response if a
 // transformer func has been set via SetStandardResponseObjectTransformer.
-func (a *GowebAPIResponder) TransformStandardResponseObject(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error) {
+func (a *GowebAPIResponder) TransformStandardResponseObject(ctx context.Context, object interface{}) (interface{}, error) {
 	if a.transformer != nil {
 		return a.transformer(ctx, object)
 	}
@@ -82,7 +82,7 @@ func (a *GowebAPIResponder) TransformStandardResponseObject(ctx context.Context,
 
 // SetStandardResponseObjectTransformer sets the function to use to transform the standard response object beore it is
 // written to the response.
-func (a *GowebAPIResponder) SetStandardResponseObjectTransformer(transformer func(ctx context.Context, object map[string]interface{}) (map[string]interface{}, error)) {
+func (a *GowebAPIResponder) SetStandardResponseObjectTransformer(transformer func(ctx context.Context, object interface{}) (interface{}, error)) {
 	a.transformer = transformer
 }
 
@@ -143,10 +143,9 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 
 	}
 
-	var sro map[string]interface{}
 	// make the standard response object
 	if (a.AlwaysEnvelopResponse && ctx.QueryValue("envelop") != "false") || ctx.QueryValue("envelop") == "true" {
-		sro = map[string]interface{}{
+		sro := map[string]interface{}{
 			a.StandardFieldStatusKey: status,
 		}
 
@@ -157,21 +156,19 @@ func (a *GowebAPIResponder) Respond(ctx context.Context, status int, data interf
 		if len(errors) > 0 {
 			sro[a.StandardFieldErrorsKey] = errors
 		}
-	} else {
-		if data != nil {
-			sro = data.(map[string]interface{})
-		}
+
+		data = sro
 	}
 
 	// transform the object
 	var transformErr error
-	sro, transformErr = a.TransformStandardResponseObject(ctx, sro)
+	data, transformErr = a.TransformStandardResponseObject(ctx, data)
 
 	if transformErr != nil {
 		return transformErr
 	}
 
-	return a.WriteResponseObject(ctx, status, sro)
+	return a.WriteResponseObject(ctx, status, data)
 
 }
 
