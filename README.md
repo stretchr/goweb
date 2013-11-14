@@ -6,6 +6,7 @@ A lightweight RESTful web framework for Go.
 
   * If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)
   * For examples and usage, please read the [Goweb API Documentation](http://godoc.org/github.com/stretchr/goweb)
+  * Read our [Articles](https://github.com/stretchr/goweb/wiki)
 
 ## Who uses Goweb?
 
