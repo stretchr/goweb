@@ -224,8 +224,8 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	pathWithOptionalID := stewstrings.MergeStrings(path, "/[", RestfulIDParameterName, "]") // e.g.  people/[123]
 
 	// get the HTTP methods that we will end up mapping
-	collectiveMethods := controllers.OptionsListForResourceCollection(controller)
-	singularMethods := controllers.OptionsListForSingleResource(controller)
+	collectiveMethods := optionsListForResourceCollection(h, controller)
+	singularMethods := optionsListForSingleResource(h, controller)
 
 	// BeforeHandler
 	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
