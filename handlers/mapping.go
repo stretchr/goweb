@@ -224,8 +224,8 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 	pathWithOptionalID := stewstrings.MergeStrings(path, "/[", RestfulIDParameterName, "]") // e.g.  people/[123]
 
 	// get the HTTP methods that we will end up mapping
-	collectiveMethods := controllers.OptionsListForResourceCollection(controller)
-	singularMethods := controllers.OptionsListForSingleResource(controller)
+	collectiveMethods := optionsListForResourceCollection(h, controller)
+	singularMethods := optionsListForSingleResource(h, controller)
 
 	// BeforeHandler
 	if beforeController, ok := controller.(controllers.BeforeHandler); ok {
@@ -278,19 +278,19 @@ func (h *HttpHandler) MapController(options ...interface{}) error {
 		h.Map(h.HttpMethodForDeleteMany, path, restfulController.DeleteMany, matcherFuncs)
 	}
 
-	// PUT /resource/{id}  -  Update
+	// PATCH /resource/{id}  -  Update
 	if restfulController, ok := controller.(controllers.RestfulUpdater); ok {
 		h.Map(h.HttpMethodForUpdateOne, pathWithID, func(ctx context.Context) error {
 			return restfulController.Update(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)
 		}, matcherFuncs)
 	}
 
-	// PUT /resource  -  UpdateMany
+	// PATCH /resource  -  UpdateMany
 	if restfulController, ok := controller.(controllers.RestfulManyUpdater); ok {
 		h.Map(h.HttpMethodForUpdateMany, path, restfulController.UpdateMany, matcherFuncs)
 	}
 
-	// POST /resource/{id}  -  Replace
+	// PUT /resource/{id}  -  Replace
 	if restfulController, ok := controller.(controllers.RestfulReplacer); ok {
 		h.Map(h.HttpMethodForReplace, pathWithID, func(ctx context.Context) error {
 			return restfulController.Replace(ctx.PathParams().Get(RestfulIDParameterName).Str(), ctx)

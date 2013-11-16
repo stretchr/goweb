@@ -63,7 +63,7 @@ type RestfulManyDeleter interface {
 // RestfulUpdater represents a controller capable of updating a single resource.
 //
 // This is usually mapped to the following kind of request:
-//     PUT /resources/{id}
+//     PATCH /resources/{id}
 type RestfulUpdater interface {
 	// Update updates a single resource.
 	Update(id string, ctx context.Context) error
@@ -72,7 +72,7 @@ type RestfulUpdater interface {
 // RestfulReplacer represents a controller capable of replacing a single resource.
 //
 // This is usually mapped to the following kind of request:
-//     POST /resources/{id}
+//     PUT /resources/{id}
 type RestfulReplacer interface {
 	// Replace replaces a single resource.
 	Replace(id string, ctx context.Context) error
@@ -81,7 +81,7 @@ type RestfulReplacer interface {
 // RestfulManyUpdater represents a controller capable of updating many resources.
 //
 // This is usually mapped to the following kind of request:
-//     PUT /resources
+//     PATCH /resources
 type RestfulManyUpdater interface {
 	// UpdateMany updates many resources at once.
 	UpdateMany(ctx context.Context) error
