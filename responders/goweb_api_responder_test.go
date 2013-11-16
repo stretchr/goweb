@@ -227,7 +227,7 @@ func TestAPI_StandardResponseObjectTransformer(t *testing.T) {
 	ctx := context_test.MakeTestContext()
 	data := map[string]interface{}{"name": "Mat"}
 
-	API.SetStandardResponseObjectTransformer(func(ctx context.Context, sro map[string]interface{}) (map[string]interface{}, error) {
+	API.SetStandardResponseObjectTransformer(func(ctx context.Context, sro interface{}) (interface{}, error) {
 
 		return map[string]interface{}{
 			"sro":       sro,
