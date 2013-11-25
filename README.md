@@ -47,6 +47,7 @@ We are looking to put together a list of companies / people that are using Goweb
 
   * [Mapping deep nested RESTful controllers](https://github.com/stretchr/goweb/wiki/Mapping-deep-nested-RESTful-controllers)
   * [Using different HTTP Methods when mapping controllers](https://github.com/stretchr/goweb/wiki/Using-different-HTTP-Methods-when-mapping-controllers)
+  * [Controlling API output](https://github.com/stretchr/goweb/wiki/Controlling-API-output)
 
 ## People who use Goweb also use
 
