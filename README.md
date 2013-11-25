@@ -62,7 +62,7 @@ We are looking to put together a list of companies / people that are using Goweb
 Contributing
 ============
 
-Please feel free to submit issues, fork the repository and send pull requests!
+Please feel free to submit issues, fork the repository and send pull requests.  Be sure to [check out our development practices](https://github.com/stretchr/goweb/wiki/Development-practices) before you get going.
 
 When submitting an issue, we ask that you please include steps to reproduce the issue so we can see it on our end also!
 
