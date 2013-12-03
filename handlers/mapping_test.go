@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	http_test "github.com/stretchr/testify/http"
 	"github.com/stretchr/testify/mock"
+	"log"
 	"net/http"
 	"testing"
 )
@@ -534,18 +535,20 @@ func TestBeforeHandler(t *testing.T) {
 
 	h.MapController(cont)
 
+	log.Printf("%s", h)
+
 	if assert.Equal(t, 2, len(h.PreHandlersPipe()), "2 pre handler's expected") {
 		assertPathMatchHandler(t, h.PreHandlersPipe()[0].(*PathMatchHandler), "/test", "POST", "before POST /test")
-		assertPathMatchHandler(t, h.PreHandlersPipe()[1].(*PathMatchHandler), "/test/123", "POST", "before POST /test/123")
-		assertPathMatchHandler(t, h.PreHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "before options /test")
-		assertPathMatchHandler(t, h.PreHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "before options /test/123")
+		assertPathMatchHandler(t, h.PreHandlersPipe()[1].(*PathMatchHandler), "/test/123", "PUT", "before PUT /test/123")
+		assertPathMatchHandler(t, h.PreHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "before OPTIONS /test")
+		assertPathMatchHandler(t, h.PreHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "before OPTIONS /test/123")
 	}
 
 	if assert.Equal(t, 2, len(h.PostHandlersPipe()), "2 post handler's expected") {
 		assertPathMatchHandler(t, h.PostHandlersPipe()[0].(*PathMatchHandler), "/test", "POST", "after POST /test")
-		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "POST", "after POST /test/123")
-		assertPathMatchHandler(t, h.PostHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "after options /test")
-		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "after options /test/123")
+		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "PUT", "after PUT /test/123")
+		assertPathMatchHandler(t, h.PostHandlersPipe()[0].(*PathMatchHandler), "/test", "OPTIONS", "after OPTIONS /test")
+		assertPathMatchHandler(t, h.PostHandlersPipe()[1].(*PathMatchHandler), "/test/123", "OPTIONS", "after OPTIONS /test/123")
 	}
 
 }
