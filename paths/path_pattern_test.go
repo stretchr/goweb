@@ -45,6 +45,12 @@ func TestPathPattern_GetPathMatch_Extensions(t *testing.T) {
 	assert.Equal(t, m.Parameters["title"], "origin.of.species")
 	assert.Equal(t, m.Parameters["chapter"], "2")
 
+	gp, _ = NewPathPattern("/places/{ipaddress}/something")
+	m = gp.GetPathMatch(NewPath("places/10.0.0.1/something"))
+
+	assert.True(t, m.Matches)
+	assert.Equal(t, m.Parameters["ipaddress"], "10.0.0.1")
+
 }
 
 func TestPathPattern_GetPathMatch_Edges(t *testing.T) {
