@@ -77,9 +77,7 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 		// build the regex to match against the raw path
 		regexString := strings.Join(checkSegments, "")
 		regexString = strings.Replace(regexString, segmentCatchAll, "(.*)?", -1)
-
 		regexString = "(?i)^" + regexString + "$"
-
 		pathRegex := regexp.MustCompile(regexString)
 
 		if pathRegex.MatchString(path.RawPath) {
@@ -93,8 +91,8 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 	// at the end of the check path
 	if len(checkSegments) < len(pathSegments) {
 
-		// check segments: /people/{id}
-		// path segments:  /people
+		// check segments: /poeple/{something}
+		// path segments: /people/something/more
 
 		// is the last segment a catchall?
 		if lastCheckSegmentType != segmentTypeCatchall {
@@ -103,8 +101,8 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 
 	} else if len(checkSegments) > len(pathSegments) {
 
-		// check segments: /poeple/{something}
-		// path segments: /people/something/more
+		// check segments: /people/{id}
+		// path segments:  /people
 
 		// this situation is only OK if the last segment is optional, or
 		// if it's the catch-all.
@@ -126,11 +124,23 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 				return PathDoesntMatch
 			}
 
-		case segmentTypeDynamic, segmentTypeDynamicOptional:
+		case segmentTypeDynamic:
 
 			if segmentIndex < len(pathSegments) {
+				// set the parameter value
+				pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
+			} else {
+				// missing variable - and it's not optional - see https://github.com/stretchr/goweb/issues/77
+				return PathDoesntMatch
+			}
+
+		case segmentTypeDynamicOptional:
+
+			if segmentIndex < len(pathSegments) {
+				// set the parameter value
 				pathMatch.Parameters[cleanSegmentName(checkSegment)] = pathSegments[segmentIndex]
 			}
+
 		}
 
 	}
