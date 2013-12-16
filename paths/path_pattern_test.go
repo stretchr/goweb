@@ -114,6 +114,12 @@ func TestPathPattern_GetPathMatch_Matches(t *testing.T) {
 
 	assert.False(t, gp.GetPathMatch(NewPath("/people/123/books")).Matches)
 
+	// /literal/{variable}/*** (should only match IF there's a variable)
+	gp, _ = NewPathPattern("/people/{id}/***")
+	assert.True(t, gp.GetPathMatch(NewPath("/people/123")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people/")).Matches)
+	assert.False(t, gp.GetPathMatch(NewPath("/people")).Matches)
+
 }
 
 func TestPathPattern_GetPathMatchCatchallPrefixLiteral_Matches(t *testing.T) {
