@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/url"
 	"testing"
+	"github.com/stretchr/codecs/json"
 )
 
 func TestAPI_Interface(t *testing.T) {
@@ -217,6 +218,34 @@ func TestWriteResponseObject_ContentNegotiation_FileExtension(t *testing.T) {
 
 	}
 
+}
+
+type CodecOptionsTester struct {
+	json.JsonCodec
+}
+
+func (c *CodecOptionsTester) Marshal(data interface{}, options map[string]interface{}) ([]byte, error) {
+	encapsulated := map[string]interface{}{
+		"data": data,
+		"test_option": options["test_option"],
+	}
+	return c.JsonCodec.Marshal(encapsulated, nil)
+}
+
+func TestAPI_WriteResponseObject_WithCodecOptions(t *testing.T) {
+	http := new(GowebHTTPResponder)
+	codecService := new(codecsservices.WebCodecService)
+	codecService.AddCodec(new(CodecOptionsTester))
+	API := NewGowebAPIResponder(codecService, http)
+	ctx := context_test.MakeTestContext()
+	test_option := "test"
+	ctx.CodecOptions().Set("test_option", test_option)
+
+	testData := "data"
+
+	API.WriteResponseObject(ctx, 200, testData)
+
+	assert.Equal(t, context_test.TestResponseWriter.Output, `{"data":"`+testData+`","test_option":"`+test_option+`"}`)
 }
 
 func TestAPI_StandardResponseObjectTransformer(t *testing.T) {

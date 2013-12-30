@@ -63,6 +63,10 @@ type Context interface {
 	// Data gets a map of data about the context.
 	Data() objx.Map
 
+	// CodecOptions gets a map of options that are passed to codecs
+	// upon responding.
+	CodecOptions() objx.Map
+
 	// CodecService gets the codecsservices.CodecService that this Context will use to marshal
 	// and unmarshal data to and from objects.
 	CodecService() codecsservices.CodecService
