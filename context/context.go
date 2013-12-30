@@ -64,7 +64,8 @@ type Context interface {
 	Data() objx.Map
 
 	// CodecOptions gets a map of options that are passed to codecs
-	// upon responding.
+	// upon responding.  If you need to pass additional options to a
+	// codec, you can add data to the value returned by this method.
 	CodecOptions() objx.Map
 
 	// CodecService gets the codecsservices.CodecService that this Context will use to marshal

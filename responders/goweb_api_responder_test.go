@@ -232,7 +232,7 @@ func (c *CodecOptionsTester) Marshal(data interface{}, options map[string]interf
 	return c.JsonCodec.Marshal(encapsulated, nil)
 }
 
-func TestAPI_WriteResponseObject_WithCodecOptions(t *testing.T) {
+func TestAPI_WriteResponseObject_CodecOptions(t *testing.T) {
 	http := new(GowebHTTPResponder)
 	codecService := new(codecsservices.WebCodecService)
 	codecService.AddCodec(new(CodecOptionsTester))
