@@ -113,8 +113,6 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 
 	// do we need to add some options?
 	if hasCallback {
-		// Don't modify the original
-		options = options.Copy()
 		options[constants.OptionKeyClientCallback] = ctx.QueryValue(CallbackParameter)
 	}
 
