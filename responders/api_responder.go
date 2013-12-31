@@ -15,6 +15,10 @@ var (
 
 /*
   APIResponder represents objects capable of provide API responses.
+  Note that when one of the response methods is called, it may
+  (depending on the request) add data to the map returned by
+  context.Context.CodecOptions() before passing it off to the chosen
+  codec's Marshal method.
 */
 type APIResponder interface {
 
@@ -51,7 +55,9 @@ type APIResponder interface {
 	Respond(ctx context.Context, status int, data interface{}, errors []string) error
 
 	// WriteResponseObject writes the status code and response object to the HttpResponseWriter in
-	// the specified context, in the format best suited based on the request.
+	// the specified context, in the format best suited based on the
+	// request.  In certain cases, some data may be added to the
+	// passed in context.Context value's CodecOptions() value.
 	//
 	// Goweb uses the WebCodecService to decide which codec to use when responding
 	// see http://godoc.org/github.com/stretchr/codecs/services#WebCodecService for more information.

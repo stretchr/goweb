@@ -112,7 +112,7 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 	options := ctx.CodecOptions()
 
 	// do we need to add some options?
-	if hasCallback {
+	if _, exists := options[constants.OptionKeyClientCallback]; hasCallback && !exists {
 		options[constants.OptionKeyClientCallback] = ctx.QueryValue(CallbackParameter)
 	}
 
