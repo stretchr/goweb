@@ -109,11 +109,11 @@ func (a *GowebAPIResponder) WriteResponseObject(ctx context.Context, status int,
 		return codecError
 	}
 
-	var options map[string]interface{}
+	options := ctx.CodecOptions()
 
 	// do we need to add some options?
-	if hasCallback {
-		options = map[string]interface{}{constants.OptionKeyClientCallback: ctx.QueryValue(CallbackParameter)}
+	if _, exists := options[constants.OptionKeyClientCallback]; hasCallback && !exists {
+		options[constants.OptionKeyClientCallback] = ctx.QueryValue(CallbackParameter)
 	}
 
 	output, marshalErr := service.MarshalWithCodec(codec, responseObject, options)

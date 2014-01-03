@@ -129,6 +129,16 @@ func TestData(t *testing.T) {
 
 }
 
+func TestCodecOptions(t *testing.T) {
+
+	c := new(WebContext)
+
+	c.codecOptions = nil
+
+	assert.NotNil(t, c.CodecOptions())
+	assert.NotNil(t, c.codecOptions)
+}
+
 func TestPathParams(t *testing.T) {
 
 	responseWriter := new(http_test.TestResponseWriter)

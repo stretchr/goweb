@@ -20,6 +20,7 @@ import (
 type WebContext struct {
 	path               *paths.Path
 	data               objx.Map
+	codecOptions       objx.Map
 	httpRequest        *http.Request
 	httpResponseWriter http.ResponseWriter
 	requestBody        []byte
@@ -61,6 +62,15 @@ func (c *WebContext) Data() objx.Map {
 		c.data = make(objx.Map)
 	}
 	return c.data
+}
+
+// CodecOptions gets a map of options to pass to codecs when
+// responding.
+func (c *WebContext) CodecOptions() objx.Map {
+	if c.codecOptions == nil {
+		c.codecOptions = make(objx.Map)
+	}
+	return c.codecOptions
 }
 
 // FileExtension gets the extension of the file from the HttpRequest().
