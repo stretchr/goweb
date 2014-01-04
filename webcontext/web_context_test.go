@@ -75,6 +75,10 @@ func TestFileExtension(t *testing.T) {
 	c = NewWebContext(responseWriter, testRequest, codecService)
 	assert.Equal(t, ".xml", c.FileExtension())
 
+	testRequest, _ = http.NewRequest("get", "http://goweb.org/people.with.dots/123.xml?a=b", nil)
+        c = NewWebContext(responseWriter, testRequest, codecService)
+        assert.Equal(t, ".xml", c.FileExtension())
+
 }
 
 func TestMethodString(t *testing.T) {
