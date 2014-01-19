@@ -75,7 +75,11 @@ func (c *WebContext) CodecOptions() objx.Map {
 
 // FileExtension gets the extension of the file from the HttpRequest().
 func (c *WebContext) FileExtension() string {
-	return strings.ToLower(path.Ext(c.HttpRequest().URL.RequestURI()))
+	ext := strings.ToLower(path.Ext(c.HttpRequest().URL.RequestURI()))
+	if idx := strings.Index("?", ext); idx != -1 {
+		ext = ext[:idx]
+	}
+	return ext
 }
 
 // RequestData gets the data out of the body of the request as a usable object.
