@@ -158,3 +158,10 @@ func TestPathPattern_GetPathMatchCatchallPrefixSuffix_Matches(t *testing.T) {
 	assert.False(t, gp.GetPathMatch(NewPath("/people/123/novels/hello")).Matches)
 
 }
+
+func TestIssue81(t *testing.T) {
+	p, _ := NewPathPattern("/prefix/static/***")
+	assert.NotPanics(t, func() {
+		assert.False(t, p.GetPathMatch(NewPath("/prefix/")).Matches)
+	})
+}
