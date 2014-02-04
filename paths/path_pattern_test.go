@@ -164,4 +164,6 @@ func TestIssue81(t *testing.T) {
 	assert.NotPanics(t, func() {
 		assert.False(t, p.GetPathMatch(NewPath("/prefix/")).Matches)
 	})
+	assert.True(t, p.GetPathMatch(NewPath("/prefix/static")).Matches)
+	assert.False(t, p.GetPathMatch(NewPath("/static")).Matches)
 }
