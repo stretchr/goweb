@@ -119,8 +119,14 @@ func (p *PathPattern) GetPathMatch(path *Path) *PathMatch {
 		switch getSegmentType(checkSegment) {
 		case segmentTypeLiteral:
 
-			pathSegment := pathSegments[segmentIndex]
-			if strings.ToLower(pathSegment) != strings.ToLower(checkSegment) {
+			if segmentIndex < len(pathSegments) {
+
+				pathSegment := pathSegments[segmentIndex]
+				if strings.ToLower(pathSegment) != strings.ToLower(checkSegment) {
+					return PathDoesntMatch
+				}
+
+			} else {
 				return PathDoesntMatch
 			}
 
