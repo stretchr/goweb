@@ -102,6 +102,11 @@ func (handler *HttpHandler) CodecService() codecsservices.CodecService {
 // ServeHTTP servers the actual HTTP request by buidling a context and running
 // it through all the handlers.
 func (handler *HttpHandler) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+	// override the method if needed
+	method := request.Header.Get("X-HTTP-Method-Override")
+	if method != "" {
+		request.Method = method
+	}
 
 	// make the context
 	ctx := webcontext.NewWebContext(responseWriter, request, handler.codecService)
