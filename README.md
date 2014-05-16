@@ -6,7 +6,7 @@ A lightweight RESTful web framework for Go.
 
 [![wercker status](https://app.wercker.com/status/560303ffa373a43c863b7f352262f1e3/m "wercker status")](https://app.wercker.com/project/bykey/560303ffa373a43c863b7f352262f1e3)
 
-  * If you'd like to chat about Goweb, please feel free to join our [HipChat Goweb Channel](http://www.hipchat.com/gXWgwTtX2)
+  * If you'd like to chat about Goweb, please feel free to join our [HipChat Open Source Channel](http://www.hipchat.com/gXWgwTtX2)
   * For examples and usage, please read the [Goweb API Documentation](http://godoc.org/github.com/stretchr/goweb)
   * Read our [Articles](https://github.com/stretchr/goweb/wiki)
 
