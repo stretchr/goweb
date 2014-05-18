@@ -1,1 +1,1 @@
-box: pjvds/golang
+box: wercker/golang@1.1.2
